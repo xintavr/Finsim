@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FinSim TG Edition</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --green: #2ea043;
+      --red: #da3633;
+      --blue: #58a6ff;
+      --yellow: #d29922;
+      --text: #c9d1d9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); }
+    .val { font-size: 1.15rem; font-weight: bold; color: #fff; }
+    
+    .btn-admin-top { background: #21262d; border: 1px solid #8b949e; color: #ffd700; padding: 6px 10px; font-size: 0.75rem; border-radius: 6px; cursor: pointer; }
+
+    .risk-bar-container { background: var(--card); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); }
+    .risk-title { font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .bar { height: 8px; width: 100%; background: #21262d; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; width: 0%; background: var(--yellow); transition: width 0.3s; }
+    
+    canvas { background: var(--card); border: 1px solid var(--border); border-radius: 10px; width: 100%; height: 160px; }
+    
+    .news-box { background: #0b0e14; border-left: 3px solid var(--blue); padding: 8px 10px; font-size: 0.85rem; border-radius: 4px; min-height: 40px; display: flex; align-items: center; }
+    
+    .section-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8b949e; margin-top: 4px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    
+    button { background: var(--card); color: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    button:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-buy { background: var(--green); border: none; }
+    .btn-sell { background: var(--red); border: none; }
+    .btn-close { grid-column: span 2; background: #21262d; }
+    .btn-action { font-size: 0.8rem; padding: 10px 6px; }
+    .btn-action span { font-size: 0.7rem; color: #8b949e; }
+
+    /* Окно Админ-панели */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: var(--card);
+      border: 1px solid #ffd700;
+      border-radius: 12px;
+      padding: 16px;
+      width: 85%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal h3 { color: #ffd700; font-size: 1rem; text-align: center; }
+    .modal input {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      text-align: center;
+    }
+    .modal input:focus { border-color: var(--blue); }
+    .modal-buttons { display: flex; gap: 8px; }
+    .btn-modal-submit { background: var(--green); flex: 1; border: none; padding: 8px; font-size: 0.85rem; }
+    .btn-modal-cancel { background: #21262d; flex: 1; border: 1px solid var(--border); padding: 8px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div style="font-size: 0.75rem; color: #8b949e;">КАПИТАЛ</div>
+      <div class="val" id="balance">$10,000</div>
+    </div>
+    <button class="btn-admin-top" onclick="openAdminModal()">👑 Админ</button>
+    <div style="text-align: right;">
+      <div style="font-size: 0.75rem; color: #8b949e;">ПОЗИЦИЯ</div>
+      <div class="val" id="position">Нет</div>
+    </div>
+  </div>
+
+  <div class="risk-bar-container">
+    <div class="risk-title">
+      <span>ВНИМАНИЕ РЕГУЛЯТОРА (SEC RISK)</span>
+      <span id="risk-val" style="color: var(--yellow)">0%</span>
+    </div>
+    <div class="bar">
+      <div class="bar-fill" id="risk-fill"></div>
+    </div>
+  </div>
+
+  <canvas id="chart"></canvas>
+
+  <div class="news-box" id="news">⚡ Рынок спокоен. Ожидание открытых торгов...</div>
+
+  <div class="section-title">Биржевой ордер (TITAN CORP: $<span id="stock-price">100.0</span>)</div>
+  <div class="grid-2">
+    <button class="btn-buy" onclick="openPosition('LONG')">LONG (В рост)</button>
+    <button class="btn-sell" onclick="openPosition('SHORT')">SHORT (В падение)</button>
+    <button class="btn-close" id="close-btn" style="display:none;" onclick="closePosition()">Закрыть сделку (<span id="pnl">+$0</span>)</button>
+  </div>
+
+  <div class="section-title">Манипуляции и черный PR</div>
+  <div class="grid-2">
+    <button class="btn-action" onclick="manipulate('HYPE')">
+      📢 Купить хайп в СМИ
+      <span>-$1,500 | +Курс | +15% SEC</span>
+    </button>
+    <button class="btn-action" onclick="manipulate('PANIC')">
+      📉 Вбросить компромат
+      <span>-$1,500 | -Курс | +20% SEC</span>
+    </button>
+    <button class="btn-action" onclick="manipulate('WHALE')">
+      🐋 Атака китов
+      <span>-$3,000 | Хаос | +35% SEC</span>
+    </button>
+    <button class="btn-action" onclick="manipulate('BRIBE')">
+      🤝 Замять аудит
+      <span>-$2,000 | -30% SEC</span>
+    </button>
+  </div>
+
+  <!-- Всплывающее окно Админа -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal">
+      <h3>👑 Доступ Создателя</h3>
+      <input type="text" id="admin-code-input" placeholder="Введите пароль..." autocomplete="off">
+      <div class="modal-buttons">
+        <button class="btn-modal-submit" onclick="submitAdminCode()">Применить</button>
+        <button class="btn-modal-cancel" onclick="closeAdminModal()">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+
+    let cash = 10000;
+    let secRisk = 0;
+    let price = 100.0;
+    let history = [100, 100, 100, 100, 100];
+    let position = null;
+
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 160;
+    }
+    resizeCanvas();
+
+    function updateUI() {
+      document.getElementById('balance').innerText = '$' + Math.floor(cash).toLocaleString();
+      document.getElementById('stock-price').innerText = price.toFixed(2);
+      
+      const riskFill = document.getElementById('risk-fill');
+      riskFill.style.width = secRisk + '%';
+      riskFill.style.background = secRisk > 70 ? 'var(--red)' : (secRisk > 40 ? 'var(--yellow)' : 'var(--blue)');
+      document.getElementById('risk-val').innerText = secRisk + '%';
+
+      const closeBtn = document.getElementById('close-btn');
+      const posEl = document.getElementById('position');
+      if (position) {
+        const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
+        const pnl = diff * position.size;
+        posEl.innerText = `${position.type} ($${Math.floor(pnl)})`;
+        posEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+        closeBtn.style.display = 'block';
+        document.getElementById('pnl').innerText = (pnl >= 0 ? '+' : '') + '$' + Math.floor(pnl);
+      } else {
+        posEl.innerText = 'Нет';
+        posEl.style.color = '#fff';
+        closeBtn.style.display = 'none';
+      }
+    }
+
+    function drawChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const min = Math.min(...history) * 0.95;
+      const max = Math.max(...history) * 1.05;
+      const step = canvas.width / (history.length - 1);
+
+      ctx.beginPath();
+      ctx.strokeStyle = history[history.length - 1] >= history[0] ? '#2ea043' : '#da3633';
+      ctx.lineWidth = 2.5;
+
+      history.forEach((p, idx) => {
+        const y = canvas.height - ((p - min) / (max - min)) * (canvas.height - 20) - 10;
+        if (idx === 0) ctx.moveTo(0, y);
+        else ctx.lineTo(idx * step, y);
+      });
+      ctx.stroke();
+    }
+
+    setInterval(() => {
+      const volatility = (Math.random() - 0.49) * 2.5;
+      price = Math.max(10, price + volatility);
+      history.push(price);
+      if (history.length > 25) history.shift();
+
+      if (secRisk > 0 && Math.random() < 0.3) secRisk = Math.max(0, secRisk - 2);
+
+      if (secRisk >= 100) {
+        const penalty = Math.floor(cash * 0.4);
+        cash -= penalty;
+        secRisk = 20;
+        document.getElementById('news').innerText = `🚨 РЕЙД SEC! Вы оштрафованы на $${penalty.toLocaleString()} за манипуляции!`;
+      }
+
+      drawChart();
+      updateUI();
+    }, 1500);
+
+    function openPosition(type) {
+      if (position) return alert('У вас уже открыта позиция!');
+      const tradeSize = 40;
+      position = { type, entryPrice: price, size: tradeSize };
+      document.getElementById('news').innerText = `📊 Открыта позиция ${type} по цене $${price.toFixed(2)}`;
+      updateUI();
+    }
+
+    function closePosition() {
+      if (!position) return;
+      const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
+      const pnl = diff * position.size;
+      cash += pnl;
+      document.getElementById('news').innerText = `💰 Сделка закрыта. Результат: ${pnl >= 0 ? '+' : ''}$${Math.floor(pnl)}`;
+      position = null;
+      updateUI();
+    }
+
+    function manipulate(action) {
+      if (action === 'HYPE') {
+        if (cash < 1500) return alert('Недостаточно денег!');
+        cash -= 1500;
+        price += 10 + Math.random() * 8;
+        secRisk = Math.min(100, secRisk + 15);
+        document.getElementById('news').innerText = '📰 СМИ выпустили заказной релиз: "Titan Corp меняет мир!" Памп пошел.';
+      } else if (action === 'PANIC') {
+        if (cash < 1500) return alert('Недостаточно денег!');
+        cash -= 1500;
+        price = Math.max(10, price - (10 + Math.random() * 8));
+        secRisk = Math.min(100, secRisk + 20);
+        document.getElementById('news').innerText = '📉 В сеть слит компромат: инвесторы экстренно сбрасывают акции Titan Corp.';
+      } else if (action === 'WHALE') {
+        if (cash < 3000) return alert('Недостаточно денег!');
+        cash -= 3000;
+        const swing = (Math.random() - 0.5) * 30;
+        price = Math.max(10, price + swing);
+        secRisk = Math.min(100, secRisk + 35);
+        document.getElementById('news').innerText = '🐋 Синдикат китов устроил агрессивный сквиз на рынке!';
+      } else if (action === 'BRIBE') {
+        if (cash < 2000) return alert('Недостаточно денег!');
+        cash -= 2000;
+        secRisk = Math.max(0, secRisk - 30);
+        document.getElementById('news').innerText = '🤝 Юристы урегулировали претензии регуляторов. Внимание снижено.';
+      }
+      updateUI();
+    }
+
+    // --- ЛОГИКА АДМИН-ПАНЕЛИ ---
+    function openAdminModal() {
+      const modal = document.getElementById('admin-modal');
+      modal.style.display = 'flex';
+      const input = document.getElementById('admin-code-input');
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').style.display = 'none';
+    }
+
+    function submitAdminCode() {
+      const input = document.getElementById('admin-code-input');
+      const code = input.value.trim().toLowerCase();
+
+      if (code === 'хочуденьги') {
+        cash += 100000;
+        document.getElementById('news').innerText = '👑 РЕЖИМ СОЗДАТЕЛЯ: Зачислено +$100,000!';
+        closeAdminModal();
+        updateUI();
+      } else {
+        alert('Неверный код доступа!');
+        input.value = '';
+      }
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
