@@ -40,7 +40,6 @@
       gap: 10px;
     }
 
-    /* Карточки со стеклянным эффектом */
     .glass {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -49,7 +48,6 @@
       border-radius: 14px;
     }
 
-    /* Шапка */
     .header {
       display: flex;
       justify-content: space-between;
@@ -101,7 +99,6 @@
       gap: 4px;
     }
 
-    /* Шкала SEC */
     .risk-card {
       padding: 10px 14px;
     }
@@ -114,7 +111,7 @@
       margin-bottom: 6px;
     }
     .risk-track {
-      height: 6px;
+      height: 7px;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 10px;
       overflow: hidden;
@@ -124,10 +121,9 @@
       width: 0%;
       background: var(--blue);
       box-shadow: 0 0 10px var(--blue);
-      transition: width 0.4s ease, background 0.4s;
+      transition: width 0.3s ease, background 0.3s;
     }
 
-    /* Терминал Графика */
     .chart-card {
       padding: 12px;
       display: flex;
@@ -145,11 +141,6 @@
       letter-spacing: 0.5px;
       color: var(--text-muted);
     }
-    .stock-price-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
     .stock-price {
       font-family: var(--font-mono);
       font-size: 1.4rem;
@@ -162,7 +153,6 @@
       border-radius: 8px;
     }
 
-    /* Инфо-лента */
     .news-box {
       padding: 10px 12px;
       font-size: 0.8rem;
@@ -175,7 +165,6 @@
       border-radius: 8px;
     }
 
-    /* Секции и Кнопки */
     .section-title {
       font-size: 0.75rem;
       font-weight: 700;
@@ -195,7 +184,7 @@
       border: none;
       cursor: pointer;
       font-weight: 700;
-      transition: transform 0.08s ease, filter 0.15s ease;
+      transition: transform 0.08s ease;
     }
     button:active {
       transform: scale(0.97);
@@ -229,16 +218,12 @@
       font-weight: normal;
     }
 
-    /* Панель активной сделки */
     .pos-card {
       display: none;
       padding: 12px;
       border: 1px solid var(--blue);
       box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
-      animation: fadeIn 0.25s ease-out;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
     .pos-info {
       display: flex;
       justify-content: space-between;
@@ -255,7 +240,6 @@
       font-size: 0.85rem;
     }
 
-    /* Карточки черного рынка */
     .btn-black-ops {
       background: rgba(22, 27, 34, 0.6);
       border: 1px solid var(--card-border);
@@ -267,15 +251,9 @@
       gap: 4px;
       text-align: left;
     }
-    .btn-black-ops:active {
-      border-color: var(--yellow);
-    }
     .ops-title {
       font-size: 0.8rem;
       color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
     .ops-cost {
       font-size: 0.7rem;
@@ -287,7 +265,7 @@
       color: var(--blue);
     }
 
-    /* Модальное окно */
+    /* Модальные окна */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -305,8 +283,6 @@
       padding: 20px;
       border-radius: 16px;
       background: #12161f;
-      border: 1px solid var(--yellow);
-      box-shadow: 0 0 30px rgba(255, 208, 0, 0.2);
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -323,7 +299,6 @@
       outline: none;
       font-family: var(--font-mono);
     }
-    .modal-input:focus { border-color: var(--yellow); }
     .btn-modal-action {
       background: var(--yellow);
       color: #000;
@@ -338,6 +313,17 @@
       border-radius: 8px;
       font-size: 0.75rem;
       margin-top: 6px;
+    }
+
+    /* Анимация мигалки при проигрыше */
+    @keyframes siren {
+      0% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.4); border-color: var(--red); }
+      50% { box-shadow: 0 0 60px rgba(0, 210, 255, 0.6); border-color: var(--blue); }
+      100% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.4); border-color: var(--red); }
+    }
+    .gameover-box {
+      border: 2px solid var(--red);
+      animation: siren 1.4s infinite;
     }
   </style>
 </head>
@@ -367,9 +353,7 @@
   <div class="glass chart-card">
     <div class="ticker-row">
       <span class="stock-symbol">$TITAN / USD</span>
-      <div class="stock-price-box">
-        <span class="stock-price" id="stock-price">100.00</span>
-      </div>
+      <span class="stock-price" id="stock-price">100.00</span>
     </div>
     <canvas id="chart"></canvas>
   </div>
@@ -430,9 +414,27 @@
     </button>
   </div>
 
+  <!-- ЭКРАН GAME OVER (ПРОИГРЫШ) -->
+  <div class="modal-overlay" id="gameover-modal" style="z-index: 2000; background: rgba(5, 7, 10, 0.94);">
+    <div class="modal-content gameover-box">
+      <div style="font-size: 3rem;">🚨</div>
+      <h2 style="color: var(--red); font-size: 1.3rem; letter-spacing: 0.5px;">ВЫ АРЕСТОВАНЫ!</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
+        Шкала внимания SEC достигла 100%. Финансовая разведка раскрыла ваши манипуляции и инсайдерские схемы. Счета заблокированы, активы конфискованы!
+      </p>
+      <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 10px; border: 1px solid var(--card-border);">
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px;">Капитал до ареста:</div>
+        <div style="font-size: 1.25rem; font-weight: 800; color: #fff; font-family: var(--font-mono);" id="final-cash">$0</div>
+      </div>
+      <button class="btn-modal-action" style="background: var(--red); color: #fff; padding: 12px; font-size: 0.95rem;" onclick="restartGame()">
+        🔄 Начать заново ($10,000)
+      </button>
+    </div>
+  </div>
+
   <!-- Модальное окно Админа -->
   <div class="modal-overlay" id="admin-modal">
-    <div class="modal-content">
+    <div class="modal-content" style="border: 1px solid var(--yellow);">
       <h3 style="color: var(--yellow); font-size: 1.05rem;">👑 Режим Создателя</h3>
       <input type="text" class="modal-input" id="admin-code-input" placeholder="Введите пароль..." autocomplete="off">
       <button class="btn-modal-action" onclick="submitAdminCode()">Применить</button>
@@ -442,13 +444,11 @@
   </div>
 
   <script>
-    // Инициализация Telegram Web App
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.ready();
       window.Telegram.WebApp.expand();
     }
 
-    // Тактильная виброотдача
     function haptic(type = 'light') {
       try {
         if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -459,16 +459,15 @@
       } catch (e) {}
     }
 
-    // Состояние игры
     let cash = 10000;
     let secRisk = 0;
     let price = 100.0;
     let history = [98, 99, 100, 101, 100];
     let position = null;
+    let isGameOver = false;
 
-    // --- СИСТЕМА СОХРАНЕНИЯ (LOCALSTORAGE) ---
     function saveGameState() {
-      const data = { cash, secRisk, price, history, position };
+      const data = { cash, secRisk, price, history, position, isGameOver };
       localStorage.setItem('finsim_save_data', JSON.stringify(data));
     }
 
@@ -482,13 +481,13 @@
           if (typeof d.price === 'number') price = d.price;
           if (Array.isArray(d.history) && d.history.length > 2) history = d.history;
           if (d.position) position = d.position;
+          if (typeof d.isGameOver === 'boolean') isGameOver = d.isGameOver;
         }
       } catch (e) {
         console.error('Ошибка загрузки данных:', e);
       }
     }
 
-    // Загрузка при старте
     loadGameState();
 
     const canvas = document.getElementById('chart');
@@ -507,13 +506,12 @@
       document.getElementById('balance').innerText = '$' + Math.floor(cash).toLocaleString();
       document.getElementById('stock-price').innerText = price.toFixed(2);
 
-      // Отрисовка риска
       const riskFill = document.getElementById('risk-fill');
-      riskFill.style.width = secRisk + '%';
-      if (secRisk > 75) {
+      riskFill.style.width = Math.min(100, secRisk) + '%';
+      if (secRisk >= 75) {
         riskFill.style.background = 'var(--red)';
         riskFill.style.boxShadow = '0 0 10px var(--red)';
-      } else if (secRisk > 40) {
+      } else if (secRisk >= 40) {
         riskFill.style.background = 'var(--yellow)';
         riskFill.style.boxShadow = '0 0 10px var(--yellow)';
       } else {
@@ -522,7 +520,6 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      // Отрисовка сделки
       const posCard = document.getElementById('pos-card');
       if (position) {
         posCard.style.display = 'block';
@@ -538,7 +535,6 @@
       }
     }
 
-    // Отрисовка неонового графика
     function drawChart() {
       const w = canvas.width / (window.devicePixelRatio || 1);
       const h = 150;
@@ -550,7 +546,6 @@
       const isUp = history[history.length - 1] >= history[0];
       const strokeColor = isUp ? '#00ff87' : '#ff3366';
 
-      // Градиентная подложка
       const grad = ctx.createLinearGradient(0, 0, 0, h);
       grad.addColorStop(0, isUp ? 'rgba(0, 255, 135, 0.25)' : 'rgba(255, 51, 102, 0.25)');
       grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
@@ -562,14 +557,12 @@
         else ctx.lineTo(i * step, y);
       });
 
-      // Линия графика со свечением
       ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 2.5;
       ctx.shadowColor = strokeColor;
       ctx.shadowBlur = 8;
       ctx.stroke();
 
-      // Заливка объема
       ctx.lineTo(w, h);
       ctx.lineTo(0, h);
       ctx.fillStyle = grad;
@@ -577,24 +570,47 @@
       ctx.fill();
     }
 
-    // Игровой цикл котировок
+    function triggerGameOver() {
+      isGameOver = true;
+      haptic('error');
+      document.getElementById('final-cash').innerText = '$' + Math.floor(cash).toLocaleString();
+      document.getElementById('gameover-modal').style.display = 'flex';
+      saveGameState();
+    }
+
+    function restartGame() {
+      isGameOver = false;
+      cash = 10000;
+      secRisk = 0;
+      price = 100.0;
+      history = [98, 99, 100, 101, 100];
+      position = null;
+      document.getElementById('gameover-modal').style.display = 'none';
+      document.getElementById('news').innerText = '⚡ Новая торговая сессия открыта. Следите за регулятором!';
+      updateUI();
+      drawChart();
+      saveGameState();
+    }
+
+    // Игровой цикл
     setInterval(() => {
+      if (isGameOver) return;
+
       const delta = (Math.random() - 0.49) * 2.2;
       price = Math.max(10, price + delta);
       history.push(price);
       if (history.length > 25) history.shift();
 
       if (secRisk > 0 && Math.random() < 0.25) {
-        secRisk = Math.max(0, secRisk - 2);
+        secRisk = Math.max(0, secRisk - 1);
       }
 
-      // Облава регулятора при 100%
+      // Проверка на проигрыш (100% SEC)
       if (secRisk >= 100) {
-        haptic('error');
-        const penalty = Math.floor(cash * 0.35);
-        cash -= penalty;
-        secRisk = 25;
-        document.getElementById('news').innerText = `🚨 РЕЙД SEC: Счета заморожены, штраф $${penalty.toLocaleString()}!`;
+        secRisk = 100;
+        updateUI();
+        triggerGameOver();
+        return;
       }
 
       drawChart();
@@ -602,8 +618,8 @@
       saveGameState();
     }, 1500);
 
-    // Торговые операции
     function openPosition(type) {
+      if (isGameOver) return;
       haptic('medium');
       if (position) return alert('У вас уже есть открытая позиция!');
       position = { type, entryPrice: price, size: 40 };
@@ -613,7 +629,7 @@
     }
 
     function closePosition() {
-      if (!position) return;
+      if (!position || isGameOver) return;
       haptic('success');
       const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
       const pnl = diff * position.size;
@@ -624,38 +640,46 @@
       saveGameState();
     }
 
-    // Манипуляции
     function manipulate(action) {
+      if (isGameOver) return;
       haptic('light');
+
       if (action === 'HYPE') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
         price += 9 + Math.random() * 8;
-        secRisk = Math.min(100, secRisk + 15);
-        document.getElementById('news').innerText = '📢 СМИ раздули хайп вокруг компании! Памп запущен.';
+        secRisk += 15;
+        document.getElementById('news').innerText = '📢 СМИ раздули хайп! Памп запущен.';
       } else if (action === 'PANIC') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
         price = Math.max(10, price - (9 + Math.random() * 8));
-        secRisk = Math.min(100, secRisk + 20);
-        document.getElementById('news').innerText = '📉 Вброшен компромат: паника среди розничных трейдеров!';
+        secRisk += 20;
+        document.getElementById('news').innerText = '📉 Вброшен компромат: розничные инвесторы паникуют!';
       } else if (action === 'WHALE') {
         if (cash < 3000) return alert('Недостаточно денег!');
         cash -= 3000;
         price += 20 + Math.random() * 15;
-        secRisk = Math.min(100, secRisk + 35);
+        secRisk += 35;
         document.getElementById('news').innerText = '🐋 Синдикат китов выкупает стакан! Курс летит вверх.';
       } else if (action === 'BRIBE') {
         if (cash < 2000) return alert('Недостаточно денег!');
         cash -= 2000;
         secRisk = Math.max(0, secRisk - 30);
-        document.getElementById('news').innerText = '🤝 Проверка SEC временно приостановлена.';
+        document.getElementById('news').innerText = '🤝 Проверка SEC замята через юристов.';
       }
+
+      if (secRisk >= 100) {
+        secRisk = 100;
+        updateUI();
+        triggerGameOver();
+        return;
+      }
+
       updateUI();
       saveGameState();
     }
 
-    // Админ-панель
     function openAdminModal() {
       haptic('light');
       document.getElementById('admin-modal').style.display = 'flex';
@@ -689,20 +713,14 @@
     function hardResetGame() {
       if (confirm('Сбросить весь баланс и начать заново с $10,000?')) {
         localStorage.removeItem('finsim_save_data');
-        cash = 10000;
-        secRisk = 0;
-        price = 100.0;
-        history = [98, 99, 100, 101, 100];
-        position = null;
+        restartGame();
         closeAdminModal();
-        updateUI();
-        saveGameState();
       }
     }
 
-    // Инициализация
     updateUI();
     drawChart();
+    if (isGameOver) triggerGameOver();
   </script>
 </body>
 </html>
