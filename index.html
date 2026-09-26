@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FinSim Cyber Terminal</title>
+  <title>FinSim Cyber Terminal Pro</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -39,10 +39,9 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: border 0.3s;
+      transition: box-shadow 0.3s;
     }
 
-    /* Анимация Черного лебедя */
     body.black-swan-active {
       animation: swanAlert 1.5s infinite alternate;
     }
@@ -103,21 +102,28 @@
       gap: 3px;
     }
 
+    .header-btns {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
     .btn-admin {
       background: rgba(255, 208, 0, 0.12);
       border: 1px solid rgba(255, 208, 0, 0.35);
       color: var(--yellow);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
       font-weight: 700;
-      cursor: pointer;
     }
 
     /* Шкала SEC */
-    .risk-card {
-      padding: 8px 12px;
-    }
+    .risk-card { padding: 8px 12px; }
     .risk-header {
       display: flex;
       justify-content: space-between;
@@ -151,12 +157,26 @@
     .ticker-row {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: center;
     }
     .stock-symbol {
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--text-muted);
+    }
+    .chart-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-mode-btn {
+      background: #1a2230;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      cursor: pointer;
     }
     .stock-price {
       font-family: var(--font-mono);
@@ -181,6 +201,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 6px;
     }
 
     /* Активная 20-сек сделка */
@@ -205,7 +226,7 @@
       transition: width 1s linear;
     }
 
-    /* Ставки */
+    /* Ставки и Плечо */
     .bet-container {
       padding: 10px 12px;
       display: flex;
@@ -257,6 +278,31 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    /* Селектор кредитного плеча (из навыка) */
+    .leverage-selector {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .lev-btn {
+      background: #161b22;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lev-btn.active {
+      background: rgba(0, 210, 255, 0.15);
+      border-color: var(--blue);
+      color: var(--blue);
     }
 
     .grid-2 {
@@ -313,8 +359,8 @@
       align-items: center;
     }
 
-    /* Активы и Бизнес */
-    .biz-card {
+    /* Карточки апгрейдов и бизнеса */
+    .item-card {
       background: rgba(22, 27, 34, 0.6);
       border: 1px solid var(--card-border);
       padding: 8px 10px;
@@ -323,9 +369,9 @@
       justify-content: space-between;
       align-items: center;
     }
-    .biz-info h4 { font-size: 0.8rem; color: #fff; margin-bottom: 2px; }
-    .biz-info p { font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); }
-    .btn-buy-biz {
+    .item-info h4 { font-size: 0.8rem; color: #fff; margin-bottom: 2px; }
+    .item-info p { font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); }
+    .btn-buy-item {
       background: #21262d;
       border: 1px solid var(--card-border);
       color: var(--green);
@@ -334,7 +380,7 @@
       border-radius: 6px;
       font-family: var(--font-mono);
     }
-    .btn-buy-biz.owned {
+    .btn-buy-item.owned {
       background: rgba(0, 255, 135, 0.1);
       border-color: var(--green);
       color: var(--green);
@@ -357,7 +403,7 @@
     .ops-cost { font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-muted); }
     .ops-effect { font-size: 0.65rem; color: var(--blue); font-weight: 600; }
 
-    /* Кнопка Престижа (Дубай) */
+    /* Кнопки действий (Шеринг, Дубай) */
     .btn-prestige {
       background: linear-gradient(135deg, #ffd700, #ff8800);
       color: #000;
@@ -371,6 +417,18 @@
       gap: 6px;
       box-shadow: 0 4px 20px rgba(255, 208, 0, 0.3);
       margin-top: 4px;
+    }
+    .btn-share {
+      background: linear-gradient(135deg, #00d2ff, #0077ff);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
     }
 
     /* Модалки */
@@ -431,12 +489,15 @@
   <div class="glass header">
     <div>
       <div style="display: flex; align-items: center; gap: 6px;">
-        <div class="badge-live">Live Market</div>
+        <div class="badge-live">Live Terminal</div>
         <div class="prestige-badge" id="prestige-label" style="display: none;">👑 Олигарх I</div>
       </div>
       <div class="val-balance" id="balance">$10,000</div>
     </div>
-    <button class="btn-admin" onclick="openAdminModal()">👑 Админ</button>
+    <div class="header-btns">
+      <button class="btn-icon" id="sound-btn" onclick="toggleSound()">🔊 Вкл</button>
+      <button class="btn-icon btn-admin" onclick="openAdminModal()">👑 Админ</button>
+    </div>
   </div>
 
   <!-- Шкала SEC -->
@@ -450,19 +511,25 @@
     </div>
   </div>
 
-  <!-- График котировок -->
+  <!-- График котировок (Линия / Свечи) -->
   <div class="glass chart-card">
     <div class="ticker-row">
-      <span class="stock-symbol" id="ticker-label">$TITAN / PRO SCALER</span>
-      <span class="stock-price" id="stock-price">100.00</span>
+      <span class="stock-symbol" id="ticker-label">$TITAN / PRO</span>
+      <div class="chart-controls">
+        <button class="chart-mode-btn" id="chart-toggle-btn" onclick="toggleChartMode()">Свечи 🕯</button>
+        <span class="stock-price" id="stock-price">100.00</span>
+      </div>
     </div>
     <canvas id="chart"></canvas>
   </div>
 
   <!-- Инфо-лента -->
-  <div class="news-box" id="news-box">
-    <span id="news">⚡ Торги открыты. До кризиса рынка есть время.</span>
-    <span id="passive-income-badge" style="color: var(--green); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;">+$0/с</span>
+  <div class="news-box">
+    <span id="news" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">⚡ Торги открыты. До кризиса рынка есть время.</span>
+    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+      <span id="passive-income-badge" style="color: var(--green); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;">+$0/с</span>
+      <button class="btn-share" id="flex-share-btn" style="display: none;" onclick="shareFlexResult()">📤 Flex</button>
+    </div>
   </div>
 
   <!-- Активная сделка (20 сек) -->
@@ -471,7 +538,7 @@
       <div>
         <span style="color: var(--text-muted);">ОРДЕР: </span>
         <b id="trade-type" style="font-size: 0.85rem;">LONG</b>
-        <span style="color: var(--text-muted); font-size: 0.75rem;">($<span id="trade-bet-val">1000</span>)</span>
+        <span style="color: var(--text-muted); font-size: 0.75rem;">($<span id="trade-bet-val">1000</span> | <span id="trade-lev-val">x3.5</span>)</span>
       </div>
       <div>
         ⏱️ <b id="trade-timer" style="font-family: var(--font-mono); color: var(--yellow);">20s</b>
@@ -486,10 +553,10 @@
     </div>
   </div>
 
-  <!-- Выбор размера ставки -->
+  <!-- Выбор размера ставки и Плеча -->
   <div class="glass bet-container" id="bet-panel">
     <div class="bet-top-row">
-      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">РАЗМЕР СТАВКИ:</span>
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">СТАВКА:</span>
       <div class="bet-input-wrap">
         <span>$</span>
         <input type="number" id="bet-input" class="bet-input" value="1000" min="50" step="50">
@@ -501,6 +568,16 @@
       <div class="chip" onclick="setBetPercent(1.00)">ALL-IN</div>
       <div class="chip" onclick="addBet(1000)">+$1,000</div>
       <div class="chip" onclick="addBet(5000)">+$5,000</div>
+    </div>
+
+    <!-- Селектор плеча (активируется навыком) -->
+    <div class="leverage-selector" id="leverage-panel">
+      <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">ПЛЕЧО СИНДИКАТА:</span>
+      <div style="display: flex; gap: 6px;">
+        <button class="lev-btn active" id="lev-35" onclick="setLeverage(3.5)">x3.5</button>
+        <button class="lev-btn" id="lev-50" onclick="setLeverage(5.0)">x5.0</button>
+        <button class="lev-btn" id="lev-100" onclick="setLeverage(10.0)">x10.0</button>
+      </div>
     </div>
   </div>
 
@@ -516,32 +593,61 @@
     </button>
   </div>
 
-  <!-- Механика А: Легальные активы и пассивный доход -->
+  <!-- Черный синдикат (Навыки) -->
   <div class="section-title">
+    <span>Черный синдикат (Навыки)</span>
+    <span style="font-size: 0.65rem; color: #8b949e;">Перманентные</span>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 6px;">
+    <div class="item-card">
+      <div class="item-info">
+        <h4>⚖️ Карманный судья</h4>
+        <p>-35% прироста внимания SEC</p>
+      </div>
+      <button class="btn-buy-item" id="btn-skill-judge" onclick="buySkill('judge')">$30,000</button>
+    </div>
+    <div class="item-card">
+      <div class="item-info">
+        <h4>⚡ Агрессивное плечо</h4>
+        <p>Доступ к множителям x5.0 и x10.0</p>
+      </div>
+      <button class="btn-buy-item" id="btn-skill-leverage" onclick="buySkill('leverage')">$50,000</button>
+    </div>
+    <div class="item-card">
+      <div class="item-info">
+        <h4>🌪️ Крипто-миксер Pro</h4>
+        <p>Отмыв SEC в 2 раза быстрее</p>
+      </div>
+      <button class="btn-buy-item" id="btn-skill-mixer" onclick="buySkill('mixer')">$80,000</button>
+    </div>
+  </div>
+
+  <!-- Легальные активы и пассивный доход -->
+  <div class="section-title" style="margin-top: 4px;">
     <span>Легальные Активы (Пассивный доход)</span>
     <span style="font-size: 0.65rem; color: #8b949e;">Лимит: 1 шт.</span>
   </div>
   <div style="display: flex; flex-direction: column; gap: 6px;">
-    <div class="biz-card">
-      <div class="biz-info">
+    <div class="item-card">
+      <div class="item-info">
         <h4>🖥️ Майнинг-отель</h4>
         <p>+$35/сек | Окупаемость ~7 мин</p>
       </div>
-      <button class="btn-buy-biz" id="btn-biz-1" onclick="buyBusiness(1)">$15,000</button>
+      <button class="btn-buy-item" id="btn-biz-1" onclick="buyBusiness(1)">$15,000</button>
     </div>
-    <div class="biz-card">
-      <div class="biz-info">
+    <div class="item-card">
+      <div class="item-info">
         <h4>☕ Сеть кофеен (Отмыв)</h4>
-        <p>+$140/сек | -1% SEC каждые 15с</p>
+        <p>+$140/сек | Снижает внимание SEC</p>
       </div>
-      <button class="btn-buy-biz" id="btn-biz-2" onclick="buyBusiness(2)">$65,000</button>
+      <button class="btn-buy-item" id="btn-biz-2" onclick="buyBusiness(2)">$65,000</button>
     </div>
-    <div class="biz-card">
-      <div class="biz-info">
+    <div class="item-card">
+      <div class="item-info">
         <h4>🏛️ Офшорный Хедж-Фонд</h4>
         <p>+$450/сек | Для крупных игроков</p>
       </div>
-      <button class="btn-buy-biz" id="btn-biz-3" onclick="buyBusiness(3)">$250,000</button>
+      <button class="btn-buy-item" id="btn-biz-3" onclick="buyBusiness(3)">$250,000</button>
     </div>
   </div>
 
@@ -550,17 +656,17 @@
   <div class="grid-2">
     <button class="btn-black-ops" onclick="manipulate('HYPE')">
       <div class="ops-title">📢 Купить хайп в СМИ</div>
-      <div class="ops-cost">-$1,500 | +15% SEC</div>
+      <div class="ops-cost">-$1,500 | +SEC</div>
       <div class="ops-effect">🚀 Взрывной рост курса</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('PANIC')">
       <div class="ops-title">📉 Вброс компромата</div>
-      <div class="ops-cost">-$1,500 | +20% SEC</div>
+      <div class="ops-cost">-$1,500 | +SEC</div>
       <div class="ops-effect">💥 Жесткий дамп курса</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('WHALE')">
       <div class="ops-title">🐋 Рейд китов</div>
-      <div class="ops-cost">-$3,000 | +35% SEC</div>
+      <div class="ops-cost">-$3,000 | +SEC</div>
       <div class="ops-effect">⚡ Мега-свеча вверх</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('BRIBE')">
@@ -626,6 +732,85 @@
       window.Telegram.WebApp.expand();
     }
 
+    // --- ЗВУКОВОЙ ДВИЖОК (WEB AUDIO API) ---
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Вкл' : '🔇 Выкл';
+      if (soundEnabled) playSound('click');
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.04);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'tick') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(750, now);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'win') {
+          // Мажорное трезвучие кассы
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'sine';
+            o.frequency.setValueAtTime(freq, now + i * 0.06);
+            g.gain.setValueAtTime(0.12, now + i * 0.06);
+            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.25);
+            o.start(now + i * 0.06);
+            o.stop(now + i * 0.06 + 0.25);
+          });
+        } else if (type === 'loss') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.exponentialRampToValueAtTime(110, now + 0.35);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'siren') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.linearRampToValueAtTime(950, now + 0.25);
+          osc.frequency.linearRampToValueAtTime(600, now + 0.5);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+          osc.start(now);
+          osc.stop(now + 0.55);
+        }
+      } catch (e) {}
+    }
+
     function haptic(type = 'light') {
       try {
         if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -636,24 +821,40 @@
       } catch (e) {}
     }
 
-    // Состояние игры
+    // Состояние
     let prestigeLevel = 0;
     let cash = 10000;
     let secRisk = 0;
     let price = 100.0;
-    let history = [85, 92, 88, 105, 96, 110, 100];
+    let chartMode = 'candles'; // 'line' или 'candles'
+    let currentLeverage = 3.5;
+    let lastProfitableTrade = 0;
+
+    // Свечи: { open, high, low, close }
+    let candles = [
+      { open: 98, high: 101, low: 96, close: 100 },
+      { open: 100, high: 104, low: 99, close: 103 },
+      { open: 103, high: 105, low: 98, close: 99 },
+      { open: 99, high: 102, low: 97, close: 101 },
+      { open: 101, high: 103, low: 99, close: 100 }
+    ];
+
     let position = null;
     let isGameOver = false;
     let momentum = 0;
 
-    // Бизнесы
+    let skills = {
+      judge: false,
+      leverage: false,
+      mixer: false
+    };
+
     let biz = {
       crypto: false,
       coffee: false,
       fund: false
     };
 
-    // Таймер Черного лебедя (8-15 минут = 480 - 900 сек)
     let nextSwanTime = Date.now() + (Math.random() * (900 - 480) + 480) * 1000;
     let isSwanActive = false;
     let swanTimeLeft = 0;
@@ -664,10 +865,13 @@
         cash,
         secRisk,
         price,
-        history,
+        candles,
         position,
         isGameOver,
+        skills,
         biz,
+        chartMode,
+        currentLeverage,
         nextSwanTime
       };
       localStorage.setItem('finsim_save_data', JSON.stringify(data));
@@ -682,10 +886,13 @@
           if (typeof d.cash === 'number') cash = d.cash;
           if (typeof d.secRisk === 'number') secRisk = d.secRisk;
           if (typeof d.price === 'number') price = d.price;
-          if (Array.isArray(d.history) && d.history.length > 2) history = d.history;
+          if (Array.isArray(d.candles) && d.candles.length > 2) candles = d.candles;
           if (d.position) position = d.position;
           if (typeof d.isGameOver === 'boolean') isGameOver = d.isGameOver;
+          if (d.skills) skills = d.skills;
           if (d.biz) biz = d.biz;
+          if (d.chartMode) chartMode = d.chartMode;
+          if (d.currentLeverage) currentLeverage = d.currentLeverage;
           if (typeof d.nextSwanTime === 'number') nextSwanTime = d.nextSwanTime;
         }
       } catch (e) {
@@ -707,13 +914,35 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    function toggleChartMode() {
+      playSound('click');
+      haptic('light');
+      chartMode = chartMode === 'candles' ? 'line' : 'candles';
+      document.getElementById('chart-toggle-btn').innerText = chartMode === 'candles' ? 'Линия 📈' : 'Свечи 🕯';
+      drawChart();
+      saveGameState();
+    }
+
+    function setLeverage(lev) {
+      playSound('click');
+      haptic('light');
+      currentLeverage = lev;
+      ['lev-35', 'lev-50', 'lev-100'].forEach(id => document.getElementById(id).classList.remove('active'));
+      if (lev === 3.5) document.getElementById('lev-35').classList.add('active');
+      if (lev === 5.0) document.getElementById('lev-50').classList.add('active');
+      if (lev === 10.0) document.getElementById('lev-100').classList.add('active');
+      saveGameState();
+    }
+
     function setBetPercent(pct) {
+      playSound('click');
       haptic('light');
       const val = Math.max(50, Math.floor(cash * pct));
       document.getElementById('bet-input').value = val;
     }
 
     function addBet(amount) {
+      playSound('click');
       haptic('light');
       const input = document.getElementById('bet-input');
       let cur = parseInt(input.value) || 0;
@@ -729,8 +958,31 @@
       return val;
     }
 
-    // Покупка бизнесов
+    function buySkill(type) {
+      playSound('click');
+      haptic('medium');
+      if (type === 'judge') {
+        if (skills.judge) return;
+        if (cash < 30000) return alert('Нужно $30,000!');
+        cash -= 30000;
+        skills.judge = true;
+      } else if (type === 'leverage') {
+        if (skills.leverage) return;
+        if (cash < 50000) return alert('Нужно $50,000!');
+        cash -= 50000;
+        skills.leverage = true;
+      } else if (type === 'mixer') {
+        if (skills.mixer) return;
+        if (cash < 80000) return alert('Нужно $80,000!');
+        cash -= 80000;
+        skills.mixer = true;
+      }
+      updateUI();
+      saveGameState();
+    }
+
     function buyBusiness(id) {
+      playSound('click');
       haptic('medium');
       if (id === 1) {
         if (biz.crypto) return;
@@ -764,7 +1016,6 @@
       document.getElementById('balance').innerText = '$' + Math.floor(cash).toLocaleString();
       document.getElementById('stock-price').innerText = price.toFixed(2);
 
-      // Престиж бэйджик
       const prestigeEl = document.getElementById('prestige-label');
       if (prestigeLevel > 0) {
         prestigeEl.style.display = 'flex';
@@ -773,24 +1024,25 @@
         prestigeEl.style.display = 'none';
       }
 
-      // Кнопка эмиграции в Дубай (при $1,000,000)
       const prestigeBtn = document.getElementById('btn-prestige-action');
-      if (cash >= 1000000) {
-        prestigeBtn.style.display = 'flex';
-      } else {
-        prestigeBtn.style.display = 'none';
-      }
+      prestigeBtn.style.display = cash >= 1000000 ? 'flex' : 'none';
 
-      // Пассивный доход
       const passiveIncome = getPassivePerSec();
       const pBadge = document.getElementById('passive-income-badge');
       pBadge.innerText = `+$${passiveIncome}/с`;
       pBadge.style.display = passiveIncome > 0 ? 'inline' : 'none';
 
-      // Статус бизнесов в интерфейсе
-      updateBizButton('btn-biz-1', biz.crypto, '$15,000');
-      updateBizButton('btn-biz-2', biz.coffee, '$65,000');
-      updateBizButton('btn-biz-3', biz.fund, '$250,000');
+      // Панель плеча
+      document.getElementById('leverage-panel').style.display = skills.leverage ? 'flex' : 'none';
+
+      // Статус кнопок навыков и бизнеса
+      updateItemButton('btn-skill-judge', skills.judge, '$30,000');
+      updateItemButton('btn-skill-leverage', skills.leverage, '$50,000');
+      updateItemButton('btn-skill-mixer', skills.mixer, '$80,000');
+
+      updateItemButton('btn-biz-1', biz.crypto, '$15,000');
+      updateItemButton('btn-biz-2', biz.coffee, '$65,000');
+      updateItemButton('btn-biz-3', biz.fund, '$250,000');
 
       // SEC Risk
       const riskFill = document.getElementById('risk-fill');
@@ -807,7 +1059,7 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      // Панель ордеров и активной сделки
+      // Сделка
       const tradeCard = document.getElementById('trade-card');
       const orderButtons = document.getElementById('order-buttons');
       const betPanel = document.getElementById('bet-panel');
@@ -822,12 +1074,13 @@
         document.getElementById('trade-type').innerText = position.type;
         document.getElementById('trade-type').style.color = position.type === 'LONG' ? 'var(--green)' : 'var(--red)';
         document.getElementById('trade-bet-val').innerText = position.bet.toLocaleString();
+        document.getElementById('trade-lev-val').innerText = `x${position.leverage}`;
         document.getElementById('trade-entry').innerText = position.entryPrice.toFixed(2);
         document.getElementById('trade-timer').innerText = position.timeLeft + 's';
         document.getElementById('trade-timer-fill').style.width = ((position.timeLeft / 20) * 100) + '%';
 
         const priceDeltaRatio = (price - position.entryPrice) / position.entryPrice * (position.type === 'LONG' ? 1 : -1);
-        const mult = isSwanActive ? 7.0 : 3.5;
+        const mult = isSwanActive ? position.leverage * 2 : position.leverage;
         const estPnL = Math.floor(position.bet * priceDeltaRatio * mult);
         const pnlEl = document.getElementById('trade-pnl');
         pnlEl.innerText = (estPnL >= 0 ? '+' : '') + '$' + estPnL.toLocaleString();
@@ -841,18 +1094,18 @@
       }
     }
 
-    function updateBizButton(id, owned, cost) {
+    function updateItemButton(id, owned, cost) {
       const btn = document.getElementById(id);
       if (owned) {
         btn.innerText = 'Куплено ✓';
-        btn.className = 'btn-buy-biz owned';
+        btn.className = 'btn-buy-item owned';
       } else {
         btn.innerText = cost;
-        btn.className = 'btn-buy-biz';
+        btn.className = 'btn-buy-item';
       }
     }
 
-    // Динамический график (с линией входа)
+    // --- ОТРИСОВКА ГРАФИКА (СВЕЧИ / ЛИНИЯ) ---
     function drawChart() {
       const dpr = window.devicePixelRatio || 1;
       const w = canvas.width / dpr;
@@ -862,11 +1115,15 @@
       const rightGutter = 50;
       const plotWidth = w - rightGutter;
 
-      let allPoints = [...history];
-      if (position) allPoints.push(position.entryPrice);
+      let allLows = candles.map(c => c.low);
+      let allHighs = candles.map(c => c.high);
+      if (position) {
+        allLows.push(position.entryPrice);
+        allHighs.push(position.entryPrice);
+      }
 
-      const rawMin = Math.min(...allPoints);
-      const rawMax = Math.max(...allPoints);
+      const rawMin = Math.min(...allLows);
+      const rawMax = Math.max(...allHighs);
       const span = Math.max(rawMax - rawMin, 8);
 
       const min = Math.max(1, rawMin - span * 0.18);
@@ -907,98 +1164,117 @@
         ctx.fillText('ENTRY', w - 4, entryY - 4);
       }
 
-      // Линия котировок
-      const step = plotWidth / (history.length - 1);
-      const isUp = history[history.length - 1] >= history[0];
-      const strokeColor = isSwanActive ? '#ffd000' : (isUp ? '#00ff87' : '#ff3366');
+      const count = candles.length;
+      const step = plotWidth / count;
 
-      const grad = ctx.createLinearGradient(0, 0, 0, h);
-      grad.addColorStop(0, isSwanActive ? 'rgba(255, 208, 0, 0.35)' : (isUp ? 'rgba(0, 255, 135, 0.28)' : 'rgba(255, 51, 102, 0.28)'));
-      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      if (chartMode === 'candles') {
+        // РЕЖИМ ЯПОНСКИХ СВЕЧЕЙ
+        const bodyWidth = Math.max(4, step * 0.65);
 
-      ctx.beginPath();
-      history.forEach((p, i) => {
-        const y = h - ((p - min) / range) * (h - 26) - 13;
-        if (i === 0) ctx.moveTo(0, y);
-        else ctx.lineTo(i * step, y);
-      });
+        candles.forEach((c, i) => {
+          const x = i * step + step / 2;
+          const openY = h - ((c.open - min) / range) * (h - 26) - 13;
+          const closeY = h - ((c.close - min) / range) * (h - 26) - 13;
+          const highY = h - ((c.high - min) / range) * (h - 26) - 13;
+          const lowY = h - ((c.low - min) / range) * (h - 26) - 13;
 
-      ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = 2.5;
-      ctx.shadowColor = strokeColor;
-      ctx.shadowBlur = 10;
-      ctx.stroke();
+          const isUp = c.close >= c.open;
+          const color = isSwanActive ? '#ffd000' : (isUp ? '#00ff87' : '#ff3366');
 
-      ctx.lineTo(plotWidth, h);
-      ctx.lineTo(0, h);
-      ctx.fillStyle = grad;
-      ctx.shadowBlur = 0;
-      ctx.fill();
+          // Фитиль (High - Low)
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1.5;
+          ctx.moveTo(x, highY);
+          ctx.lineTo(x, lowY);
+          ctx.stroke();
 
-      // Светящийся курсор цены
-      const lastX = plotWidth;
-      const lastY = h - ((history[history.length - 1] - min) / range) * (h - 26) - 13;
-      ctx.beginPath();
-      ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-      ctx.fillStyle = strokeColor;
-      ctx.shadowColor = strokeColor;
-      ctx.shadowBlur = 10;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+          // Тело свечи
+          const top = Math.min(openY, closeY);
+          const height = Math.max(2, Math.abs(closeY - openY));
+          ctx.fillStyle = color;
+          ctx.fillRect(x - bodyWidth / 2, top, bodyWidth, height);
+        });
+      } else {
+        // РЕЖИМ ЛИНИИ
+        const isUp = candles[count - 1].close >= candles[0].open;
+        const strokeColor = isSwanActive ? '#ffd000' : (isUp ? '#00ff87' : '#ff3366');
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, isSwanActive ? 'rgba(255, 208, 0, 0.35)' : (isUp ? 'rgba(0, 255, 135, 0.28)' : 'rgba(255, 51, 102, 0.28)'));
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        ctx.beginPath();
+        candles.forEach((c, i) => {
+          const x = i * step + step / 2;
+          const y = h - ((c.close - min) / range) * (h - 26) - 13;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = strokeColor;
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+
+        ctx.lineTo(plotWidth, h);
+        ctx.lineTo(step / 2, h);
+        ctx.fillStyle = grad;
+        ctx.shadowBlur = 0;
+        ctx.fill();
+      }
     }
 
-    // Игровой цикл (тик каждую секунду)
+    // Игровой цикл
     let secDecayCounter = 0;
     setInterval(() => {
       if (isGameOver) return;
 
-      // 1. Пассивный доход от легального бизнеса
       const passive = getPassivePerSec();
-      if (passive > 0) {
-        cash += passive;
-      }
+      if (passive > 0) cash += passive;
 
-      // 2. Отмыв через кофейни: -1% SEC каждые 15 сек
+      // Отмыв: с миксером каждые 7 сек, без — каждые 15 сек
       secDecayCounter++;
-      if (biz.coffee && secDecayCounter % 15 === 0 && secRisk > 0) {
+      const decayInterval = skills.mixer ? 7 : 15;
+      if (biz.coffee && secDecayCounter % decayInterval === 0 && secRisk > 0) {
         secRisk = Math.max(0, secRisk - 1);
       }
 
-      // 3. Проверка наступления ЧЕРНОГО ЛЕБЕДЯ (раз в 8-15 мин)
-      if (!isSwanActive && Date.now() >= nextSwanTime) {
-        startBlackSwan();
-      }
+      // Проверка кризиса
+      if (!isSwanActive && Date.now() >= nextSwanTime) startBlackSwan();
 
       if (isSwanActive) {
         swanTimeLeft--;
-        // Бешеная волатильность во время кризиса
         momentum = momentum * 0.5 + (Math.random() - 0.49) * 22;
-        if (swanTimeLeft <= 0) {
-          endBlackSwan();
-        }
+        if (swanTimeLeft <= 0) endBlackSwan();
       } else {
-        // Обычная волатильность
         momentum = momentum * 0.7 + (Math.random() - 0.49) * 8.5;
       }
 
+      const prevPrice = price;
       price = Math.max(10, price + momentum);
-      history.push(price);
-      if (history.length > 24) history.shift();
 
-      // Естественное остывание регулятора (без кофеен)
-      if (secRisk > 0 && Math.random() < 0.15) {
-        secRisk = Math.max(0, secRisk - 1);
-      }
+      // Генерация свечи
+      const open = prevPrice;
+      const close = price;
+      const noise = Math.random() * 2.5;
+      const high = Math.max(open, close) + noise;
+      const low = Math.max(5, Math.min(open, close) - noise);
+      candles.push({ open, high, low, close });
+      if (candles.length > 22) candles.shift();
 
-      // Таймер сделки (20 сек)
+      if (secRisk > 0 && Math.random() < 0.15) secRisk = Math.max(0, secRisk - 1);
+
+      // Таймер сделки
       if (position) {
         position.timeLeft--;
-        if (position.timeLeft <= 0) {
-          resolveTrade();
+        if (position.timeLeft <= 5 && position.timeLeft > 0) {
+          playSound('tick');
+          haptic('light');
         }
+        if (position.timeLeft <= 0) resolveTrade();
       }
 
-      // Проигрыш при 100% SEC
       if (secRisk >= 100) {
         secRisk = 100;
         updateUI();
@@ -1013,21 +1289,21 @@
 
     function startBlackSwan() {
       isSwanActive = true;
-      swanTimeLeft = 20; // Длится 20 секунд
+      swanTimeLeft = 20;
+      playSound('siren');
       haptic('error');
       document.body.classList.add('black-swan-active');
       document.getElementById('ticker-label').innerText = '⚠️ ЧЕРНЫЙ ЛЕБЕДЬ (x2 PnL)';
       document.getElementById('ticker-label').style.color = 'var(--yellow)';
-      document.getElementById('news').innerText = '🚨 ГЛОБАЛЬНЫЙ ШОК! Ликвидность разорвана, котировки штормит!';
+      document.getElementById('news').innerText = '🚨 ГЛОБАЛЬНЫЙ ШОК! Ликвидность разорвана!';
     }
 
     function endBlackSwan() {
       isSwanActive = false;
       document.body.classList.remove('black-swan-active');
-      document.getElementById('ticker-label').innerText = '$TITAN / PRO SCALER';
+      document.getElementById('ticker-label').innerText = '$TITAN / PRO';
       document.getElementById('ticker-label').style.color = 'var(--text-muted)';
       document.getElementById('news').innerText = '⚡ Рынок стабилизировался после шока.';
-      // Следующий кризис через 8 - 15 минут
       nextSwanTime = Date.now() + (Math.random() * (900 - 480) + 480) * 1000;
     }
 
@@ -1036,18 +1312,20 @@
       if (position) return alert('Сделка уже идет! Дождитесь окончания 20 секунд.');
 
       const bet = getBetAmount();
-      if (bet > cash) return alert('Недостаточно средств для такой ставки!');
+      if (bet > cash) return alert('Недостаточно средств!');
 
+      playSound('click');
       haptic('medium');
       cash -= bet;
       position = {
         type: type,
         entryPrice: price,
         bet: bet,
+        leverage: currentLeverage,
         timeLeft: 20
       };
 
-      document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} открыт на 20 сек по курсу $${price.toFixed(2)}!`;
+      document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} (x${currentLeverage}) открыт по курсу $${price.toFixed(2)}!`;
       updateUI();
       drawChart();
       saveGameState();
@@ -1055,18 +1333,24 @@
 
     function resolveTrade() {
       const priceDeltaRatio = (price - position.entryPrice) / position.entryPrice * (position.type === 'LONG' ? 1 : -1);
-      const mult = isSwanActive ? 7.0 : 3.5;
+      const mult = isSwanActive ? position.leverage * 2 : position.leverage;
       const pnl = Math.floor(position.bet * priceDeltaRatio * mult);
       const totalReturn = Math.max(0, position.bet + pnl);
 
       cash += totalReturn;
 
       if (pnl >= 0) {
+        playSound('win');
         haptic('success');
-        document.getElementById('news').innerText = `🎉 СДЕЛКА ЗАКРЫТА! Прибыль: +$${pnl.toLocaleString()} ${isSwanActive ? '(x2 БОНУС КРИЗИСА!)' : ''}`;
+        lastProfitableTrade = pnl;
+        document.getElementById('news').innerText = `🎉 ПРИБЫЛЬ: +$${pnl.toLocaleString()} ${isSwanActive ? '(x2 ШОК-БОНУС!)' : ''}`;
+        if (pnl >= 10000) {
+          document.getElementById('flex-share-btn').style.display = 'inline-flex';
+        }
       } else {
+        playSound('loss');
         haptic('error');
-        document.getElementById('news').innerText = `📉 СДЕЛКА ЗАКРЫТА! Убыток: -$${Math.abs(pnl).toLocaleString()}`;
+        document.getElementById('news').innerText = `📉 УБЫТОК: -$${Math.abs(pnl).toLocaleString()}`;
       }
 
       position = null;
@@ -1077,31 +1361,35 @@
 
     function manipulate(action) {
       if (isGameOver) return;
+      playSound('click');
       haptic('light');
+
+      // Скидка от судьи на рост риска
+      const riskMod = skills.judge ? 0.65 : 1.0;
 
       if (action === 'HYPE') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
         momentum += 25 + Math.random() * 20;
-        secRisk += 15;
-        document.getElementById('news').innerText = '📢 СМИ выпустили хайп! Курс мощно пампится вверх!';
+        secRisk += Math.round(15 * riskMod);
+        document.getElementById('news').innerText = '📢 СМИ раздули хайп! Курс мощно пампится вверх!';
       } else if (action === 'PANIC') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
         momentum -= (25 + Math.random() * 20);
-        secRisk += 20;
+        secRisk += Math.round(20 * riskMod);
         document.getElementById('news').innerText = '📉 Вброшен компромат: панический слив котировок!';
       } else if (action === 'WHALE') {
         if (cash < 3000) return alert('Недостаточно денег!');
         cash -= 3000;
         momentum += (45 + Math.random() * 30);
-        secRisk += 35;
+        secRisk += Math.round(35 * riskMod);
         document.getElementById('news').innerText = '🐋 КИТЫ зашли в стакан! Взрывная ракета вверх!';
       } else if (action === 'BRIBE') {
         if (cash < 2000) return alert('Недостаточно денег!');
         cash -= 2000;
         secRisk = Math.max(0, secRisk - 30);
-        document.getElementById('news').innerText = '🤝 Юристы замяли аудит регулятора.';
+        document.getElementById('news').innerText = '🤝 Юристы отбили проверку регуляторов.';
       }
 
       if (secRisk >= 100) {
@@ -1115,23 +1403,37 @@
       saveGameState();
     }
 
-    // ПРЕСТИЖ (ДУБАЙ)
+    // --- ФУНКЦИЯ FLEX (ПОДЕЛИТЬСЯ В TELEGRAM) ---
+    function shareFlexResult() {
+      playSound('win');
+      haptic('success');
+      const text = `🔥 Я поднял +$${lastProfitableTrade.toLocaleString()} в FinSim! Мой баланс: $${Math.floor(cash).toLocaleString()} 👑 Попробуй обойти меня в биржевых схемах:`;
+      const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
+      
+      if (window.Telegram?.WebApp?.openTelegramLink) {
+        window.Telegram.WebApp.openTelegramLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
     function triggerPrestigeModal() {
+      playSound('win');
       haptic('success');
       document.getElementById('prestige-modal').style.display = 'flex';
     }
 
     function confirmPrestige() {
       prestigeLevel++;
-      // Базовые $10,000 + $15,000 за каждый уровень престижа
       cash = 10000 + (prestigeLevel * 15000);
-      secRisk = 0; // Сброс при побеге, но защиты нет!
+      secRisk = 0;
       biz = { crypto: false, coffee: false, fund: false };
       position = null;
       price = 100.0;
-      history = [85, 92, 88, 105, 96, 110, 100];
       document.getElementById('prestige-modal').style.display = 'none';
-      document.getElementById('news').innerText = `🌴 ВЫ В ДУБАЕ! Стартовый капитал: $${cash.toLocaleString()}. Внимание SEC не спит!`;
+      document.getElementById('news').innerText = `🌴 ВЫ В ДУБАЕ! Стартовый капитал: $${cash.toLocaleString()}!`;
+      lastProfitableTrade = 1000000;
+      document.getElementById('flex-share-btn').style.display = 'inline-flex';
       updateUI();
       drawChart();
       saveGameState();
@@ -1139,6 +1441,7 @@
 
     function triggerGameOver() {
       isGameOver = true;
+      playSound('siren');
       haptic('error');
       document.getElementById('final-cash').innerText = '$' + Math.floor(cash).toLocaleString();
       document.getElementById('gameover-modal').style.display = 'flex';
@@ -1151,7 +1454,6 @@
       secRisk = 0;
       biz = { crypto: false, coffee: false, fund: false };
       price = 100.0;
-      history = [85, 92, 88, 105, 96, 110, 100];
       position = null;
       document.getElementById('gameover-modal').style.display = 'none';
       document.getElementById('news').innerText = '⚡ Новая сессия. Баланс восстановлен.';
@@ -1161,6 +1463,7 @@
     }
 
     function openAdminModal() {
+      playSound('click');
       haptic('light');
       document.getElementById('admin-modal').style.display = 'flex';
       const input = document.getElementById('admin-code-input');
@@ -1172,12 +1475,12 @@
       document.getElementById('admin-modal').style.display = 'none';
     }
 
-    // ЧИТ-КОДЫ СОЗДАТЕЛЯ
     function submitAdminCode() {
       const input = document.getElementById('admin-code-input');
       const code = input.value.trim().toLowerCase();
 
       if (code === 'хочуденьги') {
+        playSound('win');
         haptic('success');
         cash += 100000;
         document.getElementById('news').innerText = '👑 ДОСТУП РАЗРЕШЕН: Зачислено +$100,000!';
@@ -1185,6 +1488,7 @@
         updateUI();
         saveGameState();
       } else if (code === 'хочу3000') {
+        playSound('win');
         haptic('success');
         cash += 3000;
         document.getElementById('news').innerText = '👑 ДОСТУП РАЗРЕШЕН: Зачислено +$3,000!';
@@ -1200,6 +1504,7 @@
         updateUI();
         document.getElementById('news').innerText = '👑 ЧИТ-КОД: $1,000,000 готов для Эмиграции!';
       } else {
+        playSound('loss');
         haptic('error');
         alert('Неверный код доступа!');
         input.value = '';
@@ -1210,6 +1515,7 @@
       if (confirm('Сбросить весь баланс, престиж и начать заново?')) {
         localStorage.removeItem('finsim_save_data');
         prestigeLevel = 0;
+        skills = { judge: false, leverage: false, mixer: false };
         restartGame();
         closeAdminModal();
       }
