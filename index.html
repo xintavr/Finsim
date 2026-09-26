@@ -58,6 +58,7 @@
       border-radius: 12px;
     }
 
+    /* Шапка */
     .header {
       display: flex;
       justify-content: space-between;
@@ -88,7 +89,7 @@
 
     .val-balance {
       font-family: var(--font-mono);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: #fff;
     }
@@ -103,7 +104,8 @@
 
     .header-btns {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      align-items: center;
     }
     .btn-icon {
       background: rgba(255, 255, 255, 0.06);
@@ -111,8 +113,18 @@
       color: var(--text-main);
       padding: 6px 8px;
       border-radius: 8px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+    .btn-venture-nav {
+      background: linear-gradient(135deg, rgba(181, 55, 242, 0.25), rgba(0, 210, 255, 0.15));
+      border: 1px solid var(--purple);
+      color: #df9bff;
+      font-weight: 800;
     }
     .btn-admin {
       background: rgba(255, 208, 0, 0.12);
@@ -423,21 +435,22 @@
       cursor: pointer;
     }
 
+    /* Модалки */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 20px;
+      padding: 16px;
     }
     .modal-content {
       width: 100%;
-      max-width: 320px;
-      padding: 20px;
+      max-width: 340px;
+      padding: 18px;
       border-radius: 16px;
       background: #12161f;
       display: flex;
@@ -463,20 +476,72 @@
       border-radius: 8px;
       font-weight: 700;
     }
-    .gameover-box {
-      border: 2px solid var(--red);
-      animation: siren 1.4s infinite;
+
+    /* Карточки стартапов в окне Венчура */
+    .venture-card {
+      background: rgba(22, 27, 34, 0.75);
+      border: 1px solid var(--card-border);
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
     }
-    @keyframes siren {
-      0% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.4); }
-      50% { box-shadow: 0 0 50px rgba(0, 210, 255, 0.5); }
-      100% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.4); }
+    .venture-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .venture-name { font-size: 0.85rem; font-weight: 700; color: #fff; }
+    .venture-tag {
+      font-size: 0.65rem;
+      background: rgba(181, 55, 242, 0.2);
+      color: #df9bff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .venture-odds {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      display: flex;
+      justify-content: space-between;
+    }
+    .btn-invest {
+      background: linear-gradient(135deg, #1b3a2f, #10261f);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-invest:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Активное IPO в окне Венчура */
+    .active-ipo-box {
+      background: radial-gradient(circle at 50% 0%, rgba(181, 55, 242, 0.25), rgba(18, 24, 34, 0.9));
+      border: 1px solid var(--purple);
+      padding: 12px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 0 20px rgba(181, 55, 242, 0.25);
     }
   </style>
 </head>
 <body>
 
-  <!-- Шапка -->
+  <!-- Шапка с кнопкой 🚀 IPO в выделенном месте -->
   <div class="glass header">
     <div>
       <div style="display: flex; align-items: center; gap: 6px;">
@@ -486,6 +551,7 @@
       <div class="val-balance" id="balance">$10,000</div>
     </div>
     <div class="header-btns">
+      <button class="btn-icon btn-venture-nav" id="venture-nav-btn" onclick="openVentureModal()">🚀 IPO</button>
       <button class="btn-icon" id="sound-btn" onclick="toggleSound()">🔊 Вкл</button>
       <button class="btn-icon btn-admin" onclick="openAdminModal()">👑 Админ</button>
     </div>
@@ -642,7 +708,7 @@
     </div>
   </div>
 
-  <!-- Черный PR и манипуляции (Лимит: 1 раз за сделку, 8% риск срыва) -->
+  <!-- Черный PR и манипуляции -->
   <div class="section-title" style="margin-top: 4px;">Инструменты влияния (Black Ops)</div>
   <div class="grid-2">
     <button class="btn-black-ops" onclick="manipulate('HYPE')">
@@ -671,6 +737,49 @@
   <button class="btn-prestige" id="btn-prestige-action" style="display: none;" onclick="triggerPrestigeModal()">
     ✈️ Эмиграция в Дубай (Цель: $1,000,000 достигнута!)
   </button>
+
+  <!-- ОКНО ВЕНЧУРНЫХ СТАРТАПОВ И IPO -->
+  <div class="modal-overlay" id="venture-modal">
+    <div class="modal-content" style="border: 1px solid var(--purple); max-height: 85vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: #df9bff; font-size: 1.05rem;">🚀 Венчур & IPO</h3>
+        <button style="background: transparent; color: var(--text-muted); font-size: 1.1rem; padding: 4px;" onclick="closeVentureModal()">✕</button>
+      </div>
+
+      <div style="font-size: 0.72rem; color: var(--text-muted); display: flex; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 6px 10px; border-radius: 6px;">
+        <span>Обновление списка:</span>
+        <b id="venture-refresh-timer" style="color: var(--blue); font-family: var(--font-mono);">05:00</b>
+      </div>
+
+      <!-- Активное IPO (если есть инвестиция) -->
+      <div class="active-ipo-box" id="active-ipo-box" style="display: none;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <b id="ipo-active-name" style="color: #fff;">Стартап</b>
+          <span style="color: var(--yellow); font-family: var(--font-mono);">⏱️ <b id="ipo-timer">60s</b></span>
+        </div>
+        <div class="trade-timer-bar">
+          <div class="trade-timer-fill" id="ipo-timer-fill" style="background: var(--purple);"></div>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--text-muted);">
+          Инвестировано: <b id="ipo-active-cost" style="color: #fff; font-family: var(--font-mono);">$0</b>. Идет подготовка к листингу на бирже...
+        </div>
+      </div>
+
+      <!-- Список доступных стартапов -->
+      <div id="venture-list" style="display: flex; flex-direction: column; gap: 8px;">
+        <!-- Заполняется динамически -->
+      </div>
+
+      <div style="font-size: 0.65rem; color: #8b949e; line-height: 1.3; text-align: left; padding: 4px;">
+        ℹ️ <b>Шансы при IPO (через 1 мин):</b><br>
+        🦄 <b>5%</b> — Единорог (x10 выплата)<br>
+        📈 <b>35%</b> — Успешный листинг (x2 выплата)<br>
+        💥 <b>60%</b> — Банкротство ($0)
+      </div>
+
+      <button style="background: #21262d; color: var(--text-muted); padding: 8px; border-radius: 8px; font-size: 0.8rem;" onclick="closeVentureModal()">Закрыть</button>
+    </div>
+  </div>
 
   <!-- GAME OVER МОДАЛКА -->
   <div class="modal-overlay" id="gameover-modal" style="z-index: 2000; background: rgba(5, 7, 10, 0.95);">
@@ -822,25 +931,43 @@
       { open: 101, high: 103, low: 99, close: 100 }
     ];
 
-    let position = null; // { type, entryPrice, bet, leverage, timeLeft, usedOps: { HYPE: bool, PANIC: bool, WHALE: bool, BRIBE: bool } }
+    let position = null;
     let isGameOver = false;
     let momentum = 0;
 
-    let skillsExpiry = {
-      judge: 0,
-      leverage: 0,
-      mixer: 0
-    };
-
-    let biz = {
-      crypto: false,
-      coffee: false,
-      fund: false
-    };
+    let skillsExpiry = { judge: 0, leverage: 0, mixer: 0 };
+    let biz = { crypto: false, coffee: false, fund: false };
 
     let nextSwanTime = Date.now() + (Math.random() * (900 - 480) + 480) * 1000;
     let isSwanActive = false;
     let swanTimeLeft = 0;
+
+    // --- ВЕНЧУРНЫЕ СТАРТАПЫ И IPO ---
+    const STARTUP_NAMES = [
+      { name: "🧠 NeuralBrain AI", tag: "Нейросети" },
+      { name: "⚡ QuantumPay DEX", tag: "Крипто-Финтех" },
+      { name: "🛸 SkyDrive Aero", tag: "Аэротакси" },
+      { name: "🧬 NanoGen Biotech", tag: "Биоинженерия" },
+      { name: "🛰️ StarMesh Global", tag: "Спутники" },
+      { name: "🔋 FusionCore Power", tag: "Зеленая Энергия" },
+      { name: "🤖 CyberRobotics", tag: "Роботы" },
+      { name: "🛡️ DarkShield Cyber", tag: "Кибербезопасность" }
+    ];
+
+    let ventureStartups = [];
+    let nextVentureRefresh = Date.now() + 300 * 1000; // Раз в 5 минут
+    let activeIPO = null; // { name, cost, endTime }
+
+    function generateVentureStartups() {
+      const shuffled = [...STARTUP_NAMES].sort(() => 0.5 - Math.random());
+      ventureStartups = shuffled.slice(0, 3).map((item, idx) => ({
+        id: idx + 1,
+        name: item.name,
+        tag: item.tag,
+        // Сумма от $8,000 до $95,000 (не выше 100к)
+        cost: Math.floor(Math.random() * 88 + 8) * 1000
+      }));
+    }
 
     function isSkillActive(type) {
       return Date.now() < (skillsExpiry[type] || 0);
@@ -848,18 +975,9 @@
 
     function saveGameState() {
       const data = {
-        prestigeLevel,
-        cash,
-        secRisk,
-        price,
-        candles,
-        position,
-        isGameOver,
-        skillsExpiry,
-        biz,
-        chartMode,
-        currentLeverage,
-        nextSwanTime
+        prestigeLevel, cash, secRisk, price, candles, position, isGameOver,
+        skillsExpiry, biz, chartMode, currentLeverage, nextSwanTime,
+        ventureStartups, nextVentureRefresh, activeIPO
       };
       localStorage.setItem('finsim_save_data', JSON.stringify(data));
     }
@@ -873,7 +991,7 @@
           if (typeof d.cash === 'number') cash = d.cash;
           if (typeof d.secRisk === 'number') secRisk = d.secRisk;
           if (typeof d.price === 'number') price = d.price;
-          if (Array.isArray(d.candles) && d.candles.length > 2) candles = d.candles;
+          if (Array.isArray(d.candles)) candles = d.candles;
           if (d.position) position = d.position;
           if (typeof d.isGameOver === 'boolean') isGameOver = d.isGameOver;
           if (d.skillsExpiry) skillsExpiry = d.skillsExpiry;
@@ -881,9 +999,15 @@
           if (d.chartMode) chartMode = d.chartMode;
           if (d.currentLeverage) currentLeverage = d.currentLeverage;
           if (typeof d.nextSwanTime === 'number') nextSwanTime = d.nextSwanTime;
+          if (Array.isArray(d.ventureStartups) && d.ventureStartups.length > 0) ventureStartups = d.ventureStartups;
+          if (typeof d.nextVentureRefresh === 'number') nextVentureRefresh = d.nextVentureRefresh;
+          if (d.activeIPO) activeIPO = d.activeIPO;
         }
       } catch (e) {
         console.error('Ошибка загрузки данных:', e);
+      }
+      if (!ventureStartups || ventureStartups.length === 0) {
+        generateVentureStartups();
       }
     }
 
@@ -952,7 +1076,6 @@
       haptic('medium');
 
       const tenMinutes = 10 * 60 * 1000;
-
       if (type === 'judge') {
         if (cash < 30000) return alert('Нужно $30,000!');
         cash -= 30000;
@@ -993,7 +1116,6 @@
       saveGameState();
     }
 
-    // НОВАЯ ЭКОНОМИКА БИЗНЕСА: Кофейни +66/с, Хедж-фонд +150/с
     function getPassivePerSec() {
       let income = 0;
       if (biz.crypto) income += 10;
@@ -1006,7 +1128,103 @@
       const sec = Math.max(0, Math.ceil(ms / 1000));
       const m = Math.floor(sec / 60);
       const s = sec % 60;
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    // --- МОДАЛЬНОЕ ОКНО ВЕНЧУРА & IPO ---
+    function openVentureModal() {
+      playSound('click');
+      haptic('light');
+      renderVentureList();
+      document.getElementById('venture-modal').style.display = 'flex';
+    }
+
+    function closeVentureModal() {
+      document.getElementById('venture-modal').style.display = 'none';
+    }
+
+    function renderVentureList() {
+      const listEl = document.getElementById('venture-list');
+      listEl.innerHTML = '';
+
+      ventureStartups.forEach((s) => {
+        const canAfford = cash >= s.cost;
+        const isBusy = activeIPO !== null;
+
+        const card = document.createElement('div');
+        card.className = 'venture-card';
+        card.innerHTML = `
+          <div class="venture-head">
+            <span class="venture-name">${s.name}</span>
+            <span class="venture-tag">${s.tag}</span>
+          </div>
+          <div class="venture-odds">
+            <span>Раунд финансирования:</span>
+            <b style="color: #fff;">$${s.cost.toLocaleString()}</b>
+          </div>
+          <button class="btn-invest" ${(!canAfford || isBusy) ? 'disabled' : ''} onclick="investInStartup(${s.id})">
+            ${isBusy ? 'Идет другое IPO...' : (!canAfford ? 'Недостаточно денег' : `Инвестировать $${s.cost.toLocaleString()}`)}
+          </button>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function investInStartup(id) {
+      if (activeIPO) return alert('У вас уже идет выход на IPO одного стартапа! Дождитесь завершения 1 минуты.');
+      const s = ventureStartups.find(x => x.id === id);
+      if (!s) return;
+      if (cash < s.cost) return alert('Недостаточно средств!');
+
+      playSound('click');
+      haptic('medium');
+      cash -= s.cost;
+
+      // 60 секунд до IPO
+      activeIPO = {
+        name: s.name,
+        cost: s.cost,
+        endTime: Date.now() + 60 * 1000
+      };
+
+      document.getElementById('news').innerText = `🚀 Инвестировано $${s.cost.toLocaleString()} в ${s.name}! До IPO осталась 1 минута.`;
+      updateUI();
+      renderVentureList();
+      saveGameState();
+    }
+
+    function resolveIPO() {
+      const rand = Math.random();
+      const cost = activeIPO.cost;
+      const name = activeIPO.name;
+
+      if (rand < 0.05) {
+        // 5% Единорог (x10)
+        const payout = cost * 10;
+        cash += payout;
+        lastProfitableTrade = payout;
+        playSound('win');
+        haptic('success');
+        document.getElementById('news').innerText = `🦄 МЕГА-ХАЙП! ${name} стал ЕДИНОРОГОМ на бирже! Выплата: +$${payout.toLocaleString()} (x10)!`;
+        document.getElementById('flex-share-btn').style.display = 'inline-flex';
+      } else if (rand < 0.40) {
+        // 35% Успех (x2)
+        const payout = cost * 2;
+        cash += payout;
+        playSound('win');
+        haptic('success');
+        document.getElementById('news').innerText = `📈 УСПЕШНОЕ IPO! ${name} удвоил оценку! Выплата: +$${payout.toLocaleString()} (x2)!`;
+      } else {
+        // 60% Провал ($0)
+        playSound('loss');
+        haptic('error');
+        document.getElementById('news').innerText = `💥 БАНКРОТСТВО! ${name} провалил IPO. Инвестиция сгорела.`;
+      }
+
+      activeIPO = null;
+      updateUI();
+      renderVentureList();
+      saveGameState();
     }
 
     function updateUI() {
@@ -1058,7 +1276,7 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      // Сделка
+      // Активная быстрая 20-сек сделка
       const tradeCard = document.getElementById('trade-card');
       const orderButtons = document.getElementById('order-buttons');
       const betPanel = document.getElementById('bet-panel');
@@ -1090,6 +1308,24 @@
         orderButtons.style.pointerEvents = 'auto';
         betPanel.style.opacity = '1';
         betPanel.style.pointerEvents = 'auto';
+      }
+
+      // Обновление статуса IPO в шапке и окне
+      const vNavBtn = document.getElementById('venture-nav-btn');
+      const ipoBox = document.getElementById('active-ipo-box');
+
+      if (activeIPO) {
+        const remainingMs = Math.max(0, activeIPO.endTime - Date.now());
+        const remainingSec = Math.ceil(remainingMs / 1000);
+        vNavBtn.innerText = `🚀 IPO (${remainingSec}s)`;
+        ipoBox.style.display = 'flex';
+        document.getElementById('ipo-active-name').innerText = activeIPO.name;
+        document.getElementById('ipo-active-cost').innerText = '$' + activeIPO.cost.toLocaleString();
+        document.getElementById('ipo-timer').innerText = remainingSec + 's';
+        document.getElementById('ipo-timer-fill').style.width = ((remainingSec / 60) * 100) + '%';
+      } else {
+        vNavBtn.innerText = '🚀 IPO';
+        ipoBox.style.display = 'none';
       }
     }
 
@@ -1264,6 +1500,7 @@
 
       if (secRisk > 0 && Math.random() < 0.15) secRisk = Math.max(0, secRisk - 1);
 
+      // Таймер 20-сек сделки
       if (position) {
         position.timeLeft--;
         if (position.timeLeft <= 5 && position.timeLeft > 0) {
@@ -1271,6 +1508,24 @@
           haptic('light');
         }
         if (position.timeLeft <= 0) resolveTrade();
+      }
+
+      // ТАЙМЕР ВЕНЧУРА & IPO
+      if (Date.now() >= nextVentureRefresh) {
+        generateVentureStartups();
+        nextVentureRefresh = Date.now() + 300 * 1000;
+        renderVentureList();
+      }
+      const vRemain = Math.max(0, nextVentureRefresh - Date.now());
+      document.getElementById('venture-refresh-timer').innerText = formatTimeRemaining(vRemain);
+
+      if (activeIPO) {
+        if (Date.now() >= activeIPO.endTime) {
+          resolveIPO();
+        } else {
+          const secLeft = Math.ceil((activeIPO.endTime - Date.now()) / 1000);
+          if (secLeft <= 5) playSound('tick');
+        }
       }
 
       if (secRisk >= 100) {
@@ -1321,12 +1576,7 @@
         bet: bet,
         leverage: currentLeverage,
         timeLeft: 20,
-        usedOps: {
-          HYPE: false,
-          PANIC: false,
-          WHALE: false,
-          BRIBE: false
-        }
+        usedOps: { HYPE: false, PANIC: false, WHALE: false, BRIBE: false }
       };
 
       document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} (x${currentLeverage}) открыт по курсу $${price.toFixed(2)}!`;
@@ -1363,11 +1613,9 @@
       saveGameState();
     }
 
-    // МАНИПУЛЯЦИИ: ЛИМИТ 1 РАЗ ЗА СДЕЛКУ + 8% ШАНС СРЫВА
     function manipulate(action) {
       if (isGameOver) return;
 
-      // Проверка лимита: строго 1 раз за сделку
       if (position) {
         if (position.usedOps && position.usedOps[action]) {
           return alert('Этот инструмент уже использован в текущей сделке! Лимит: 1 раз за сделку.');
@@ -1385,7 +1633,7 @@
           playSound('loss');
           haptic('error');
           secRisk += Math.round(8 * riskMod);
-          document.getElementById('news').innerText = '❌ Срыв хайпа: Главред издания испугался репутационного иска и заблокировал публикацию! Деньги сгорели.';
+          document.getElementById('news').innerText = '❌ Срыв хайпа: Главред испугался репутационного иска! Деньги сгорели.';
           updateUI();
           saveGameState();
           return;
@@ -1395,7 +1643,7 @@
         haptic('light');
         momentum += 25 + Math.random() * 20;
         secRisk += Math.round(15 * riskMod);
-        document.getElementById('news').innerText = '📢 СМИ выпустили хайп! Памп запущен!';
+        document.getElementById('news').innerText = '📢 СМИ раздули хайп! Памп запущен!';
 
       } else if (action === 'PANIC') {
         if (cash < 1500) return alert('Недостаточно денег!');
@@ -1406,7 +1654,7 @@
           playSound('loss');
           haptic('error');
           secRisk += Math.round(10 * riskMod);
-          document.getElementById('news').innerText = '❌ Срыв атаки: Юристы эмитента через суд заблокировали распространение компромата!';
+          document.getElementById('news').innerText = '❌ Срыв атаки: Суд заблокировал распространение компромата!';
           updateUI();
           saveGameState();
           return;
@@ -1427,7 +1675,7 @@
           playSound('loss');
           haptic('error');
           secRisk += Math.round(15 * riskMod);
-          document.getElementById('news').innerText = '❌ Срыв китов: Маркет-мейкер раскусил схему и перехватил ликвидность, синдикат отменил ордера!';
+          document.getElementById('news').innerText = '❌ Срыв китов: Маркет-мейкер перехватил ликвидность!';
           updateUI();
           saveGameState();
           return;
@@ -1448,7 +1696,7 @@
           playSound('loss');
           haptic('error');
           secRisk = Math.min(100, secRisk + Math.round(15 * riskMod));
-          document.getElementById('news').innerText = '❌ Срыв сделки: Инспектор оказался принципиальным агентом под прикрытием и отклонил взятку! Внимание SEC выросло!';
+          document.getElementById('news').innerText = '❌ Срыв сделки: Инспектор оказался под прикрытием! Внимание SEC выросло!';
           if (secRisk >= 100) triggerGameOver();
           updateUI();
           saveGameState();
@@ -1497,6 +1745,7 @@
       secRisk = 0;
       biz = { crypto: false, coffee: false, fund: false };
       position = null;
+      activeIPO = null;
       price = 100.0;
       document.getElementById('prestige-modal').style.display = 'none';
       document.getElementById('news').innerText = `🌴 ВЫ В ДУБАЕ! Стартовый капитал: $${cash.toLocaleString()}!`;
@@ -1523,6 +1772,7 @@
       biz = { crypto: false, coffee: false, fund: false };
       price = 100.0;
       position = null;
+      activeIPO = null;
       document.getElementById('gameover-modal').style.display = 'none';
       document.getElementById('news').innerText = '⚡ Новая сессия. Баланс восстановлен.';
       updateUI();
@@ -1584,6 +1834,7 @@
         localStorage.removeItem('finsim_save_data');
         prestigeLevel = 0;
         skillsExpiry = { judge: 0, leverage: 0, mixer: 0 };
+        activeIPO = null;
         restartGame();
         closeAdminModal();
       }
