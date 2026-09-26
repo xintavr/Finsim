@@ -629,40 +629,40 @@
     <div class="item-card">
       <div class="item-info">
         <h4>☕ Сеть кофеен (Отмыв)</h4>
-        <p>+$140/сек | Снижает внимание SEC</p>
+        <p>+$66/сек | Снижает внимание SEC</p>
       </div>
       <button class="btn-buy-item" id="btn-biz-2" onclick="buyBusiness(2)">$65,000</button>
     </div>
     <div class="item-card">
       <div class="item-info">
         <h4>🏛️ Офшорный Хедж-Фонд</h4>
-        <p>+$450/сек | Для крупных игроков</p>
+        <p>+$150/сек | Для крупных игроков</p>
       </div>
       <button class="btn-buy-item" id="btn-biz-3" onclick="buyBusiness(3)">$250,000</button>
     </div>
   </div>
 
-  <!-- Черный PR и манипуляции -->
+  <!-- Черный PR и манипуляции (Лимит: 1 раз за сделку, 8% риск срыва) -->
   <div class="section-title" style="margin-top: 4px;">Инструменты влияния (Black Ops)</div>
   <div class="grid-2">
     <button class="btn-black-ops" onclick="manipulate('HYPE')">
       <div class="ops-title">📢 Купить хайп в СМИ</div>
-      <div class="ops-cost">-$1,500 | +SEC | 8% риск срыва</div>
-      <div class="ops-effect">🚀 Макс 2 за сделку</div>
+      <div class="ops-cost">-$1,500 | 8% срыв | 1 за сделку</div>
+      <div class="ops-effect">🚀 Взрывной памп курса</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('PANIC')">
       <div class="ops-title">📉 Вброс компромата</div>
-      <div class="ops-cost">-$1,500 | +SEC</div>
-      <div class="ops-effect">💥 Макс 2 за сделку</div>
+      <div class="ops-cost">-$1,500 | 8% срыв | 1 за сделку</div>
+      <div class="ops-effect">💥 Жесткий дамп котировок</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('WHALE')">
       <div class="ops-title">🐋 Рейд китов</div>
-      <div class="ops-cost">-$3,000 | +SEC</div>
+      <div class="ops-cost">-$3,000 | 8% срыв | 1 за сделку</div>
       <div class="ops-effect">⚡ Мега-свеча вверх</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('BRIBE')">
       <div class="ops-title">🤝 Замять аудит</div>
-      <div class="ops-cost">-$2,000 | 0% риска</div>
+      <div class="ops-cost">-$2,000 | 8% срыв | 1 за сделку</div>
       <div class="ops-effect">-30% к вниманию SEC</div>
     </button>
   </div>
@@ -822,7 +822,7 @@
       { open: 101, high: 103, low: 99, close: 100 }
     ];
 
-    let position = null;
+    let position = null; // { type, entryPrice, bet, leverage, timeLeft, usedOps: { HYPE: bool, PANIC: bool, WHALE: bool, BRIBE: bool } }
     let isGameOver = false;
     let momentum = 0;
 
@@ -993,12 +993,12 @@
       saveGameState();
     }
 
-    // МАЙНИНГ-ОТЕЛЬ ТЕПЕРЬ ДАЕТ +10 В СЕКУНДУ
+    // НОВАЯ ЭКОНОМИКА БИЗНЕСА: Кофейни +66/с, Хедж-фонд +150/с
     function getPassivePerSec() {
       let income = 0;
       if (biz.crypto) income += 10;
-      if (biz.coffee) income += 140;
-      if (biz.fund) income += 450;
+      if (biz.coffee) income += 66;
+      if (biz.fund) income += 150;
       return income;
     }
 
@@ -1321,8 +1321,12 @@
         bet: bet,
         leverage: currentLeverage,
         timeLeft: 20,
-        hypeCount: 0,
-        panicCount: 0
+        usedOps: {
+          HYPE: false,
+          PANIC: false,
+          WHALE: false,
+          BRIBE: false
+        }
       };
 
       document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} (x${currentLeverage}) открыт по курсу $${price.toFixed(2)}!`;
@@ -1359,28 +1363,29 @@
       saveGameState();
     }
 
+    // МАНИПУЛЯЦИИ: ЛИМИТ 1 РАЗ ЗА СДЕЛКУ + 8% ШАНС СРЫВА
     function manipulate(action) {
       if (isGameOver) return;
+
+      // Проверка лимита: строго 1 раз за сделку
+      if (position) {
+        if (position.usedOps && position.usedOps[action]) {
+          return alert('Этот инструмент уже использован в текущей сделке! Лимит: 1 раз за сделку.');
+        }
+      }
 
       const riskMod = isSkillActive('judge') ? 0.65 : 1.0;
 
       if (action === 'HYPE') {
-        if (position) {
-          if (position.hypeCount >= 2) {
-            return alert('Лимит исчерпан: максимум 2 хайпа в СМИ за сделку!');
-          }
-        }
-
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
-
-        if (position) position.hypeCount++;
+        if (position) position.usedOps[action] = true;
 
         if (Math.random() < 0.08) {
           playSound('loss');
           haptic('error');
           secRisk += Math.round(8 * riskMod);
-          document.getElementById('news').innerText = '❌ СМИ отклонили материал: "Репутационные риски слишком высоки!". Деньги потрачены впустую.';
+          document.getElementById('news').innerText = '❌ Срыв хайпа: Главред издания испугался репутационного иска и заблокировал публикацию! Деньги сгорели.';
           updateUI();
           saveGameState();
           return;
@@ -1390,29 +1395,44 @@
         haptic('light');
         momentum += 25 + Math.random() * 20;
         secRisk += Math.round(15 * riskMod);
-        document.getElementById('news').innerText = `📢 СМИ выпустили хайп! Памп запущен! ${position ? `[${position.hypeCount}/2]` : ''}`;
+        document.getElementById('news').innerText = '📢 СМИ выпустили хайп! Памп запущен!';
 
       } else if (action === 'PANIC') {
-        if (position) {
-          if (position.panicCount >= 2) {
-            return alert('Лимит исчерпан: максимум 2 компромата за сделку!');
-          }
-        }
-
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
+        if (position) position.usedOps[action] = true;
 
-        if (position) position.panicCount++;
+        if (Math.random() < 0.08) {
+          playSound('loss');
+          haptic('error');
+          secRisk += Math.round(10 * riskMod);
+          document.getElementById('news').innerText = '❌ Срыв атаки: Юристы эмитента через суд заблокировали распространение компромата!';
+          updateUI();
+          saveGameState();
+          return;
+        }
 
         playSound('click');
         haptic('light');
         momentum -= (25 + Math.random() * 20);
         secRisk += Math.round(20 * riskMod);
-        document.getElementById('news').innerText = `📉 Вброшен компромат: слив котировок! ${position ? `[${position.panicCount}/2]` : ''}`;
+        document.getElementById('news').innerText = '📉 Вброшен компромат: слив котировок!';
 
       } else if (action === 'WHALE') {
         if (cash < 3000) return alert('Недостаточно денег!');
         cash -= 3000;
+        if (position) position.usedOps[action] = true;
+
+        if (Math.random() < 0.08) {
+          playSound('loss');
+          haptic('error');
+          secRisk += Math.round(15 * riskMod);
+          document.getElementById('news').innerText = '❌ Срыв китов: Маркет-мейкер раскусил схему и перехватил ликвидность, синдикат отменил ордера!';
+          updateUI();
+          saveGameState();
+          return;
+        }
+
         playSound('click');
         haptic('light');
         momentum += (45 + Math.random() * 30);
@@ -1422,6 +1442,19 @@
       } else if (action === 'BRIBE') {
         if (cash < 2000) return alert('Недостаточно денег!');
         cash -= 2000;
+        if (position) position.usedOps[action] = true;
+
+        if (Math.random() < 0.08) {
+          playSound('loss');
+          haptic('error');
+          secRisk = Math.min(100, secRisk + Math.round(15 * riskMod));
+          document.getElementById('news').innerText = '❌ Срыв сделки: Инспектор оказался принципиальным агентом под прикрытием и отклонил взятку! Внимание SEC выросло!';
+          if (secRisk >= 100) triggerGameOver();
+          updateUI();
+          saveGameState();
+          return;
+        }
+
         playSound('click');
         haptic('light');
         secRisk = Math.max(0, secRisk - 30);
@@ -1561,4 +1594,4 @@
     if (isGameOver) triggerGameOver();
   </script>
 </body>
-    </html>
+</html>
