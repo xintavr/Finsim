@@ -3,287 +3,662 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FinSim TG Edition</title>
+  <title>FinSim Cyber Terminal</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --border: #30363d;
-      --green: #2ea043;
-      --red: #da3633;
-      --blue: #58a6ff;
-      --yellow: #d29922;
-      --text: #c9d1d9;
+      --bg: #090c10;
+      --card-bg: rgba(22, 27, 34, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --green: #00ff87;
+      --green-glow: rgba(0, 255, 135, 0.25);
+      --red: #ff3366;
+      --red-glow: rgba(255, 51, 102, 0.25);
+      --blue: #00d2ff;
+      --yellow: #ffd000;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --font-mono: "SF Mono", "Fira Code", "Courier New", monospace;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    
-    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); }
-    .val { font-size: 1.15rem; font-weight: bold; color: #fff; }
-    
-    .btn-admin-top { background: #21262d; border: 1px solid #8b949e; color: #ffd700; padding: 6px 10px; font-size: 0.75rem; border-radius: 6px; cursor: pointer; }
 
-    .risk-bar-container { background: var(--card); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); }
-    .risk-title { font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .bar { height: 8px; width: 100%; background: #21262d; border-radius: 4px; overflow: hidden; }
-    .bar-fill { height: 100%; width: 0%; background: var(--yellow); transition: width 0.3s; }
-    
-    canvas { background: var(--card); border: 1px solid var(--border); border-radius: 10px; width: 100%; height: 160px; }
-    
-    .news-box { background: #0b0e14; border-left: 3px solid var(--blue); padding: 8px 10px; font-size: 0.85rem; border-radius: 4px; min-height: 40px; display: flex; align-items: center; }
-    
-    .section-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8b949e; margin-top: 4px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    
-    button { background: var(--card); color: #fff; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
-    button:active { transform: scale(0.98); opacity: 0.9; }
-    .btn-buy { background: var(--green); border: none; }
-    .btn-sell { background: var(--red); border: none; }
-    .btn-close { grid-column: span 2; background: #21262d; }
-    .btn-action { font-size: 0.8rem; padding: 10px 6px; }
-    .btn-action span { font-size: 0.7rem; color: #8b949e; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* Окно Админ-панели */
+    body {
+      background: radial-gradient(circle at 50% 0%, #161f30 0%, var(--bg) 70%);
+      color: var(--text-main);
+      padding: 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Карточки со стеклянным эффектом */
+    .glass {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+    }
+
+    /* Шапка */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+    .val-balance {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .btn-admin {
+      background: linear-gradient(135deg, rgba(255, 208, 0, 0.15), rgba(255, 208, 0, 0.05));
+      border: 1px solid rgba(255, 208, 0, 0.4);
+      color: var(--yellow);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Шкала SEC */
+    .risk-card {
+      padding: 10px 14px;
+    }
+    .risk-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .risk-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .risk-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+      transition: width 0.4s ease, background 0.4s;
+    }
+
+    /* Терминал Графика */
+    .chart-card {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ticker-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .stock-symbol {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .stock-price-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stock-price {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+    canvas {
+      width: 100%;
+      height: 150px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Инфо-лента */
+    .news-box {
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 3px solid var(--blue);
+      background: rgba(0, 210, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    /* Секции и Кнопки */
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    button {
+      outline: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.08s ease, filter 0.15s ease;
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-trade {
+      padding: 14px 10px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.95rem;
+    }
+    .btn-long {
+      background: linear-gradient(180deg, #1b3a2f, #10261f);
+      border: 1px solid var(--green);
+      color: var(--green);
+      box-shadow: 0 4px 15px var(--green-glow);
+    }
+    .btn-short {
+      background: linear-gradient(180deg, #3d1b26, #261118);
+      border: 1px solid var(--red);
+      color: var(--red);
+      box-shadow: 0 4px 15px var(--red-glow);
+    }
+    .btn-subtitle {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      font-family: var(--font-mono);
+      font-weight: normal;
+    }
+
+    /* Панель активной сделки */
+    .pos-card {
+      display: none;
+      padding: 12px;
+      border: 1px solid var(--blue);
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .pos-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .btn-close-pos {
+      width: 100%;
+      background: #21262d;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    /* Карточки черного рынка */
+    .btn-black-ops {
+      background: rgba(22, 27, 34, 0.6);
+      border: 1px solid var(--card-border);
+      padding: 10px 8px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      text-align: left;
+    }
+    .btn-black-ops:active {
+      border-color: var(--yellow);
+    }
+    .ops-title {
+      font-size: 0.8rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .ops-cost {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+    .ops-effect {
+      font-size: 0.65rem;
+      color: var(--blue);
+    }
+
+    /* Модальное окно */
     .modal-overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(3px);
-      justify-content: center;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
       align-items: center;
+      justify-content: center;
       z-index: 1000;
+      padding: 20px;
     }
-    .modal {
-      background: var(--card);
-      border: 1px solid #ffd700;
-      border-radius: 12px;
-      padding: 16px;
-      width: 85%;
+    .modal-content {
+      width: 100%;
       max-width: 320px;
+      padding: 20px;
+      border-radius: 16px;
+      background: #12161f;
+      border: 1px solid var(--yellow);
+      box-shadow: 0 0 30px rgba(255, 208, 0, 0.2);
       display: flex;
       flex-direction: column;
       gap: 12px;
-    }
-    .modal h3 { color: #ffd700; font-size: 1rem; text-align: center; }
-    .modal input {
-      background: #0d1117;
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      outline: none;
       text-align: center;
     }
-    .modal input:focus { border-color: var(--blue); }
-    .modal-buttons { display: flex; gap: 8px; }
-    .btn-modal-submit { background: var(--green); flex: 1; border: none; padding: 8px; font-size: 0.85rem; }
-    .btn-modal-cancel { background: #21262d; flex: 1; border: 1px solid var(--border); padding: 8px; font-size: 0.85rem; }
+    .modal-input {
+      background: #090c10;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      text-align: center;
+      outline: none;
+      font-family: var(--font-mono);
+    }
+    .modal-input:focus { border-color: var(--yellow); }
+    .btn-modal-action {
+      background: var(--yellow);
+      color: #000;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .btn-modal-reset {
+      background: rgba(255, 51, 102, 0.15);
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
+  <!-- Шапка -->
+  <div class="glass header">
     <div>
-      <div style="font-size: 0.75rem; color: #8b949e;">КАПИТАЛ</div>
-      <div class="val" id="balance">$10,000</div>
+      <div class="badge-live">Live Market</div>
+      <div class="val-balance" id="balance">$10,000</div>
     </div>
-    <button class="btn-admin-top" onclick="openAdminModal()">👑 Админ</button>
-    <div style="text-align: right;">
-      <div style="font-size: 0.75rem; color: #8b949e;">ПОЗИЦИЯ</div>
-      <div class="val" id="position">Нет</div>
-    </div>
+    <button class="btn-admin" onclick="openAdminModal()">👑 Админ</button>
   </div>
 
-  <div class="risk-bar-container">
-    <div class="risk-title">
-      <span>ВНИМАНИЕ РЕГУЛЯТОРА (SEC RISK)</span>
-      <span id="risk-val" style="color: var(--yellow)">0%</span>
+  <!-- Шкала SEC -->
+  <div class="glass risk-card">
+    <div class="risk-header">
+      <span>ВНИМАНИЕ РЕГУЛЯТОРА (SEC HEAT)</span>
+      <span id="risk-val" style="font-family: var(--font-mono); color: var(--blue);">0%</span>
     </div>
-    <div class="bar">
-      <div class="bar-fill" id="risk-fill"></div>
+    <div class="risk-track">
+      <div class="risk-fill" id="risk-fill"></div>
     </div>
   </div>
 
-  <canvas id="chart"></canvas>
-
-  <div class="news-box" id="news">⚡ Рынок спокоен. Ожидание открытых торгов...</div>
-
-  <div class="section-title">Биржевой ордер (TITAN CORP: $<span id="stock-price">100.0</span>)</div>
-  <div class="grid-2">
-    <button class="btn-buy" onclick="openPosition('LONG')">LONG (В рост)</button>
-    <button class="btn-sell" onclick="openPosition('SHORT')">SHORT (В падение)</button>
-    <button class="btn-close" id="close-btn" style="display:none;" onclick="closePosition()">Закрыть сделку (<span id="pnl">+$0</span>)</button>
-  </div>
-
-  <div class="section-title">Манипуляции и черный PR</div>
-  <div class="grid-2">
-    <button class="btn-action" onclick="manipulate('HYPE')">
-      📢 Купить хайп в СМИ
-      <span>-$1,500 | +Курс | +15% SEC</span>
-    </button>
-    <button class="btn-action" onclick="manipulate('PANIC')">
-      📉 Вбросить компромат
-      <span>-$1,500 | -Курс | +20% SEC</span>
-    </button>
-    <button class="btn-action" onclick="manipulate('WHALE')">
-      🐋 Атака китов
-      <span>-$3,000 | Хаос | +35% SEC</span>
-    </button>
-    <button class="btn-action" onclick="manipulate('BRIBE')">
-      🤝 Замять аудит
-      <span>-$2,000 | -30% SEC</span>
-    </button>
-  </div>
-
-  <!-- Всплывающее окно Админа -->
-  <div class="modal-overlay" id="admin-modal">
-    <div class="modal">
-      <h3>👑 Доступ Создателя</h3>
-      <input type="text" id="admin-code-input" placeholder="Введите пароль..." autocomplete="off">
-      <div class="modal-buttons">
-        <button class="btn-modal-submit" onclick="submitAdminCode()">Применить</button>
-        <button class="btn-modal-cancel" onclick="closeAdminModal()">Отмена</button>
+  <!-- График курса -->
+  <div class="glass chart-card">
+    <div class="ticker-row">
+      <span class="stock-symbol">$TITAN / USD</span>
+      <div class="stock-price-box">
+        <span class="stock-price" id="stock-price">100.00</span>
       </div>
+    </div>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <!-- Инфо-лента -->
+  <div class="news-box" id="news">⚡ Торговая сессия открыта. Данные синхронизированы.</div>
+
+  <!-- Позиция (если открыта) -->
+  <div class="glass pos-card" id="pos-card">
+    <div class="pos-info">
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">ОРДЕР: </span>
+        <b id="pos-type" style="font-size: 0.85rem;">LONG</b>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">PNL: </span>
+        <b id="pos-pnl" style="font-family: var(--font-mono); font-size: 0.95rem;">+$0</b>
+      </div>
+    </div>
+    <button class="btn-close-pos" onclick="closePosition()">Закрыть сделку</button>
+  </div>
+
+  <!-- Кнопки Торговли -->
+  <div class="section-title">Быстрый ордер</div>
+  <div class="grid-2">
+    <button class="btn-trade btn-long" onclick="openPosition('LONG')">
+      ▲ LONG
+      <span class="btn-subtitle">Игра в рост</span>
+    </button>
+    <button class="btn-trade btn-short" onclick="openPosition('SHORT')">
+      ▼ SHORT
+      <span class="btn-subtitle">Игра на падение</span>
+    </button>
+  </div>
+
+  <!-- Черный PR и манипуляции -->
+  <div class="section-title">Инструменты влияния (Black Ops)</div>
+  <div class="grid-2">
+    <button class="btn-black-ops" onclick="manipulate('HYPE')">
+      <div class="ops-title">📢 Купить хайп в СМИ</div>
+      <div class="ops-cost">-$1,500 | +15% SEC</div>
+      <div class="ops-effect">+Резкий рост курса</div>
+    </button>
+    <button class="btn-black-ops" onclick="manipulate('PANIC')">
+      <div class="ops-title">📉 Вброс компромата</div>
+      <div class="ops-cost">-$1,500 | +20% SEC</div>
+      <div class="ops-effect">-Обвал котировок</div>
+    </button>
+    <button class="btn-black-ops" onclick="manipulate('WHALE')">
+      <div class="ops-title">🐋 Рейд китов</div>
+      <div class="ops-cost">-$3,000 | +35% SEC</div>
+      <div class="ops-effect">⚡ Экстремальный памп</div>
+    </button>
+    <button class="btn-black-ops" onclick="manipulate('BRIBE')">
+      <div class="ops-title">🤝 Замять аудит</div>
+      <div class="ops-cost">-$2,000 | 0% риска</div>
+      <div class="ops-effect">-30% к вниманию SEC</div>
+    </button>
+  </div>
+
+  <!-- Модальное окно Админа -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal-content">
+      <h3 style="color: var(--yellow); font-size: 1.05rem;">👑 Режим Создателя</h3>
+      <input type="text" class="modal-input" id="admin-code-input" placeholder="Введите пароль..." autocomplete="off">
+      <button class="btn-modal-action" onclick="submitAdminCode()">Применить</button>
+      <button class="btn-modal-reset" onclick="hardResetGame()">⚠️ Сбросить весь прогресс</button>
+      <button style="background: transparent; color: var(--text-muted); padding: 6px; font-size: 0.8rem;" onclick="closeAdminModal()">Закрыть</button>
     </div>
   </div>
 
   <script>
+    // Инициализация Telegram Web App
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.ready();
       window.Telegram.WebApp.expand();
     }
 
+    // Тактильная виброотдача
+    function haptic(type = 'light') {
+      try {
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+          if (type === 'success') window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+          else if (type === 'error') window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+          else window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+        }
+      } catch (e) {}
+    }
+
+    // Состояние игры
     let cash = 10000;
     let secRisk = 0;
     let price = 100.0;
-    let history = [100, 100, 100, 100, 100];
+    let history = [98, 99, 100, 101, 100];
     let position = null;
+
+    // --- СИСТЕМА СОХРАНЕНИЯ (LOCALSTORAGE) ---
+    function saveGameState() {
+      const data = { cash, secRisk, price, history, position };
+      localStorage.setItem('finsim_save_data', JSON.stringify(data));
+    }
+
+    function loadGameState() {
+      try {
+        const saved = localStorage.getItem('finsim_save_data');
+        if (saved) {
+          const d = JSON.parse(saved);
+          if (typeof d.cash === 'number') cash = d.cash;
+          if (typeof d.secRisk === 'number') secRisk = d.secRisk;
+          if (typeof d.price === 'number') price = d.price;
+          if (Array.isArray(d.history) && d.history.length > 2) history = d.history;
+          if (d.position) position = d.position;
+        }
+      } catch (e) {
+        console.error('Ошибка загрузки данных:', e);
+      }
+    }
+
+    // Загрузка при старте
+    loadGameState();
 
     const canvas = document.getElementById('chart');
     const ctx = canvas.getContext('2d');
 
     function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = 160;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.parentElement.clientWidth * dpr;
+      canvas.height = 150 * dpr;
+      ctx.scale(dpr, dpr);
     }
     resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     function updateUI() {
       document.getElementById('balance').innerText = '$' + Math.floor(cash).toLocaleString();
       document.getElementById('stock-price').innerText = price.toFixed(2);
-      
+
+      // Отрисовка риска
       const riskFill = document.getElementById('risk-fill');
       riskFill.style.width = secRisk + '%';
-      riskFill.style.background = secRisk > 70 ? 'var(--red)' : (secRisk > 40 ? 'var(--yellow)' : 'var(--blue)');
+      if (secRisk > 75) {
+        riskFill.style.background = 'var(--red)';
+        riskFill.style.boxShadow = '0 0 10px var(--red)';
+      } else if (secRisk > 40) {
+        riskFill.style.background = 'var(--yellow)';
+        riskFill.style.boxShadow = '0 0 10px var(--yellow)';
+      } else {
+        riskFill.style.background = 'var(--blue)';
+        riskFill.style.boxShadow = '0 0 10px var(--blue)';
+      }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      const closeBtn = document.getElementById('close-btn');
-      const posEl = document.getElementById('position');
+      // Отрисовка сделки
+      const posCard = document.getElementById('pos-card');
       if (position) {
+        posCard.style.display = 'block';
         const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
         const pnl = diff * position.size;
-        posEl.innerText = `${position.type} ($${Math.floor(pnl)})`;
-        posEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-        closeBtn.style.display = 'block';
-        document.getElementById('pnl').innerText = (pnl >= 0 ? '+' : '') + '$' + Math.floor(pnl);
+        const pnlEl = document.getElementById('pos-pnl');
+        pnlEl.innerText = (pnl >= 0 ? '+' : '') + '$' + Math.floor(pnl);
+        pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+        document.getElementById('pos-type').innerText = position.type;
+        document.getElementById('pos-type').style.color = position.type === 'LONG' ? 'var(--green)' : 'var(--red)';
       } else {
-        posEl.innerText = 'Нет';
-        posEl.style.color = '#fff';
-        closeBtn.style.display = 'none';
+        posCard.style.display = 'none';
       }
     }
 
+    // Отрисовка неонового графика
     function drawChart() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const min = Math.min(...history) * 0.95;
-      const max = Math.max(...history) * 1.05;
-      const step = canvas.width / (history.length - 1);
+      const w = canvas.width / (window.devicePixelRatio || 1);
+      const h = 150;
+      ctx.clearRect(0, 0, w, h);
+
+      const min = Math.min(...history) * 0.98;
+      const max = Math.max(...history) * 1.02;
+      const step = w / (history.length - 1);
+      const isUp = history[history.length - 1] >= history[0];
+      const strokeColor = isUp ? '#00ff87' : '#ff3366';
+
+      // Градиентная подложка
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, isUp ? 'rgba(0, 255, 135, 0.25)' : 'rgba(255, 51, 102, 0.25)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.beginPath();
-      ctx.strokeStyle = history[history.length - 1] >= history[0] ? '#2ea043' : '#da3633';
-      ctx.lineWidth = 2.5;
-
-      history.forEach((p, idx) => {
-        const y = canvas.height - ((p - min) / (max - min)) * (canvas.height - 20) - 10;
-        if (idx === 0) ctx.moveTo(0, y);
-        else ctx.lineTo(idx * step, y);
+      history.forEach((p, i) => {
+        const y = h - ((p - min) / (max - min)) * (h - 20) - 10;
+        if (i === 0) ctx.moveTo(0, y);
+        else ctx.lineTo(i * step, y);
       });
+
+      // Линия графика со свечением
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = strokeColor;
+      ctx.shadowBlur = 8;
       ctx.stroke();
+
+      // Заливка объема
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.fillStyle = grad;
+      ctx.shadowBlur = 0;
+      ctx.fill();
     }
 
+    // Игровой цикл котировок
     setInterval(() => {
-      const volatility = (Math.random() - 0.49) * 2.5;
-      price = Math.max(10, price + volatility);
+      const delta = (Math.random() - 0.49) * 2.2;
+      price = Math.max(10, price + delta);
       history.push(price);
       if (history.length > 25) history.shift();
 
-      if (secRisk > 0 && Math.random() < 0.3) secRisk = Math.max(0, secRisk - 2);
+      if (secRisk > 0 && Math.random() < 0.25) {
+        secRisk = Math.max(0, secRisk - 2);
+      }
 
+      // Облава регулятора при 100%
       if (secRisk >= 100) {
-        const penalty = Math.floor(cash * 0.4);
+        haptic('error');
+        const penalty = Math.floor(cash * 0.35);
         cash -= penalty;
-        secRisk = 20;
-        document.getElementById('news').innerText = `🚨 РЕЙД SEC! Вы оштрафованы на $${penalty.toLocaleString()} за манипуляции!`;
+        secRisk = 25;
+        document.getElementById('news').innerText = `🚨 РЕЙД SEC: Счета заморожены, штраф $${penalty.toLocaleString()}!`;
       }
 
       drawChart();
       updateUI();
+      saveGameState();
     }, 1500);
 
+    // Торговые операции
     function openPosition(type) {
-      if (position) return alert('У вас уже открыта позиция!');
-      const tradeSize = 40;
-      position = { type, entryPrice: price, size: tradeSize };
-      document.getElementById('news').innerText = `📊 Открыта позиция ${type} по цене $${price.toFixed(2)}`;
+      haptic('medium');
+      if (position) return alert('У вас уже есть открытая позиция!');
+      position = { type, entryPrice: price, size: 40 };
+      document.getElementById('news').innerText = `⚡ Открыт ордер ${type} по цене $${price.toFixed(2)}`;
       updateUI();
+      saveGameState();
     }
 
     function closePosition() {
       if (!position) return;
+      haptic('success');
       const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
       const pnl = diff * position.size;
       cash += pnl;
-      document.getElementById('news').innerText = `💰 Сделка закрыта. Результат: ${pnl >= 0 ? '+' : ''}$${Math.floor(pnl)}`;
+      document.getElementById('news').innerText = `💰 Позиция закрыта. Результат: ${pnl >= 0 ? '+' : ''}$${Math.floor(pnl)}`;
       position = null;
       updateUI();
+      saveGameState();
     }
 
+    // Манипуляции
     function manipulate(action) {
+      haptic('light');
       if (action === 'HYPE') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
-        price += 10 + Math.random() * 8;
+        price += 9 + Math.random() * 8;
         secRisk = Math.min(100, secRisk + 15);
-        document.getElementById('news').innerText = '📰 СМИ выпустили заказной релиз: "Titan Corp меняет мир!" Памп пошел.';
+        document.getElementById('news').innerText = '📢 СМИ раздули хайп вокруг компании! Памп запущен.';
       } else if (action === 'PANIC') {
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
-        price = Math.max(10, price - (10 + Math.random() * 8));
+        price = Math.max(10, price - (9 + Math.random() * 8));
         secRisk = Math.min(100, secRisk + 20);
-        document.getElementById('news').innerText = '📉 В сеть слит компромат: инвесторы экстренно сбрасывают акции Titan Corp.';
+        document.getElementById('news').innerText = '📉 Вброшен компромат: паника среди розничных трейдеров!';
       } else if (action === 'WHALE') {
         if (cash < 3000) return alert('Недостаточно денег!');
         cash -= 3000;
-        const swing = (Math.random() - 0.5) * 30;
-        price = Math.max(10, price + swing);
+        price += 20 + Math.random() * 15;
         secRisk = Math.min(100, secRisk + 35);
-        document.getElementById('news').innerText = '🐋 Синдикат китов устроил агрессивный сквиз на рынке!';
+        document.getElementById('news').innerText = '🐋 Синдикат китов выкупает стакан! Курс летит вверх.';
       } else if (action === 'BRIBE') {
         if (cash < 2000) return alert('Недостаточно денег!');
         cash -= 2000;
         secRisk = Math.max(0, secRisk - 30);
-        document.getElementById('news').innerText = '🤝 Юристы урегулировали претензии регуляторов. Внимание снижено.';
+        document.getElementById('news').innerText = '🤝 Проверка SEC временно приостановлена.';
       }
       updateUI();
+      saveGameState();
     }
 
-    // --- ЛОГИКА АДМИН-ПАНЕЛИ ---
+    // Админ-панель
     function openAdminModal() {
-      const modal = document.getElementById('admin-modal');
-      modal.style.display = 'flex';
+      haptic('light');
+      document.getElementById('admin-modal').style.display = 'flex';
       const input = document.getElementById('admin-code-input');
       input.value = '';
       setTimeout(() => input.focus(), 100);
@@ -298,17 +673,36 @@
       const code = input.value.trim().toLowerCase();
 
       if (code === 'хочуденьги') {
+        haptic('success');
         cash += 100000;
-        document.getElementById('news').innerText = '👑 РЕЖИМ СОЗДАТЕЛЯ: Зачислено +$100,000!';
+        document.getElementById('news').innerText = '👑 ДОСТУП РАЗРЕШЕН: Зачислено +$100,000!';
         closeAdminModal();
         updateUI();
+        saveGameState();
       } else {
+        haptic('error');
         alert('Неверный код доступа!');
         input.value = '';
       }
     }
 
+    function hardResetGame() {
+      if (confirm('Сбросить весь баланс и начать заново с $10,000?')) {
+        localStorage.removeItem('finsim_save_data');
+        cash = 10000;
+        secRisk = 0;
+        price = 100.0;
+        history = [98, 99, 100, 101, 100];
+        position = null;
+        closeAdminModal();
+        updateUI();
+        saveGameState();
+      }
+    }
+
+    // Инициализация
     updateUI();
+    drawChart();
   </script>
 </body>
 </html>
