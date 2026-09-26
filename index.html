@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FinSim Cyber Terminal</title>
+  <title>FinSim Pro Terminal</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #090c10;
-      --card-bg: rgba(22, 27, 34, 0.75);
+      --bg: #080b10;
+      --card-bg: rgba(18, 24, 34, 0.85);
       --card-border: rgba(255, 255, 255, 0.08);
       --green: #00ff87;
-      --green-glow: rgba(0, 255, 135, 0.25);
+      --green-glow: rgba(0, 255, 135, 0.3);
       --red: #ff3366;
-      --red-glow: rgba(255, 51, 102, 0.25);
+      --red-glow: rgba(255, 51, 102, 0.3);
       --blue: #00d2ff;
       --yellow: #ffd000;
       --text-main: #f0f6fc;
@@ -31,9 +31,9 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 0%, #161f30 0%, var(--bg) 70%);
+      background: radial-gradient(circle at 50% 0%, #152238 0%, var(--bg) 75%);
       color: var(--text-main);
-      padding: 12px;
+      padding: 10px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -42,18 +42,18 @@
 
     .glass {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 12px;
     }
 
+    /* Шапка */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      padding: 10px 12px;
     }
     .badge-live {
       display: inline-flex;
@@ -73,45 +73,42 @@
       background: var(--green);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--green);
-      animation: pulse 1.5s infinite;
+      animation: pulse 1.2s infinite;
     }
-    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+    @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
     .val-balance {
       font-family: var(--font-mono);
       font-size: 1.35rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
       color: #fff;
     }
 
     .btn-admin {
-      background: linear-gradient(135deg, rgba(255, 208, 0, 0.15), rgba(255, 208, 0, 0.05));
-      border: 1px solid rgba(255, 208, 0, 0.4);
+      background: rgba(255, 208, 0, 0.12);
+      border: 1px solid rgba(255, 208, 0, 0.35);
       color: var(--yellow);
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
 
+    /* Шкала SEC */
     .risk-card {
-      padding: 10px 14px;
+      padding: 8px 12px;
     }
     .risk-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     .risk-track {
-      height: 7px;
+      height: 6px;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 10px;
       overflow: hidden;
@@ -124,11 +121,13 @@
       transition: width 0.3s ease, background 0.3s;
     }
 
+    /* График с индикаторами */
     .chart-card {
-      padding: 12px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      position: relative;
     }
     .ticker-row {
       display: flex;
@@ -136,49 +135,118 @@
       align-items: baseline;
     }
     .stock-symbol {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
       color: var(--text-muted);
     }
     .stock-price {
       font-family: var(--font-mono);
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 800;
     }
     canvas {
       width: 100%;
-      height: 150px;
+      height: 165px;
       display: block;
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
+    /* Инфо-лента */
     .news-box {
-      padding: 10px 12px;
-      font-size: 0.8rem;
-      line-height: 1.35;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      padding: 8px 10px;
+      font-size: 0.75rem;
+      line-height: 1.3;
       border-left: 3px solid var(--blue);
       background: rgba(0, 210, 255, 0.05);
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
-    .section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
+    /* Активная 60-сек сделка */
+    .active-trade-card {
+      display: none;
+      padding: 12px;
+      border: 1px solid var(--blue);
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .trade-timer-bar {
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .trade-timer-fill {
+      height: 100%;
+      width: 100%;
+      background: var(--blue);
+      transition: width 1s linear;
+    }
+
+    /* Настройка ставки */
+    .bet-container {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bet-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .bet-input-wrap {
+      display: flex;
+      align-items: center;
+      background: #0b0f17;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      width: 55%;
+    }
+    .bet-input-wrap span {
       color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+    .bet-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      width: 100%;
+      outline: none;
       margin-left: 4px;
     }
+    .quick-chips {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+    }
+    .chip {
+      background: #1a2230;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip:active { background: #263347; }
+
+    /* Кнопки Торговли */
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-
     button {
       outline: none;
       border: none;
@@ -186,91 +254,66 @@
       font-weight: 700;
       transition: transform 0.08s ease;
     }
-    button:active {
-      transform: scale(0.97);
-    }
+    button:active { transform: scale(0.97); }
 
     .btn-trade {
-      padding: 14px 10px;
-      border-radius: 12px;
+      padding: 12px 10px;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       font-size: 0.95rem;
     }
     .btn-long {
       background: linear-gradient(180deg, #1b3a2f, #10261f);
       border: 1px solid var(--green);
       color: var(--green);
-      box-shadow: 0 4px 15px var(--green-glow);
+      box-shadow: 0 4px 12px var(--green-glow);
     }
     .btn-short {
       background: linear-gradient(180deg, #3d1b26, #261118);
       border: 1px solid var(--red);
       color: var(--red);
-      box-shadow: 0 4px 15px var(--red-glow);
+      box-shadow: 0 4px 12px var(--red-glow);
     }
     .btn-subtitle {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       opacity: 0.8;
       font-family: var(--font-mono);
       font-weight: normal;
     }
 
-    .pos-card {
-      display: none;
-      padding: 12px;
-      border: 1px solid var(--blue);
-      box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+    /* Манипуляции */
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-left: 2px;
     }
-    .pos-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .btn-close-pos {
-      width: 100%;
-      background: #21262d;
-      border: 1px solid var(--card-border);
-      color: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-    }
-
     .btn-black-ops {
       background: rgba(22, 27, 34, 0.6);
       border: 1px solid var(--card-border);
-      padding: 10px 8px;
-      border-radius: 10px;
+      padding: 9px 8px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 4px;
+      gap: 3px;
       text-align: left;
     }
-    .ops-title {
-      font-size: 0.8rem;
-      color: #fff;
-    }
-    .ops-cost {
-      font-size: 0.7rem;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-    }
-    .ops-effect {
-      font-size: 0.65rem;
-      color: var(--blue);
-    }
+    .ops-title { font-size: 0.75rem; color: #fff; }
+    .ops-cost { font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-muted); }
+    .ops-effect { font-size: 0.65rem; color: var(--blue); font-weight: 600; }
 
-    /* Модальные окна */
+    /* Модалки */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.82);
       backdrop-filter: blur(8px);
       align-items: center;
       justify-content: center;
@@ -293,7 +336,7 @@
       border: 1px solid var(--card-border);
       color: #fff;
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 0.95rem;
       text-align: center;
       outline: none;
@@ -304,26 +347,16 @@
       color: #000;
       padding: 10px;
       border-radius: 8px;
-    }
-    .btn-modal-reset {
-      background: rgba(255, 51, 102, 0.15);
-      border: 1px solid var(--red);
-      color: var(--red);
-      padding: 8px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      margin-top: 6px;
-    }
-
-    /* Анимация мигалки при проигрыше */
-    @keyframes siren {
-      0% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.4); border-color: var(--red); }
-      50% { box-shadow: 0 0 60px rgba(0, 210, 255, 0.6); border-color: var(--blue); }
-      100% { box-shadow: 0 0 30px rgba(255, 51, 102, 0.4); border-color: var(--red); }
+      font-weight: 700;
     }
     .gameover-box {
       border: 2px solid var(--red);
       animation: siren 1.4s infinite;
+    }
+    @keyframes siren {
+      0% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.4); }
+      50% { box-shadow: 0 0 50px rgba(0, 210, 255, 0.5); }
+      100% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.4); }
     }
   </style>
 </head>
@@ -332,7 +365,7 @@
   <!-- Шапка -->
   <div class="glass header">
     <div>
-      <div class="badge-live">Live Market</div>
+      <div class="badge-live">Live Market (1m Expire)</div>
       <div class="val-balance" id="balance">$10,000</div>
     </div>
     <button class="btn-admin" onclick="openAdminModal()">👑 Админ</button>
@@ -349,43 +382,66 @@
     </div>
   </div>
 
-  <!-- График курса -->
+  <!-- График с индикаторами -->
   <div class="glass chart-card">
     <div class="ticker-row">
-      <span class="stock-symbol">$TITAN / USD</span>
+      <span class="stock-symbol">$TITAN / VOLATILE</span>
       <span class="stock-price" id="stock-price">100.00</span>
     </div>
     <canvas id="chart"></canvas>
   </div>
 
   <!-- Инфо-лента -->
-  <div class="news-box" id="news">⚡ Торговая сессия открыта. Данные синхронизированы.</div>
+  <div class="news-box" id="news">⚡ Рынок открыт. Высокая волатильность включена!</div>
 
-  <!-- Позиция (если открыта) -->
-  <div class="glass pos-card" id="pos-card">
-    <div class="pos-info">
+  <!-- Активная сделка (60 сек) -->
+  <div class="glass active-trade-card" id="trade-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
       <div>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">ОРДЕР: </span>
-        <b id="pos-type" style="font-size: 0.85rem;">LONG</b>
+        <span style="color: var(--text-muted);">ОРДЕР: </span>
+        <b id="trade-type" style="font-size: 0.85rem;">LONG</b>
+        <span style="color: var(--text-muted); font-size: 0.75rem;">($<span id="trade-bet-val">1000</span>)</span>
       </div>
       <div>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">PNL: </span>
-        <b id="pos-pnl" style="font-family: var(--font-mono); font-size: 0.95rem;">+$0</b>
+        ⏱️ <b id="trade-timer" style="font-family: var(--font-mono); color: var(--yellow);">60s</b>
       </div>
     </div>
-    <button class="btn-close-pos" onclick="closePosition()">Закрыть сделку</button>
+    <div class="trade-timer-bar">
+      <div class="trade-timer-fill" id="trade-timer-fill"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+      <span style="color: var(--text-muted);">Вход: $<span id="trade-entry">100.0</span></span>
+      <span>PnL: <b id="trade-pnl" style="font-family: var(--font-mono);">+$0</b></span>
+    </div>
   </div>
 
-  <!-- Кнопки Торговли -->
-  <div class="section-title">Быстрый ордер</div>
-  <div class="grid-2">
+  <!-- Выбор размера ставки -->
+  <div class="glass bet-container" id="bet-panel">
+    <div class="bet-top-row">
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">РАЗМЕР СТАВКИ:</span>
+      <div class="bet-input-wrap">
+        <span>$</span>
+        <input type="number" id="bet-input" class="bet-input" value="1000" min="50" step="50">
+      </div>
+    </div>
+    <div class="quick-chips">
+      <div class="chip" onclick="setBetPercent(0.25)">25%</div>
+      <div class="chip" onclick="setBetPercent(0.50)">50%</div>
+      <div class="chip" onclick="setBetPercent(1.00)">ALL-IN</div>
+      <div class="chip" onclick="addBet(1000)">+$1,000</div>
+      <div class="chip" onclick="addBet(5000)">+$5,000</div>
+    </div>
+  </div>
+
+  <!-- Кнопки Торговли (1 мин) -->
+  <div class="grid-2" id="order-buttons">
     <button class="btn-trade btn-long" onclick="openPosition('LONG')">
-      ▲ LONG
-      <span class="btn-subtitle">Игра в рост</span>
+      ▲ LONG (60s)
+      <span class="btn-subtitle">Прогноз на рост</span>
     </button>
     <button class="btn-trade btn-short" onclick="openPosition('SHORT')">
-      ▼ SHORT
-      <span class="btn-subtitle">Игра на падение</span>
+      ▼ SHORT (60s)
+      <span class="btn-subtitle">Прогноз на спад</span>
     </button>
   </div>
 
@@ -395,17 +451,17 @@
     <button class="btn-black-ops" onclick="manipulate('HYPE')">
       <div class="ops-title">📢 Купить хайп в СМИ</div>
       <div class="ops-cost">-$1,500 | +15% SEC</div>
-      <div class="ops-effect">+Резкий рост курса</div>
+      <div class="ops-effect">🚀 Взрывной рост курса</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('PANIC')">
       <div class="ops-title">📉 Вброс компромата</div>
       <div class="ops-cost">-$1,500 | +20% SEC</div>
-      <div class="ops-effect">-Обвал котировок</div>
+      <div class="ops-effect">💥 Жесткий дамп курса</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('WHALE')">
       <div class="ops-title">🐋 Рейд китов</div>
       <div class="ops-cost">-$3,000 | +35% SEC</div>
-      <div class="ops-effect">⚡ Экстремальный памп</div>
+      <div class="ops-effect">⚡ Мега-свеча вверх</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('BRIBE')">
       <div class="ops-title">🤝 Замять аудит</div>
@@ -414,31 +470,31 @@
     </button>
   </div>
 
-  <!-- ЭКРАН GAME OVER (ПРОИГРЫШ) -->
-  <div class="modal-overlay" id="gameover-modal" style="z-index: 2000; background: rgba(5, 7, 10, 0.94);">
+  <!-- GAME OVER МОДАЛКА -->
+  <div class="modal-overlay" id="gameover-modal" style="z-index: 2000; background: rgba(5, 7, 10, 0.95);">
     <div class="modal-content gameover-box">
       <div style="font-size: 3rem;">🚨</div>
-      <h2 style="color: var(--red); font-size: 1.3rem; letter-spacing: 0.5px;">ВЫ АРЕСТОВАНЫ!</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
-        Шкала внимания SEC достигла 100%. Финансовая разведка раскрыла ваши манипуляции и инсайдерские схемы. Счета заблокированы, активы конфискованы!
+      <h2 style="color: var(--red); font-size: 1.25rem;">ВЫ АРЕСТОВАНЫ!</h2>
+      <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4;">
+        Шкала SEC достигла 100%. Финансовый регулятор конфисковал все деньги за инсайдерские манипуляции!
       </p>
-      <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 10px; border: 1px solid var(--card-border);">
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px;">Капитал до ареста:</div>
-        <div style="font-size: 1.25rem; font-weight: 800; color: #fff; font-family: var(--font-mono);" id="final-cash">$0</div>
+      <div style="background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Капитал до ареста:</div>
+        <div style="font-size: 1.2rem; font-weight: 800; color: #fff; font-family: var(--font-mono);" id="final-cash">$0</div>
       </div>
-      <button class="btn-modal-action" style="background: var(--red); color: #fff; padding: 12px; font-size: 0.95rem;" onclick="restartGame()">
+      <button class="btn-modal-action" style="background: var(--red); color: #fff; padding: 12px;" onclick="restartGame()">
         🔄 Начать заново ($10,000)
       </button>
     </div>
   </div>
 
-  <!-- Модальное окно Админа -->
+  <!-- АДМИН МОДАЛКА -->
   <div class="modal-overlay" id="admin-modal">
     <div class="modal-content" style="border: 1px solid var(--yellow);">
       <h3 style="color: var(--yellow); font-size: 1.05rem;">👑 Режим Создателя</h3>
       <input type="text" class="modal-input" id="admin-code-input" placeholder="Введите пароль..." autocomplete="off">
       <button class="btn-modal-action" onclick="submitAdminCode()">Применить</button>
-      <button class="btn-modal-reset" onclick="hardResetGame()">⚠️ Сбросить весь прогресс</button>
+      <button style="background: rgba(255, 51, 102, 0.15); border: 1px solid var(--red); color: var(--red); padding: 8px; border-radius: 8px; font-size: 0.75rem; margin-top: 6px;" onclick="hardResetGame()">⚠️ Сбросить весь прогресс</button>
       <button style="background: transparent; color: var(--text-muted); padding: 6px; font-size: 0.8rem;" onclick="closeAdminModal()">Закрыть</button>
     </div>
   </div>
@@ -462,9 +518,10 @@
     let cash = 10000;
     let secRisk = 0;
     let price = 100.0;
-    let history = [98, 99, 100, 101, 100];
-    let position = null;
+    let history = [85, 92, 88, 105, 96, 110, 100];
+    let position = null; // { type, entryPrice, bet, timeLeft: 60 }
     let isGameOver = false;
+    let momentum = 0; // Импульс для создания реальных волн и трендов
 
     function saveGameState() {
       const data = { cash, secRisk, price, history, position, isGameOver };
@@ -496,16 +553,40 @@
     function resizeCanvas() {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = canvas.parentElement.clientWidth * dpr;
-      canvas.height = 150 * dpr;
+      canvas.height = 165 * dpr;
       ctx.scale(dpr, dpr);
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    // Управление ставкой
+    function setBetPercent(pct) {
+      haptic('light');
+      const val = Math.max(50, Math.floor(cash * pct));
+      document.getElementById('bet-input').value = val;
+    }
+
+    function addBet(amount) {
+      haptic('light');
+      const input = document.getElementById('bet-input');
+      let cur = parseInt(input.value) || 0;
+      input.value = Math.min(Math.floor(cash), cur + amount);
+    }
+
+    function getBetAmount() {
+      const input = document.getElementById('bet-input');
+      let val = parseInt(input.value) || 100;
+      if (val > cash) val = Math.floor(cash);
+      if (val < 50) val = 50;
+      input.value = val;
+      return val;
+    }
+
     function updateUI() {
       document.getElementById('balance').innerText = '$' + Math.floor(cash).toLocaleString();
       document.getElementById('stock-price').innerText = price.toFixed(2);
 
+      // SEC Risk
       const riskFill = document.getElementById('risk-fill');
       riskFill.style.width = Math.min(100, secRisk) + '%';
       if (secRisk >= 75) {
@@ -520,39 +601,104 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      const posCard = document.getElementById('pos-card');
+      // Панель ордеров и активной сделки
+      const tradeCard = document.getElementById('trade-card');
+      const orderButtons = document.getElementById('order-buttons');
+      const betPanel = document.getElementById('bet-panel');
+
       if (position) {
-        posCard.style.display = 'block';
-        const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
-        const pnl = diff * position.size;
-        const pnlEl = document.getElementById('pos-pnl');
-        pnlEl.innerText = (pnl >= 0 ? '+' : '') + '$' + Math.floor(pnl);
-        pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-        document.getElementById('pos-type').innerText = position.type;
-        document.getElementById('pos-type').style.color = position.type === 'LONG' ? 'var(--green)' : 'var(--red)';
+        tradeCard.style.display = 'block';
+        orderButtons.style.opacity = '0.4';
+        orderButtons.style.pointerEvents = 'none';
+        betPanel.style.opacity = '0.4';
+        betPanel.style.pointerEvents = 'none';
+
+        document.getElementById('trade-type').innerText = position.type;
+        document.getElementById('trade-type').style.color = position.type === 'LONG' ? 'var(--green)' : 'var(--red)';
+        document.getElementById('trade-bet-val').innerText = position.bet.toLocaleString();
+        document.getElementById('trade-entry').innerText = position.entryPrice.toFixed(2);
+        document.getElementById('trade-timer').innerText = position.timeLeft + 's';
+        document.getElementById('trade-timer-fill').style.width = ((position.timeLeft / 60) * 100) + '%';
+
+        // PnL расчет с плечом 3x
+        const priceDeltaRatio = (price - position.entryPrice) / position.entryPrice * (position.type === 'LONG' ? 1 : -1);
+        const estPnL = Math.floor(position.bet * priceDeltaRatio * 3.5);
+        const pnlEl = document.getElementById('trade-pnl');
+        pnlEl.innerText = (estPnL >= 0 ? '+' : '') + '$' + estPnL.toLocaleString();
+        pnlEl.style.color = estPnL >= 0 ? 'var(--green)' : 'var(--red)';
       } else {
-        posCard.style.display = 'none';
+        tradeCard.style.display = 'none';
+        orderButtons.style.opacity = '1';
+        orderButtons.style.pointerEvents = 'auto';
+        betPanel.style.opacity = '1';
+        betPanel.style.pointerEvents = 'auto';
       }
     }
 
+    // Отрисовка графика со шкалой и индикаторами
     function drawChart() {
-      const w = canvas.width / (window.devicePixelRatio || 1);
-      const h = 150;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.width / dpr;
+      const h = 165;
       ctx.clearRect(0, 0, w, h);
 
-      const min = Math.min(...history) * 0.98;
-      const max = Math.max(...history) * 1.02;
-      const step = w / (history.length - 1);
+      const rightGutter = 50; // Место для шкалы цен справа
+      const plotWidth = w - rightGutter;
+
+      const min = Math.min(...history) * 0.95;
+      const max = Math.max(...history) * 1.05;
+      const range = max - min || 1;
+
+      // 1. Отрисовка горизонтальной сетки и отметок цен
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#6e7681';
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'right';
+
+      const gridLevels = 4;
+      for (let i = 0; i <= gridLevels; i++) {
+        const y = h - (i / gridLevels) * (h - 26) - 13;
+        const levelPrice = min + (i / gridLevels) * range;
+        
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(plotWidth, y);
+        ctx.stroke();
+
+        ctx.fillText('$' + levelPrice.toFixed(1), w - 4, y + 3);
+      }
+
+      // 2. Линия входа в сделку (Entry Price Indicator)
+      if (position) {
+        const entryY = h - ((position.entryPrice - min) / range) * (h - 26) - 13;
+        if (entryY >= 0 && entryY <= h) {
+          ctx.beginPath();
+          ctx.strokeStyle = position.type === 'LONG' ? 'rgba(0, 255, 135, 0.7)' : 'rgba(255, 51, 102, 0.7)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.moveTo(0, entryY);
+          ctx.lineTo(plotWidth, entryY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = position.type === 'LONG' ? 'var(--green)' : 'var(--red)';
+          ctx.fillText('ENTRY', w - 4, entryY - 4);
+        }
+      }
+
+      // 3. Линия котировок с градиентной заливкой
+      const step = plotWidth / (history.length - 1);
       const isUp = history[history.length - 1] >= history[0];
       const strokeColor = isUp ? '#00ff87' : '#ff3366';
 
       const grad = ctx.createLinearGradient(0, 0, 0, h);
-      grad.addColorStop(0, isUp ? 'rgba(0, 255, 135, 0.25)' : 'rgba(255, 51, 102, 0.25)');
+      grad.addColorStop(0, isUp ? 'rgba(0, 255, 135, 0.28)' : 'rgba(255, 51, 102, 0.28)');
       grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.beginPath();
       history.forEach((p, i) => {
-        const y = h - ((p - min) / (max - min)) * (h - 20) - 10;
+        const y = h - ((p - min) / range) * (h - 26) - 13;
         if (i === 0) ctx.moveTo(0, y);
         else ctx.lineTo(i * step, y);
       });
@@ -560,14 +706,150 @@
       ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 2.5;
       ctx.shadowColor = strokeColor;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 10;
       ctx.stroke();
 
-      ctx.lineTo(w, h);
+      // Заливка
+      ctx.lineTo(plotWidth, h);
       ctx.lineTo(0, h);
       ctx.fillStyle = grad;
       ctx.shadowBlur = 0;
       ctx.fill();
+
+      // Светящаяся точка на конце графика
+      const lastX = plotWidth;
+      const lastY = h - ((history[history.length - 1] - min) / range) * (h - 26) - 13;
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+      ctx.fillStyle = strokeColor;
+      ctx.shadowColor = strokeColor;
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Движок рынка (ТИК КАЖДУЮ СЕКУНДУ ДЛЯ 60-СЕК СДЕЛОК)
+    setInterval(() => {
+      if (isGameOver) return;
+
+      // Высокая волатильность: затухающий импульс + случайный бросок от -8% до +8%
+      momentum = momentum * 0.7 + (Math.random() - 0.49) * 8.5;
+      price = Math.max(10, price + momentum);
+      history.push(price);
+      if (history.length > 24) history.shift();
+
+      // Естественное остывание регулятора
+      if (secRisk > 0 && Math.random() < 0.2) {
+        secRisk = Math.max(0, secRisk - 1);
+      }
+
+      // Обработка 60-секундного таймера сделки
+      if (position) {
+        position.timeLeft--;
+        if (position.timeLeft <= 0) {
+          resolveTrade();
+        }
+      }
+
+      // Проверка на проигрыш при 100% SEC
+      if (secRisk >= 100) {
+        secRisk = 100;
+        updateUI();
+        triggerGameOver();
+        return;
+      }
+
+      drawChart();
+      updateUI();
+      saveGameState();
+    }, 1000);
+
+    // Открытие сделки
+    function openPosition(type) {
+      if (isGameOver) return;
+      if (position) return alert('Сделка уже идет! Дождитесь окончания 60 секунд.');
+
+      const bet = getBetAmount();
+      if (bet > cash) return alert('Недостаточно средств для такой ставки!');
+
+      haptic('medium');
+      cash -= bet; // Снимаем ставку с баланса
+      position = {
+        type: type,
+        entryPrice: price,
+        bet: bet,
+        timeLeft: 60
+      };
+
+      document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} открыт на 60 сек по курсу $${price.toFixed(2)}!`;
+      updateUI();
+      drawChart();
+      saveGameState();
+    }
+
+    // Автоматическое закрытие сделки через 60 секунд
+    function resolveTrade() {
+      const priceDeltaRatio = (price - position.entryPrice) / position.entryPrice * (position.type === 'LONG' ? 1 : -1);
+      
+      // Мультипликатор волатильности / плечо (3.5x)
+      const pnl = Math.floor(position.bet * priceDeltaRatio * 3.5);
+      const totalReturn = Math.max(0, position.bet + pnl);
+
+      cash += totalReturn;
+
+      if (pnl >= 0) {
+        haptic('success');
+        document.getElementById('news').innerText = `🎉 ВРЕМЯ ВЫШЛО! ПРИБЫЛЬ: +$${pnl.toLocaleString()} (Курс: $${price.toFixed(2)})`;
+      } else {
+        haptic('error');
+        document.getElementById('news').innerText = `📉 ВРЕМЯ ВЫШЛО! УБЫТОК: -$${Math.abs(pnl).toLocaleString()} (Курс: $${price.toFixed(2)})`;
+      }
+
+      position = null;
+      updateUI();
+      drawChart();
+      saveGameState();
+    }
+
+    // Манипуляции (дают мощные рывки)
+    function manipulate(action) {
+      if (isGameOver) return;
+      haptic('light');
+
+      if (action === 'HYPE') {
+        if (cash < 1500) return alert('Недостаточно денег!');
+        cash -= 1500;
+        momentum += 25 + Math.random() * 20; // Огромный толчок вверх
+        secRisk += 15;
+        document.getElementById('news').innerText = '📢 СМИ выпустили хайп! Курс мощно пампится вверх!';
+      } else if (action === 'PANIC') {
+        if (cash < 1500) return alert('Недостаточно денег!');
+        cash -= 1500;
+        momentum -= (25 + Math.random() * 20); // Огромный толчок вниз
+        secRisk += 20;
+        document.getElementById('news').innerText = '📉 Вброшен компромат: панический слив котировок!';
+      } else if (action === 'WHALE') {
+        if (cash < 3000) return alert('Недостаточно денег!');
+        cash -= 3000;
+        momentum += (45 + Math.random() * 30); // Экстремальный взлет
+        secRisk += 35;
+        document.getElementById('news').innerText = '🐋 КИТЫ зашли в стакан! Взрывная ракета вверх!';
+      } else if (action === 'BRIBE') {
+        if (cash < 2000) return alert('Недостаточно денег!');
+        cash -= 2000;
+        secRisk = Math.max(0, secRisk - 30);
+        document.getElementById('news').innerText = '🤝 Юристы отбили проверку регуляторов.';
+      }
+
+      if (secRisk >= 100) {
+        secRisk = 100;
+        updateUI();
+        triggerGameOver();
+        return;
+      }
+
+      updateUI();
+      saveGameState();
     }
 
     function triggerGameOver() {
@@ -583,100 +865,12 @@
       cash = 10000;
       secRisk = 0;
       price = 100.0;
-      history = [98, 99, 100, 101, 100];
+      history = [85, 92, 88, 105, 96, 110, 100];
       position = null;
       document.getElementById('gameover-modal').style.display = 'none';
-      document.getElementById('news').innerText = '⚡ Новая торговая сессия открыта. Следите за регулятором!';
+      document.getElementById('news').innerText = '⚡ Новая сессия. Баланс восстановлен до $10,000.';
       updateUI();
       drawChart();
-      saveGameState();
-    }
-
-    // Игровой цикл
-    setInterval(() => {
-      if (isGameOver) return;
-
-      const delta = (Math.random() - 0.49) * 2.2;
-      price = Math.max(10, price + delta);
-      history.push(price);
-      if (history.length > 25) history.shift();
-
-      if (secRisk > 0 && Math.random() < 0.25) {
-        secRisk = Math.max(0, secRisk - 1);
-      }
-
-      // Проверка на проигрыш (100% SEC)
-      if (secRisk >= 100) {
-        secRisk = 100;
-        updateUI();
-        triggerGameOver();
-        return;
-      }
-
-      drawChart();
-      updateUI();
-      saveGameState();
-    }, 1500);
-
-    function openPosition(type) {
-      if (isGameOver) return;
-      haptic('medium');
-      if (position) return alert('У вас уже есть открытая позиция!');
-      position = { type, entryPrice: price, size: 40 };
-      document.getElementById('news').innerText = `⚡ Открыт ордер ${type} по цене $${price.toFixed(2)}`;
-      updateUI();
-      saveGameState();
-    }
-
-    function closePosition() {
-      if (!position || isGameOver) return;
-      haptic('success');
-      const diff = (price - position.entryPrice) * (position.type === 'LONG' ? 1 : -1);
-      const pnl = diff * position.size;
-      cash += pnl;
-      document.getElementById('news').innerText = `💰 Позиция закрыта. Результат: ${pnl >= 0 ? '+' : ''}$${Math.floor(pnl)}`;
-      position = null;
-      updateUI();
-      saveGameState();
-    }
-
-    function manipulate(action) {
-      if (isGameOver) return;
-      haptic('light');
-
-      if (action === 'HYPE') {
-        if (cash < 1500) return alert('Недостаточно денег!');
-        cash -= 1500;
-        price += 9 + Math.random() * 8;
-        secRisk += 15;
-        document.getElementById('news').innerText = '📢 СМИ раздули хайп! Памп запущен.';
-      } else if (action === 'PANIC') {
-        if (cash < 1500) return alert('Недостаточно денег!');
-        cash -= 1500;
-        price = Math.max(10, price - (9 + Math.random() * 8));
-        secRisk += 20;
-        document.getElementById('news').innerText = '📉 Вброшен компромат: розничные инвесторы паникуют!';
-      } else if (action === 'WHALE') {
-        if (cash < 3000) return alert('Недостаточно денег!');
-        cash -= 3000;
-        price += 20 + Math.random() * 15;
-        secRisk += 35;
-        document.getElementById('news').innerText = '🐋 Синдикат китов выкупает стакан! Курс летит вверх.';
-      } else if (action === 'BRIBE') {
-        if (cash < 2000) return alert('Недостаточно денег!');
-        cash -= 2000;
-        secRisk = Math.max(0, secRisk - 30);
-        document.getElementById('news').innerText = '🤝 Проверка SEC замята через юристов.';
-      }
-
-      if (secRisk >= 100) {
-        secRisk = 100;
-        updateUI();
-        triggerGameOver();
-        return;
-      }
-
-      updateUI();
       saveGameState();
     }
 
@@ -711,7 +905,7 @@
     }
 
     function hardResetGame() {
-      if (confirm('Сбросить весь баланс и начать заново с $10,000?')) {
+      if (confirm('Сбросить весь баланс и начать заново?')) {
         localStorage.removeItem('finsim_save_data');
         restartGame();
         closeAdminModal();
