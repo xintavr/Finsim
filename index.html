@@ -58,7 +58,6 @@
       border-radius: 12px;
     }
 
-    /* Шапка */
     .header {
       display: flex;
       justify-content: space-between;
@@ -122,7 +121,6 @@
       font-weight: 700;
     }
 
-    /* Шкала SEC */
     .risk-card { padding: 8px 12px; }
     .risk-header {
       display: flex;
@@ -146,7 +144,6 @@
       transition: width 0.3s ease, background 0.3s;
     }
 
-    /* График */
     .chart-card {
       padding: 10px;
       display: flex;
@@ -190,7 +187,6 @@
       border-radius: 6px;
     }
 
-    /* Инфо-лента */
     .news-box {
       padding: 8px 10px;
       font-size: 0.75rem;
@@ -204,7 +200,6 @@
       gap: 6px;
     }
 
-    /* Активная 20-сек сделка */
     .active-trade-card {
       display: none;
       padding: 12px;
@@ -226,7 +221,6 @@
       transition: width 1s linear;
     }
 
-    /* Ставки и Плечо */
     .bet-container {
       padding: 10px 12px;
       display: flex;
@@ -280,7 +274,6 @@
       white-space: nowrap;
     }
 
-    /* Селектор кредитного плеча (из навыка) */
     .leverage-selector {
       display: none;
       align-items: center;
@@ -359,7 +352,6 @@
       align-items: center;
     }
 
-    /* Карточки апгрейдов и бизнеса */
     .item-card {
       background: rgba(22, 27, 34, 0.6);
       border: 1px solid var(--card-border);
@@ -379,15 +371,16 @@
       padding: 6px 10px;
       border-radius: 6px;
       font-family: var(--font-mono);
+      min-width: 80px;
+      text-align: center;
     }
     .btn-buy-item.owned {
-      background: rgba(0, 255, 135, 0.1);
+      background: rgba(0, 255, 135, 0.12);
       border-color: var(--green);
       color: var(--green);
       pointer-events: none;
     }
 
-    /* Черный PR */
     .btn-black-ops {
       background: rgba(22, 27, 34, 0.6);
       border: 1px solid var(--card-border);
@@ -403,7 +396,6 @@
     .ops-cost { font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-muted); }
     .ops-effect { font-size: 0.65rem; color: var(--blue); font-weight: 600; }
 
-    /* Кнопки действий (Шеринг, Дубай) */
     .btn-prestige {
       background: linear-gradient(135deg, #ffd700, #ff8800);
       color: #000;
@@ -431,7 +423,6 @@
       cursor: pointer;
     }
 
-    /* Модалки */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -511,7 +502,7 @@
     </div>
   </div>
 
-  <!-- График котировок (Линия / Свечи) -->
+  <!-- График котировок -->
   <div class="glass chart-card">
     <div class="ticker-row">
       <span class="stock-symbol" id="ticker-label">$TITAN / PRO</span>
@@ -570,7 +561,7 @@
       <div class="chip" onclick="addBet(5000)">+$5,000</div>
     </div>
 
-    <!-- Селектор плеча (активируется навыком) -->
+    <!-- Селектор плеча -->
     <div class="leverage-selector" id="leverage-panel">
       <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">ПЛЕЧО СИНДИКАТА:</span>
       <div style="display: flex; gap: 6px;">
@@ -593,30 +584,30 @@
     </button>
   </div>
 
-  <!-- Черный синдикат (Навыки) -->
+  <!-- Черный синдикат (Навыки на 10 минут) -->
   <div class="section-title">
-    <span>Черный синдикат (Навыки)</span>
-    <span style="font-size: 0.65rem; color: #8b949e;">Перманентные</span>
+    <span>Черный синдикат (Действуют 10 мин)</span>
+    <span style="font-size: 0.65rem; color: #8b949e;">Временные</span>
   </div>
   <div style="display: flex; flex-direction: column; gap: 6px;">
     <div class="item-card">
       <div class="item-info">
         <h4>⚖️ Карманный судья</h4>
-        <p>-35% прироста внимания SEC</p>
+        <p>-35% прироста SEC | 10 мин</p>
       </div>
       <button class="btn-buy-item" id="btn-skill-judge" onclick="buySkill('judge')">$30,000</button>
     </div>
     <div class="item-card">
       <div class="item-info">
         <h4>⚡ Агрессивное плечо</h4>
-        <p>Доступ к множителям x5.0 и x10.0</p>
+        <p>Доступ к x5.0 и x10.0 | 10 мин</p>
       </div>
       <button class="btn-buy-item" id="btn-skill-leverage" onclick="buySkill('leverage')">$50,000</button>
     </div>
     <div class="item-card">
       <div class="item-info">
         <h4>🌪️ Крипто-миксер Pro</h4>
-        <p>Отмыв SEC в 2 раза быстрее</p>
+        <p>Отмыв SEC в 2 раза быстрее | 10 мин</p>
       </div>
       <button class="btn-buy-item" id="btn-skill-mixer" onclick="buySkill('mixer')">$80,000</button>
     </div>
@@ -631,7 +622,7 @@
     <div class="item-card">
       <div class="item-info">
         <h4>🖥️ Майнинг-отель</h4>
-        <p>+$35/сек | Окупаемость ~7 мин</p>
+        <p>+$10/сек | Окупаемость ~25 мин</p>
       </div>
       <button class="btn-buy-item" id="btn-biz-1" onclick="buyBusiness(1)">$15,000</button>
     </div>
@@ -656,13 +647,13 @@
   <div class="grid-2">
     <button class="btn-black-ops" onclick="manipulate('HYPE')">
       <div class="ops-title">📢 Купить хайп в СМИ</div>
-      <div class="ops-cost">-$1,500 | +SEC</div>
-      <div class="ops-effect">🚀 Взрывной рост курса</div>
+      <div class="ops-cost">-$1,500 | +SEC | 8% риск срыва</div>
+      <div class="ops-effect">🚀 Макс 2 за сделку</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('PANIC')">
       <div class="ops-title">📉 Вброс компромата</div>
       <div class="ops-cost">-$1,500 | +SEC</div>
-      <div class="ops-effect">💥 Жесткий дамп курса</div>
+      <div class="ops-effect">💥 Макс 2 за сделку</div>
     </button>
     <button class="btn-black-ops" onclick="manipulate('WHALE')">
       <div class="ops-title">🐋 Рейд китов</div>
@@ -732,17 +723,12 @@
       window.Telegram.WebApp.expand();
     }
 
-    // --- ЗВУКОВОЙ ДВИЖОК (WEB AUDIO API) ---
     let soundEnabled = true;
     let audioCtx = null;
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
     function toggleSound() {
@@ -777,7 +763,6 @@
           osc.start(now);
           osc.stop(now + 0.05);
         } else if (type === 'win') {
-          // Мажорное трезвучие кассы
           [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
@@ -821,16 +806,14 @@
       } catch (e) {}
     }
 
-    // Состояние
     let prestigeLevel = 0;
     let cash = 10000;
     let secRisk = 0;
     let price = 100.0;
-    let chartMode = 'candles'; // 'line' или 'candles'
+    let chartMode = 'candles';
     let currentLeverage = 3.5;
     let lastProfitableTrade = 0;
 
-    // Свечи: { open, high, low, close }
     let candles = [
       { open: 98, high: 101, low: 96, close: 100 },
       { open: 100, high: 104, low: 99, close: 103 },
@@ -843,10 +826,10 @@
     let isGameOver = false;
     let momentum = 0;
 
-    let skills = {
-      judge: false,
-      leverage: false,
-      mixer: false
+    let skillsExpiry = {
+      judge: 0,
+      leverage: 0,
+      mixer: 0
     };
 
     let biz = {
@@ -859,6 +842,10 @@
     let isSwanActive = false;
     let swanTimeLeft = 0;
 
+    function isSkillActive(type) {
+      return Date.now() < (skillsExpiry[type] || 0);
+    }
+
     function saveGameState() {
       const data = {
         prestigeLevel,
@@ -868,7 +855,7 @@
         candles,
         position,
         isGameOver,
-        skills,
+        skillsExpiry,
         biz,
         chartMode,
         currentLeverage,
@@ -889,7 +876,7 @@
           if (Array.isArray(d.candles) && d.candles.length > 2) candles = d.candles;
           if (d.position) position = d.position;
           if (typeof d.isGameOver === 'boolean') isGameOver = d.isGameOver;
-          if (d.skills) skills = d.skills;
+          if (d.skillsExpiry) skillsExpiry = d.skillsExpiry;
           if (d.biz) biz = d.biz;
           if (d.chartMode) chartMode = d.chartMode;
           if (d.currentLeverage) currentLeverage = d.currentLeverage;
@@ -924,6 +911,7 @@
     }
 
     function setLeverage(lev) {
+      if (!isSkillActive('leverage') && lev > 3.5) return alert('Требуется активный навык "Агрессивное плечо"!');
       playSound('click');
       haptic('light');
       currentLeverage = lev;
@@ -959,23 +947,24 @@
     }
 
     function buySkill(type) {
+      if (isSkillActive(type)) return alert('Навык еще действует!');
       playSound('click');
       haptic('medium');
+
+      const tenMinutes = 10 * 60 * 1000;
+
       if (type === 'judge') {
-        if (skills.judge) return;
         if (cash < 30000) return alert('Нужно $30,000!');
         cash -= 30000;
-        skills.judge = true;
+        skillsExpiry.judge = Date.now() + tenMinutes;
       } else if (type === 'leverage') {
-        if (skills.leverage) return;
         if (cash < 50000) return alert('Нужно $50,000!');
         cash -= 50000;
-        skills.leverage = true;
+        skillsExpiry.leverage = Date.now() + tenMinutes;
       } else if (type === 'mixer') {
-        if (skills.mixer) return;
         if (cash < 80000) return alert('Нужно $80,000!');
         cash -= 80000;
-        skills.mixer = true;
+        skillsExpiry.mixer = Date.now() + tenMinutes;
       }
       updateUI();
       saveGameState();
@@ -1004,12 +993,20 @@
       saveGameState();
     }
 
+    // МАЙНИНГ-ОТЕЛЬ ТЕПЕРЬ ДАЕТ +10 В СЕКУНДУ
     function getPassivePerSec() {
       let income = 0;
-      if (biz.crypto) income += 35;
+      if (biz.crypto) income += 10;
       if (biz.coffee) income += 140;
       if (biz.fund) income += 450;
       return income;
+    }
+
+    function formatTimeRemaining(ms) {
+      const sec = Math.max(0, Math.ceil(ms / 1000));
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
     function updateUI() {
@@ -1032,13 +1029,15 @@
       pBadge.innerText = `+$${passiveIncome}/с`;
       pBadge.style.display = passiveIncome > 0 ? 'inline' : 'none';
 
-      // Панель плеча
-      document.getElementById('leverage-panel').style.display = skills.leverage ? 'flex' : 'none';
+      const leverageActive = isSkillActive('leverage');
+      document.getElementById('leverage-panel').style.display = leverageActive ? 'flex' : 'none';
+      if (!leverageActive && currentLeverage > 3.5) {
+        setLeverage(3.5);
+      }
 
-      // Статус кнопок навыков и бизнеса
-      updateItemButton('btn-skill-judge', skills.judge, '$30,000');
-      updateItemButton('btn-skill-leverage', skills.leverage, '$50,000');
-      updateItemButton('btn-skill-mixer', skills.mixer, '$80,000');
+      updateTimedSkillButton('btn-skill-judge', 'judge', '$30,000');
+      updateTimedSkillButton('btn-skill-leverage', 'leverage', '$50,000');
+      updateTimedSkillButton('btn-skill-mixer', 'mixer', '$80,000');
 
       updateItemButton('btn-biz-1', biz.crypto, '$15,000');
       updateItemButton('btn-biz-2', biz.coffee, '$65,000');
@@ -1094,6 +1093,18 @@
       }
     }
 
+    function updateTimedSkillButton(btnId, type, cost) {
+      const btn = document.getElementById(btnId);
+      const remaining = (skillsExpiry[type] || 0) - Date.now();
+      if (remaining > 0) {
+        btn.innerText = `⏱️ ${formatTimeRemaining(remaining)}`;
+        btn.className = 'btn-buy-item owned';
+      } else {
+        btn.innerText = cost;
+        btn.className = 'btn-buy-item';
+      }
+    }
+
     function updateItemButton(id, owned, cost) {
       const btn = document.getElementById(id);
       if (owned) {
@@ -1105,7 +1116,6 @@
       }
     }
 
-    // --- ОТРИСОВКА ГРАФИКА (СВЕЧИ / ЛИНИЯ) ---
     function drawChart() {
       const dpr = window.devicePixelRatio || 1;
       const w = canvas.width / dpr;
@@ -1130,7 +1140,6 @@
       const max = rawMax + span * 0.18;
       const range = max - min || 1;
 
-      // Сетка и цены
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
       ctx.lineWidth = 1;
       ctx.fillStyle = '#6e7681';
@@ -1148,7 +1157,6 @@
         ctx.fillText('$' + levelPrice.toFixed(1), w - 4, y + 3);
       }
 
-      // Линия точки входа
       if (position) {
         const entryY = h - ((position.entryPrice - min) / range) * (h - 26) - 13;
         ctx.beginPath();
@@ -1168,9 +1176,7 @@
       const step = plotWidth / count;
 
       if (chartMode === 'candles') {
-        // РЕЖИМ ЯПОНСКИХ СВЕЧЕЙ
         const bodyWidth = Math.max(4, step * 0.65);
-
         candles.forEach((c, i) => {
           const x = i * step + step / 2;
           const openY = h - ((c.open - min) / range) * (h - 26) - 13;
@@ -1181,7 +1187,6 @@
           const isUp = c.close >= c.open;
           const color = isSwanActive ? '#ffd000' : (isUp ? '#00ff87' : '#ff3366');
 
-          // Фитиль (High - Low)
           ctx.beginPath();
           ctx.strokeStyle = color;
           ctx.lineWidth = 1.5;
@@ -1189,14 +1194,12 @@
           ctx.lineTo(x, lowY);
           ctx.stroke();
 
-          // Тело свечи
           const top = Math.min(openY, closeY);
           const height = Math.max(2, Math.abs(closeY - openY));
           ctx.fillStyle = color;
           ctx.fillRect(x - bodyWidth / 2, top, bodyWidth, height);
         });
       } else {
-        // РЕЖИМ ЛИНИИ
         const isUp = candles[count - 1].close >= candles[0].open;
         const strokeColor = isSwanActive ? '#ffd000' : (isUp ? '#00ff87' : '#ff3366');
         const grad = ctx.createLinearGradient(0, 0, 0, h);
@@ -1225,7 +1228,6 @@
       }
     }
 
-    // Игровой цикл
     let secDecayCounter = 0;
     setInterval(() => {
       if (isGameOver) return;
@@ -1233,14 +1235,12 @@
       const passive = getPassivePerSec();
       if (passive > 0) cash += passive;
 
-      // Отмыв: с миксером каждые 7 сек, без — каждые 15 сек
       secDecayCounter++;
-      const decayInterval = skills.mixer ? 7 : 15;
+      const decayInterval = isSkillActive('mixer') ? 7 : 15;
       if (biz.coffee && secDecayCounter % decayInterval === 0 && secRisk > 0) {
         secRisk = Math.max(0, secRisk - 1);
       }
 
-      // Проверка кризиса
       if (!isSwanActive && Date.now() >= nextSwanTime) startBlackSwan();
 
       if (isSwanActive) {
@@ -1254,7 +1254,6 @@
       const prevPrice = price;
       price = Math.max(10, price + momentum);
 
-      // Генерация свечи
       const open = prevPrice;
       const close = price;
       const noise = Math.random() * 2.5;
@@ -1265,7 +1264,6 @@
 
       if (secRisk > 0 && Math.random() < 0.15) secRisk = Math.max(0, secRisk - 1);
 
-      // Таймер сделки
       if (position) {
         position.timeLeft--;
         if (position.timeLeft <= 5 && position.timeLeft > 0) {
@@ -1322,7 +1320,9 @@
         entryPrice: price,
         bet: bet,
         leverage: currentLeverage,
-        timeLeft: 20
+        timeLeft: 20,
+        hypeCount: 0,
+        panicCount: 0
       };
 
       document.getElementById('news').innerText = `⚡ ${type} на $${bet.toLocaleString()} (x${currentLeverage}) открыт по курсу $${price.toFixed(2)}!`;
@@ -1361,33 +1361,69 @@
 
     function manipulate(action) {
       if (isGameOver) return;
-      playSound('click');
-      haptic('light');
 
-      // Скидка от судьи на рост риска
-      const riskMod = skills.judge ? 0.65 : 1.0;
+      const riskMod = isSkillActive('judge') ? 0.65 : 1.0;
 
       if (action === 'HYPE') {
+        if (position) {
+          if (position.hypeCount >= 2) {
+            return alert('Лимит исчерпан: максимум 2 хайпа в СМИ за сделку!');
+          }
+        }
+
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
+
+        if (position) position.hypeCount++;
+
+        if (Math.random() < 0.08) {
+          playSound('loss');
+          haptic('error');
+          secRisk += Math.round(8 * riskMod);
+          document.getElementById('news').innerText = '❌ СМИ отклонили материал: "Репутационные риски слишком высоки!". Деньги потрачены впустую.';
+          updateUI();
+          saveGameState();
+          return;
+        }
+
+        playSound('click');
+        haptic('light');
         momentum += 25 + Math.random() * 20;
         secRisk += Math.round(15 * riskMod);
-        document.getElementById('news').innerText = '📢 СМИ раздули хайп! Курс мощно пампится вверх!';
+        document.getElementById('news').innerText = `📢 СМИ выпустили хайп! Памп запущен! ${position ? `[${position.hypeCount}/2]` : ''}`;
+
       } else if (action === 'PANIC') {
+        if (position) {
+          if (position.panicCount >= 2) {
+            return alert('Лимит исчерпан: максимум 2 компромата за сделку!');
+          }
+        }
+
         if (cash < 1500) return alert('Недостаточно денег!');
         cash -= 1500;
+
+        if (position) position.panicCount++;
+
+        playSound('click');
+        haptic('light');
         momentum -= (25 + Math.random() * 20);
         secRisk += Math.round(20 * riskMod);
-        document.getElementById('news').innerText = '📉 Вброшен компромат: панический слив котировок!';
+        document.getElementById('news').innerText = `📉 Вброшен компромат: слив котировок! ${position ? `[${position.panicCount}/2]` : ''}`;
+
       } else if (action === 'WHALE') {
         if (cash < 3000) return alert('Недостаточно денег!');
         cash -= 3000;
+        playSound('click');
+        haptic('light');
         momentum += (45 + Math.random() * 30);
         secRisk += Math.round(35 * riskMod);
         document.getElementById('news').innerText = '🐋 КИТЫ зашли в стакан! Взрывная ракета вверх!';
+
       } else if (action === 'BRIBE') {
         if (cash < 2000) return alert('Недостаточно денег!');
         cash -= 2000;
+        playSound('click');
+        haptic('light');
         secRisk = Math.max(0, secRisk - 30);
         document.getElementById('news').innerText = '🤝 Юристы отбили проверку регуляторов.';
       }
@@ -1403,7 +1439,6 @@
       saveGameState();
     }
 
-    // --- ФУНКЦИЯ FLEX (ПОДЕЛИТЬСЯ В TELEGRAM) ---
     function shareFlexResult() {
       playSound('win');
       haptic('success');
@@ -1515,7 +1550,7 @@
       if (confirm('Сбросить весь баланс, престиж и начать заново?')) {
         localStorage.removeItem('finsim_save_data');
         prestigeLevel = 0;
-        skills = { judge: false, leverage: false, mixer: false };
+        skillsExpiry = { judge: 0, leverage: 0, mixer: 0 };
         restartGame();
         closeAdminModal();
       }
@@ -1526,4 +1561,4 @@
     if (isGameOver) triggerGameOver();
   </script>
 </body>
-</html>
+    </html>
