@@ -425,20 +425,21 @@
     }
     .casino-game-menu {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
     }
     .btn-casino-sub {
       background: #101622;
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 9px 2px;
+      padding: 8px 2px;
       border-radius: 8px;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .btn-casino-sub.active {
       background: linear-gradient(135deg, rgba(255, 207, 38, 0.25), rgba(255, 136, 0, 0.15));
@@ -456,7 +457,7 @@
       gap: 10px;
     }
 
-    /* РАКЕТА */
+    /* CRASH */
     .crash-viewport {
       position: relative;
       border-radius: 10px;
@@ -504,6 +505,32 @@
       display: block;
     }
 
+    /* COIN PUSHER */
+    .pusher-viewport {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 207, 38, 0.3);
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+      cursor: crosshair;
+    }
+    canvas#pusher-canvas {
+      width: 100%;
+      height: 240px;
+      display: block;
+    }
+    .pusher-hint {
+      position: absolute;
+      top: 6px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.65rem;
+      color: rgba(255, 207, 38, 0.8);
+      font-family: var(--font-mono);
+      pointer-events: none;
+      text-shadow: 0 1px 2px #000;
+    }
+
     /* МИНЫ */
     .mines-grid {
       display: grid;
@@ -536,7 +563,7 @@
       box-shadow: 0 0 15px var(--red-glow);
     }
 
-    /* ВКЛАДКА IPO */
+    /* IPO */
     .ipo-view { display: none; flex-direction: column; gap: 10px; }
     .ipo-header-box {
       padding: 12px;
@@ -578,7 +605,7 @@
       text-align: center;
     }
 
-    /* ВКЛАДКА ЛИДЕРБОРД */
+    /* ЛИДЕРБОРД */
     .leaderboard-view { display: none; flex-direction: column; gap: 10px; }
     .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .stats-box {
@@ -926,6 +953,7 @@
       <button class="btn-casino-sub active" id="btn-sub-crash" onclick="switchCasinoGame('crash')">🚀 Ракета</button>
       <button class="btn-casino-sub" id="btn-sub-roulette" onclick="switchCasinoGame('roulette')">🔴 Рулетка</button>
       <button class="btn-casino-sub" id="btn-sub-plinko" onclick="switchCasinoGame('plinko')">📌 Плинко</button>
+      <button class="btn-casino-sub" id="btn-sub-pusher" onclick="switchCasinoGame('pusher')">🪙 Пушер</button>
       <button class="btn-casino-sub" id="btn-sub-mines" onclick="switchCasinoGame('mines')">💣 Мины</button>
     </div>
 
@@ -974,7 +1002,7 @@
       </div>
     </div>
 
-    <!-- 3. ПЛИНКО С БИНОМИАЛЬНЫМ РАСПРЕДЕЛЕНИЕМ -->
+    <!-- 3. ПЛИНКО -->
     <div class="casino-game-box" id="casino-box-plinko" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">📌 Plinko Multi-Drop</span>
@@ -986,7 +1014,22 @@
       </button>
     </div>
 
-    <!-- 4. МИНЫ С 95% RTP -->
+    <!-- 4. COIN PUSHER (НОВАЯ ИГРА) -->
+    <div class="casino-game-box" id="casino-box-pusher" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🪙 Cyber Coin Pusher</span>
+        <span style="font-size: 0.7rem; color: var(--gold);">Тапай по столу для сброса</span>
+      </div>
+      <div class="pusher-viewport" onclick="handlePusherCanvasClick(event)">
+        <canvas id="pusher-canvas"></canvas>
+        <div class="pusher-hint">▼ НАЖИМАЙ В ЛЮБОЕ МЕСТО СВЕРХУ ДЛЯ БРОСКА ▼</div>
+      </div>
+      <button class="ipo-btn-invest" id="btn-pusher-drop" style="background: linear-gradient(135deg, #ffd700, #ff8800); color: #000;" onclick="dropPusherCoin()">
+        Сбросить монету ($<span id="pusher-btn-bet-label">10,000</span>)
+      </button>
+    </div>
+
+    <!-- 5. МИНЫ -->
     <div class="casino-game-box" id="casino-box-mines" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">💣 Теневые Мины (4 бомбы)</span>
@@ -1136,6 +1179,13 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
           osc.start(now);
           osc.stop(now + 0.04);
+        } else if (type === 'coin') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400 + Math.random()*400, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
         } else if (type === 'win') {
           [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
             const o = audioCtx.createOscillator();
@@ -1357,7 +1407,7 @@
     loadGameState();
 
     // ==========================================
-    // КАЗИНО: СТРОГАЯ ЭКОНОМИКА (МИН. $10,000)
+    // КАЗИНО: ЭКОНОМИКА (МИН. $10,000)
     // ==========================================
     let currentCasinoGame = 'crash';
 
@@ -1395,6 +1445,8 @@
       const str = bet.toLocaleString();
       document.getElementById('crash-btn-bet-label').innerText = str;
       document.getElementById('plinko-btn-bet-label').innerText = str;
+      const pusherBtn = document.getElementById('pusher-btn-bet-label');
+      if (pusherBtn) pusherBtn.innerText = str;
       if (minesState.status === 'idle') document.getElementById('mines-btn-bet-label').innerText = str;
     }
 
@@ -1404,19 +1456,22 @@
       playSound('click');
       haptic('light');
       currentCasinoGame = game;
-      ['crash', 'roulette', 'plinko', 'mines'].forEach(g => {
-        document.getElementById(`casino-box-${g}`).style.display = g === game ? 'flex' : 'none';
-        document.getElementById(`btn-sub-${g}`).classList.toggle('active', g === game);
+      ['crash', 'roulette', 'plinko', 'pusher', 'mines'].forEach(g => {
+        const box = document.getElementById(`casino-box-${g}`);
+        if (box) box.style.display = g === game ? 'flex' : 'none';
+        const btn = document.getElementById(`btn-sub-${g}`);
+        if (btn) btn.classList.toggle('active', g === game);
       });
       if (game === 'crash') { resizeCrashCanvas(); drawCrashScene(0, 0); }
       if (game === 'roulette') { drawRouletteWheel(0, null); }
       if (game === 'plinko') { resizePlinkoCanvas(); }
+      if (game === 'pusher') { resizePusherCanvas(); initPusherTable(); }
       if (game === 'mines' && minesState.status === 'idle') initMinesUI();
       updateCasinoLabels();
     }
 
     // ==========================================
-    // 1. CRASH (СТРОГИЙ 94% RTP + 5% МГНОВЕННЫЙ КРАШ)
+    // 1. CRASH (СТРОГИЙ 94% RTP)
     // ==========================================
     const crashCanvas = document.getElementById('crash-canvas');
     const crashCtx = crashCanvas.getContext('2d');
@@ -1458,10 +1513,8 @@
       cash -= bet;
       updateUI();
 
-      // Математическая модель Crash с House Edge 6% (RTP = 94%)
       let cp = 1.00;
       if (Math.random() < 0.05) {
-        // 5% шанс моментального краша на старте (1.00x)
         cp = 1.00;
       } else {
         const r = Math.random();
@@ -1997,19 +2050,17 @@
     }
 
     // ==========================================
-    // 3. ПЛИНКО: СТРОГОЕ БИНОМИАЛЬНОЕ РАСПРЕДЕЛЕНИЕ (RTP = 89.1%)
+    // 3. ПЛИНКО (БИНОМИАЛЬНАЯ РЕШЕТКА ГАЛЬТОНА, RTP = 89.1%)
     // ==========================================
     const plinkoCanvas = document.getElementById('plinko-canvas');
     const pCtx = plinkoCanvas.getContext('2d');
     let plinkoBalls = [];
     let plinkoAnimId = null;
-    // 7 луз: [10x, 1.5x, 0.5x, 0.2x, 0.5x, 1.5x, 10x]
-    // 10x падает ТОЛЬКО в 3.1% случаев! В 78% случаев шарик залетает в 0.2x или 0.5x!
     let plinkoBins = [10, 1.5, 0.5, 0.2, 0.5, 1.5, 10];
     let bucketFlash = Array(7).fill(0);
 
     const PLINKO_ROWS = 6;
-    const PEG_SPACING_X = 28; // Фиксированный шаг решетки Гальтона!
+    const PEG_SPACING_X = 28;
     const PEG_SPACING_Y = 24;
 
     function resizePlinkoCanvas() {
@@ -2028,7 +2079,6 @@
 
       const centerX = w / 2;
 
-      // Отрисовка правильной треугольной решетки Гальтона
       pCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
       for (let r = 0; r < PLINKO_ROWS; r++) {
         const count = r + 3;
@@ -2044,7 +2094,6 @@
         }
       }
 
-      // 7 корзин строго под промежутками нижнего ряда
       const binsTotalWidth = 7 * PEG_SPACING_X;
       const binStartX = centerX - binsTotalWidth / 2;
 
@@ -2070,7 +2119,6 @@
         pCtx.fillText(mult + 'x', bx + bw / 2 + 1.5, h - 13);
       });
 
-      // Шарики
       plinkoBalls.forEach(b => {
         pCtx.beginPath();
         pCtx.arc(b.x, b.y, 4.5, 0, Math.PI * 2);
@@ -2097,7 +2145,6 @@
       const centerX = w / 2;
       const colors = ['#ffd700', '#00ff87', '#00d2ff', '#ff3366', '#b537f2'];
 
-      // Генерируем 6 независимых 50/50 шагов (биномиальное распределение!)
       let rights = 0;
       const pathDecisions = [];
       for (let i = 0; i < 6; i++) {
@@ -2111,8 +2158,8 @@
         y: 8,
         vy: 1.5,
         currentRow: 0,
-        pathDecisions: pathDecisions, // Биномиальный путь
-        targetBin: rights, // Итоговая корзина от 0 до 6
+        pathDecisions: pathDecisions,
+        targetBin: rights,
         bet: bet,
         color: colors[Math.floor(Math.random() * colors.length)]
       });
@@ -2127,36 +2174,31 @@
       const w = plinkoCanvas.width / dpr;
       const h = 220;
       const centerX = w / 2;
-      const binStartX = centerX - (7 * PEG_SPACING_X) / 2;
 
       for (let i = plinkoBalls.length - 1; i >= 0; i--) {
         const b = plinkoBalls[i];
-        b.vy += 0.22; // Гравитация
+        b.vy += 0.22;
         b.y += b.vy;
 
-        // Определяем строку решетки
         const row = Math.floor((b.y - 15) / PEG_SPACING_Y);
         if (row >= 0 && row < 6) {
           const stepIndex = b.pathDecisions[row];
-          // Расчет идеальной позиции в слое Гальтона
           const count = row + 3;
           const rowWidth = (count - 1) * PEG_SPACING_X;
           const startX = centerX - rowWidth / 2;
           const targetX = startX + (stepIndex + 0.5) * PEG_SPACING_X;
 
-          // Мягкое подруливание к биномиальному пути с органичным отскоком
           b.x += (targetX - b.x) * 0.18;
 
           if (row > b.currentRow) {
             b.currentRow = row;
             playSound('tick');
-            b.vy = 0.8; // Замедление при соударении
+            b.vy = 0.8;
           }
         }
 
-        // Попадание в корзину
         if (b.y >= h - 28) {
-          const finalBin = b.targetBin; // Строго гарантированный биномиальный слот!
+          const finalBin = b.targetBin;
           const mult = plinkoBins[finalBin];
           const returnAmount = Math.floor(b.bet * mult);
           cash += returnAmount;
@@ -2183,7 +2225,386 @@
     }
 
     // ==========================================
-    // 4. МИНЫ (СТРОГИЙ МАТЕМАТИЧЕСКИЙ RTP = 95%)
+    // 4. CYBER COIN PUSHER (НОВАЯ ИГРА: 2.5D ФИЗИКА И СТРОГИЙ БАЛАНС)
+    // ==========================================
+    const pusherCanvas = document.getElementById('pusher-canvas');
+    const uCtx = pusherCanvas.getContext('2d');
+    let pusherItems = [];
+    let pusherAnimId = null;
+    let pusherCycle = 0; // Фаза движения полки
+
+    function resizePusherCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      pusherCanvas.width = pusherCanvas.parentElement.clientWidth * dpr;
+      pusherCanvas.height = 240 * dpr;
+      uCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizePusherCanvas);
+
+    // Первоначальное наполнение стола монетами и слитками
+    function initPusherTable() {
+      if (pusherItems.length > 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr || 320;
+
+      // 40 монет
+      for (let i = 0; i < 40; i++) {
+        pusherItems.push({
+          type: 'coin',
+          x: w * 0.18 + Math.random() * (w * 0.64),
+          z: 0.15 + Math.random() * 0.75, // 0 (верх толкателя) -> 1 (передний обрыв)
+          val: 10000,
+          vx: 0, vz: 0,
+          rad: 9
+        });
+      }
+
+      // 2 платиновых слитка ($50k)
+      pusherItems.push({
+        type: 'bar',
+        x: w * 0.42,
+        z: 0.55,
+        val: 50000,
+        vx: 0, vz: 0,
+        rad: 16
+      });
+      pusherItems.push({
+        type: 'bar',
+        x: w * 0.58,
+        z: 0.72,
+        val: 50000,
+        vx: 0, vz: 0,
+        rad: 16
+      });
+
+      // 1 изумруд ($150k) ближе к краю
+      pusherItems.push({
+        type: 'gem',
+        x: w * 0.5,
+        z: 0.82,
+        val: 150000,
+        vx: 0, vz: 0,
+        rad: 12
+      });
+
+      if (!pusherAnimId) {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      }
+    }
+
+    function handlePusherCanvasClick(e) {
+      const rect = pusherCanvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      dropPusherCoinAt(clickX);
+    }
+
+    function dropPusherCoin() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      // Бросок по центру со случайным смещением
+      dropPusherCoinAt(w / 2 + (Math.random() - 0.5) * 60);
+    }
+
+    function dropPusherCoinAt(targetX) {
+      const bet = getCasinoBet();
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
+      if (cash < bet) return alert('Недостаточно средств!');
+
+      playSound('coin');
+      haptic('light');
+      cash -= bet;
+      updateUI();
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      const safeX = Math.max(w * 0.2, Math.min(w * 0.8, targetX));
+
+      // Создание новой монеты на верхнем ярусе
+      pusherItems.push({
+        type: 'coin',
+        x: safeX,
+        z: 0.05, // Падает на подвижную полку
+        val: bet,
+        vx: (Math.random() - 0.5) * 0.4,
+        vz: 0.015,
+        rad: 9
+      });
+
+      if (!pusherAnimId) {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      }
+      saveGameState();
+    }
+
+    function animatePusherLoop() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      const h = 240;
+
+      pusherCycle += 0.035;
+      // Ход толкателя от 0.0 до 0.28 глубины Z
+      const pusherPos = 0.14 + Math.sin(pusherCycle) * 0.14;
+      const pusherSpeed = Math.cos(pusherCycle) * 0.007;
+
+      const leftGutterX = w * 0.12;
+      const rightGutterX = w * 0.88;
+
+      let wonCashThisFrame = 0;
+
+      // 1. Движение и сталкивание предметов
+      for (let i = pusherItems.length - 1; i >= 0; i--) {
+        const item = pusherItems[i];
+
+        // Толкатель давит на объекты, если движется вперед
+        if (pusherSpeed > 0 && item.z < pusherPos + 0.1 && item.z >= pusherPos - 0.08) {
+          item.vz = Math.max(item.vz, pusherSpeed * 1.4);
+          item.vx += (Math.random() - 0.5) * 0.2; // Боковое выдавливание
+        }
+
+        item.z += item.vz;
+        item.x += item.vx;
+
+        // Трение поверхности
+        item.vz *= 0.85;
+        item.vx *= 0.85;
+
+        // Отталкивание соседних монет (Collision Repulsion)
+        for (let j = i - 1; j >= 0; j--) {
+          const other = pusherItems[j];
+          const dx = item.x - other.x;
+          const dz = (item.z - other.z) * 120; // Масштаб Z к пикселям
+          const dist = Math.hypot(dx, dz);
+          const minDist = item.rad + other.rad - 2;
+
+          if (dist < minDist && dist > 0) {
+            const overlap = (minDist - dist) * 0.4;
+            const nx = dx / dist;
+            const nz = dz / dist / 120;
+
+            item.x += nx * overlap;
+            item.z += nz * overlap;
+            other.x -= nx * overlap;
+            other.z -= nz * overlap;
+
+            // Передача импульса вперед
+            if (item.vz > 0.001) other.vz += item.vz * 0.45;
+          }
+        }
+
+        // БОКОВОЙ ЖЕЛОБ (ДОХОД КАЗИНО): монета вытолкнута за пределы стола
+        if (item.x < leftGutterX || item.x > rightGutterX) {
+          pusherItems.splice(i, 1);
+          playSound('tick');
+          continue;
+        }
+
+        // ПЕРЕДНИЙ КРАЙ (ПОБЕДА ИГРОКА): предмет упал с обрыва
+        if (item.z >= 0.98) {
+          wonCashThisFrame += item.val;
+          pusherItems.splice(i, 1);
+          continue;
+        }
+      }
+
+      if (wonCashThisFrame > 0) {
+        cash += wonCashThisFrame;
+        playSound('win');
+        haptic('success');
+        document.getElementById('news').innerText = `🪙 PUSHER: С обрыва упало +$${wonCashThisFrame.toLocaleString()}!`;
+        updateUI();
+        saveGameState();
+      }
+
+      drawPusherScene(w, h, pusherPos);
+
+      // Фоновое наполнение, если стол опустел
+      if (pusherItems.length < 28) {
+        pusherItems.push({
+          type: Math.random() > 0.15 ? 'coin' : (Math.random() > 0.5 ? 'bar' : 'gem'),
+          x: w * 0.25 + Math.random() * (w * 0.5),
+          z: 0.12,
+          val: 10000,
+          vx: 0, vz: 0.01,
+          rad: 9
+        });
+      }
+
+      if (currentCasinoGame === 'pusher') {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      } else {
+        pusherAnimId = null;
+      }
+    }
+
+    function drawPusherScene(w, h, pusherPos) {
+      uCtx.clearRect(0, 0, w, h);
+
+      // Фон камеры автомата (Зеркальная сталь)
+      const bgGrad = uCtx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, '#090d14');
+      bgGrad.addColorStop(1, '#111724');
+      uCtx.fillStyle = bgGrad;
+      uCtx.fillRect(0, 0, w, h);
+
+      // Боковые неоновые барьеры
+      const leftGutterX = w * 0.12;
+      const rightGutterX = w * 0.88;
+
+      uCtx.fillStyle = 'rgba(255, 51, 102, 0.15)';
+      uCtx.fillRect(0, 0, leftGutterX, h);
+      uCtx.fillRect(rightGutterX, 0, w - rightGutterX, h);
+
+      uCtx.strokeStyle = 'rgba(255, 51, 102, 0.5)';
+      uCtx.lineWidth = 2;
+      uCtx.strokeRect(0, 0, leftGutterX, h);
+      uCtx.strokeRect(rightGutterX, 0, w - rightGutterX, h);
+
+      // Надписи на стоках
+      uCtx.fillStyle = 'rgba(255, 51, 102, 0.7)';
+      uCtx.font = 'bold 8px monospace';
+      uCtx.save();
+      uCtx.translate(14, h / 2);
+      uCtx.rotate(-Math.PI / 2);
+      uCtx.fillText('СТОК КАЗИНО (0$)', -35, 0);
+      uCtx.restore();
+
+      uCtx.save();
+      uCtx.translate(w - 6, h / 2);
+      uCtx.rotate(Math.PI / 2);
+      uCtx.fillText('СТОК КАЗИНО (0$)', -35, 0);
+      uCtx.restore();
+
+      // Направляющая подвижная полка толкателя
+      const pusherY = 35 + pusherPos * 60;
+      const pushGrad = uCtx.createLinearGradient(0, pusherY - 30, 0, pusherY);
+      pushGrad.addColorStop(0, '#484f58');
+      pushGrad.addColorStop(0.5, '#c9d1d9');
+      pushGrad.addColorStop(1, '#8b949e');
+      uCtx.fillStyle = pushGrad;
+      uCtx.fillRect(leftGutterX, pusherY - 30, rightGutterX - leftGutterX, 30);
+
+      // Золотой край толкателя
+      uCtx.fillStyle = 'var(--gold)';
+      uCtx.fillRect(leftGutterX, pusherY - 2, rightGutterX - leftGutterX, 4);
+
+      // Передний край обрыва (Drop Ledge)
+      const ledgeY = h - 22;
+      uCtx.fillStyle = 'rgba(0, 255, 135, 0.2)';
+      uCtx.fillRect(leftGutterX, ledgeY, rightGutterX - leftGutterX, 22);
+
+      uCtx.strokeStyle = 'var(--green)';
+      uCtx.lineWidth = 2;
+      uCtx.strokeRect(leftGutterX, ledgeY, rightGutterX - leftGutterX, 22);
+
+      uCtx.fillStyle = 'var(--green)';
+      uCtx.font = 'bold 10px monospace';
+      uCtx.textAlign = 'center';
+      uCtx.fillText('▼ ЗОНА ВЫПЛАТЫ ИГРОКУ ▼', w / 2, h - 8);
+
+      // 2. Отрисовка предметов на столе в изометрии
+      // Сортировка по Z (глубине), чтобы ближние перекрывали дальних
+      const sorted = [...pusherItems].sort((a, b) => a.z - b.z);
+
+      sorted.forEach(item => {
+        // Проекция Z на высоту Y
+        const screenY = 35 + item.z * (ledgeY - 35);
+        const scale = 0.8 + item.z * 0.35; // Перспектива размера
+
+        if (item.type === 'coin') {
+          drawIsometricCoin(item.x, screenY, item.rad * scale);
+        } else if (item.type === 'bar') {
+          drawIsometricBar(item.x, screenY, item.rad * scale);
+        } else if (item.type === 'gem') {
+          drawIsometricGem(item.x, screenY, item.rad * scale);
+        }
+      });
+    }
+
+    function drawIsometricCoin(x, y, r) {
+      // Тень
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 3, r, r * 0.55, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = 'rgba(0,0,0,0.45)';
+      uCtx.fill();
+
+      // Толщина ребра монеты (гурт)
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 2, r, r * 0.55, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = '#b58406';
+      uCtx.fill();
+
+      // Лицевая сторона монеты
+      uCtx.beginPath();
+      uCtx.ellipse(x, y, r, r * 0.55, 0, 0, Math.PI * 2);
+      const cGrad = uCtx.createLinearGradient(x - r, y, x + r, y);
+      cGrad.addColorStop(0, '#ffd700');
+      cGrad.addColorStop(0.5, '#fff2a1');
+      cGrad.addColorStop(1, '#e6a800');
+      uCtx.fillStyle = cGrad;
+      uCtx.fill();
+      uCtx.strokeStyle = '#b58406';
+      uCtx.lineWidth = 1;
+      uCtx.stroke();
+
+      // Штамп доллара
+      uCtx.fillStyle = '#946300';
+      uCtx.font = 'bold 8px sans-serif';
+      uCtx.textAlign = 'center';
+      uCtx.textBaseline = 'middle';
+      uCtx.fillText('$', x, y);
+    }
+
+    function drawIsometricBar(x, y, r) {
+      // Тень
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 4, r * 1.2, r * 0.5, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = 'rgba(0,0,0,0.5)';
+      uCtx.fill();
+
+      // Платиновый слиток ($50k)
+      const bw = r * 2.2;
+      const bh = r * 0.8;
+
+      uCtx.fillStyle = '#6e7681';
+      uCtx.fillRect(x - bw / 2, y, bw, bh);
+
+      uCtx.beginPath();
+      uCtx.moveTo(x - bw / 2, y);
+      uCtx.lineTo(x - bw / 2 + 4, y - 6);
+      uCtx.lineTo(x + bw / 2 - 4, y - 6);
+      uCtx.lineTo(x + bw / 2, y);
+      uCtx.closePath();
+      const topGrad = uCtx.createLinearGradient(0, y - 6, 0, y);
+      topGrad.addColorStop(0, '#f0f6fc');
+      topGrad.addColorStop(1, '#c9d1d9');
+      uCtx.fillStyle = topGrad;
+      uCtx.fill();
+
+      uCtx.fillStyle = '#21262d';
+      uCtx.font = 'bold 7px monospace';
+      uCtx.textAlign = 'center';
+      uCtx.fillText('50K', x, y - 1);
+    }
+
+    function drawIsometricGem(x, y, r) {
+      // Изумруд ($150k)
+      uCtx.save();
+      uCtx.translate(x, y);
+      uCtx.beginPath();
+      uCtx.moveTo(0, -r);
+      uCtx.lineTo(r, -r * 0.3);
+      uCtx.lineTo(0, r);
+      uCtx.lineTo(-r, -r * 0.3);
+      uCtx.closePath();
+      uCtx.fillStyle = '#00ff87';
+      uCtx.shadowColor = '#00ff87';
+      uCtx.shadowBlur = 10;
+      uCtx.fill();
+      uCtx.restore();
+    }
+
+    // ==========================================
+    // 5. МИНЫ (СТРОГИЙ МАТЕМАТИЧЕСКИЙ RTP = 95%)
     // ==========================================
     let minesState = {
       status: 'idle',
@@ -2194,8 +2615,6 @@
       currentMult: 1.0
     };
 
-    // Точная математическая таблица честных множителей (для 4 бомб из 25 при 95% RTP):
-    // 1st: 1.13x, 2nd: 1.35x, 3rd: 1.64x, 4th: 2.00x...
     const MINES_MULTS = [
       1.0, 1.13, 1.35, 1.64, 2.00, 2.48, 3.10, 3.95, 5.12, 6.77, 9.15,
       12.65, 18.00, 26.50, 41.00, 68.00, 120.00, 235.00, 520.00, 1350.00, 4500.00
@@ -2203,6 +2622,7 @@
 
     function initMinesUI() {
       const field = document.getElementById('mines-field');
+      if (!field) return;
       field.innerHTML = '';
       for (let i = 0; i < 25; i++) {
         const cell = document.createElement('div');
@@ -2527,7 +2947,7 @@
       const sec = Math.max(0, Math.ceil(ms / 1000));
       const m = Math.floor(sec / 60);
       const s = sec % 60;
-      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
     function investStartup(id) {
@@ -3255,7 +3675,6 @@
         updateUI();
         saveGameState();
       } else if (code === 'сбросить') {
-        // Секретный код сброса раздутого баланса для проверки экономики
         cash = 10000;
         document.getElementById('news').innerText = '👑 Баланс сброшен до $10,000 для проверки экономики!';
         closeAdminModal();
