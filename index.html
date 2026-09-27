@@ -35,7 +35,7 @@
     body {
       background: radial-gradient(circle at 50% 0%, #152238 0%, var(--bg) 75%);
       color: var(--text-main);
-      padding: 10px;
+      padding: 10px 10px 32px 10px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -59,36 +59,55 @@
       border-radius: 12px;
     }
 
-    /* Шапка */
+    /* Исправленная шапка: Баланс не выталкивает кнопки */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
+      padding: 8px 12px;
+      gap: 8px;
+    }
+    .header-user-block {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
     }
     .val-balance {
       font-family: var(--font-mono);
-      font-size: 1.35rem;
+      font-size: clamp(1.05rem, 3.8vw, 1.32rem);
       font-weight: 800;
       color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.3px;
     }
     .prestige-badge {
       font-size: 0.68rem;
-      color: var(--yellow);
+      color: var(--gold);
       font-weight: 700;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 3px;
     }
-    .header-btns { display: flex; gap: 6px; }
+    .header-btns {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
     .btn-icon {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 6px 8px;
+      padding: 6px 10px;
       border-radius: 8px;
       font-size: 0.75rem;
       cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
     .btn-admin {
       background: rgba(255, 208, 0, 0.12);
@@ -97,7 +116,7 @@
       font-weight: 700;
     }
 
-    /* 4 ПЛАШКИ НАВИГАЦИИ */
+    /* 4 вкладки навигации */
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -110,7 +129,7 @@
     .nav-tab {
       padding: 8px 2px;
       border-radius: 8px;
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-align: center;
       background: transparent;
@@ -223,6 +242,7 @@
       transition: width 1s linear;
     }
 
+    /* Ставки на терминале */
     .bet-container {
       padding: 10px 12px;
       display: flex;
@@ -252,25 +272,22 @@
       margin-left: 4px;
     }
 
-    .quick-chips {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      padding-bottom: 2px;
-      -webkit-overflow-scrolling: touch;
+    .quick-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
     }
     .chip {
       background: #1a2230;
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 6px 10px;
+      padding: 6px 2px;
       border-radius: 6px;
       font-size: 0.72rem;
       font-weight: 700;
+      text-align: center;
       cursor: pointer;
       white-space: nowrap;
-      flex-shrink: 0;
     }
     .chip:active { background: #263347; }
 
@@ -332,12 +349,12 @@
     .btn-subtitle { font-size: 0.65rem; opacity: 0.8; font-family: var(--font-mono); font-weight: normal; }
 
     .section-title {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.8px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-left: 2px;
+      margin: 4px 0 2px 2px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -390,16 +407,16 @@
     .btn-prestige {
       background: linear-gradient(135deg, #ffd700, #ff8800);
       color: #000;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.85rem;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 0.88rem;
       font-weight: 800;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 6px;
       box-shadow: 0 4px 20px rgba(255, 208, 0, 0.3);
-      margin-top: 4px;
+      margin-top: 8px;
     }
     .btn-share {
       background: linear-gradient(135deg, #00d2ff, #0077ff);
@@ -414,7 +431,7 @@
       cursor: pointer;
     }
 
-    /* ==================== VIP КАЗИНО ==================== */
+    /* VIP КАЗИНО: Адаптивная карточка без обрезания фишек */
     .casino-view { display: none; flex-direction: column; gap: 10px; }
     .casino-vip-card {
       background: linear-gradient(135deg, rgba(255, 207, 38, 0.14), rgba(255, 51, 102, 0.08));
@@ -423,22 +440,44 @@
       padding: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
+    .casino-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .casino-chip {
+      background: #141b26;
+      border: 1px solid rgba(255, 207, 38, 0.35);
+      color: var(--text-main);
+      padding: 7px 2px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .casino-chip:active { background: #263347; }
+    .casino-chip.max { border-color: var(--red); color: var(--red); }
+
     .casino-game-menu {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
     }
     .btn-casino-sub {
       background: #101622;
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 9px 2px;
+      padding: 8px 2px;
       border-radius: 8px;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .btn-casino-sub.active {
       background: linear-gradient(135deg, rgba(255, 207, 38, 0.25), rgba(255, 136, 0, 0.15));
@@ -456,7 +495,7 @@
       gap: 10px;
     }
 
-    /* РАКЕТА */
+    /* Ракета */
     .crash-viewport {
       position: relative;
       border-radius: 10px;
@@ -476,25 +515,21 @@
       pointer-events: none;
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.7);
       line-height: 1.4;
       text-shadow: 0 1px 3px #000;
     }
 
-    /* РУЛЕТКА */
+    /* Рулетка */
     .roulette-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
     }
-    canvas#roulette-canvas {
-      width: 220px;
-      height: 220px;
-      display: block;
-    }
+    canvas#roulette-canvas { width: 220px; height: 220px; display: block; }
 
-    /* ПЛИНКО */
+    /* Плинко */
     canvas#plinko-canvas {
       width: 100%;
       height: 220px;
@@ -504,7 +539,29 @@
       display: block;
     }
 
-    /* МИНЫ */
+    /* Пушер */
+    .pusher-viewport {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 207, 38, 0.3);
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+      cursor: crosshair;
+    }
+    canvas#pusher-canvas { width: 100%; height: 240px; display: block; }
+    .pusher-hint {
+      position: absolute;
+      top: 6px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.65rem;
+      color: rgba(255, 207, 38, 0.8);
+      font-family: var(--font-mono);
+      pointer-events: none;
+      text-shadow: 0 1px 2px #000;
+    }
+
+    /* Мины */
     .mines-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -536,7 +593,7 @@
       box-shadow: 0 0 15px var(--red-glow);
     }
 
-    /* ВКЛАДКА IPO */
+    /* Вкладка IPO */
     .ipo-view { display: none; flex-direction: column; gap: 10px; }
     .ipo-header-box {
       padding: 12px;
@@ -578,7 +635,7 @@
       text-align: center;
     }
 
-    /* ВКЛАДКА ЛИДЕРБОРД */
+    /* Лидерборд */
     .leaderboard-view { display: none; flex-direction: column; gap: 10px; }
     .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .stats-box {
@@ -604,7 +661,7 @@
     .leader-user { flex: 1; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .leader-cash { font-family: var(--font-mono); font-weight: 700; color: #fff; }
 
-    /* МОДАЛКИ */
+    /* Модалки */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -670,13 +727,11 @@
 
   <canvas id="fireworks-canvas"></canvas>
 
-  <!-- Шапка -->
+  <!-- Шапка с защитой от вылезания текста -->
   <div class="glass header">
-    <div>
-      <div style="display: flex; align-items: center; gap: 6px;">
-        <div class="val-balance" id="balance">$10,000</div>
-        <div class="prestige-badge" id="prestige-label" style="display: none;">👑 Олигарх I</div>
-      </div>
+    <div class="header-user-block">
+      <div class="val-balance" id="balance">$10,000</div>
+      <div class="prestige-badge" id="prestige-label" style="display: none;">👑 Олигарх I</div>
     </div>
     <div class="header-btns">
       <button class="btn-icon" id="sound-btn" onclick="toggleSound()">🔊 Вкл</button>
@@ -684,20 +739,12 @@
     </div>
   </div>
 
-  <!-- 4 ПЛАШКИ НАВИГАЦИИ -->
+  <!-- 4 вкладки -->
   <div class="nav-tabs">
-    <button class="nav-tab active" id="tab-btn-main" onclick="switchTab('main')">
-      📊 Терминал
-    </button>
-    <button class="nav-tab" id="tab-btn-ipo" onclick="switchTab('ipo')">
-      🚀 Венчур <span class="badge-count" id="ipo-badge" style="display: none;">1</span>
-    </button>
-    <button class="nav-tab tab-casino" id="tab-btn-casino" onclick="switchTab('casino')">
-      🎰 Казино
-    </button>
-    <button class="nav-tab" id="tab-btn-top" onclick="switchTab('top')">
-      🏆 Топ
-    </button>
+    <button class="nav-tab active" id="tab-btn-main" onclick="switchTab('main')">📊 Терминал</button>
+    <button class="nav-tab" id="tab-btn-ipo" onclick="switchTab('ipo')">🚀 Венчур <span class="badge-count" id="ipo-badge" style="display: none;">1</span></button>
+    <button class="nav-tab tab-casino" id="tab-btn-casino" onclick="switchTab('casino')">🎰 Казино</button>
+    <button class="nav-tab" id="tab-btn-top" onclick="switchTab('top')">🏆 Топ</button>
   </div>
 
   <!-- Шкала SEC -->
@@ -760,12 +807,12 @@
           <input type="number" id="bet-input" class="bet-input" value="1000" min="50" step="50">
         </div>
       </div>
-      <div class="quick-chips">
+      <div class="quick-chips-grid">
         <div class="chip" onclick="setBetPercent(0.25)">25%</div>
         <div class="chip" onclick="setBetPercent(0.50)">50%</div>
         <div class="chip" onclick="setBetPercent(1.00)">ALL-IN</div>
-        <div class="chip" onclick="addBet(1000)">+$1,000</div>
-        <div class="chip" onclick="addBet(5000)">+$5,000</div>
+        <div class="chip" onclick="addBet(1000)">+1K</div>
+        <div class="chip" onclick="addBet(5000)">+5K</div>
       </div>
 
       <div class="leverage-selector" id="leverage-panel">
@@ -789,7 +836,7 @@
       </button>
     </div>
 
-    <!-- Черный синдикат (Навыки) -->
+    <!-- Черный синдикат -->
     <div class="section-title">
       <span>Черный синдикат (Действуют 10 мин)</span>
       <span style="font-size: 0.65rem; color: #8b949e;">Временные</span>
@@ -819,7 +866,7 @@
     </div>
 
     <!-- Легальные активы -->
-    <div class="section-title" style="margin-top: 4px;">
+    <div class="section-title">
       <span>Легальные Активы (Пассивный доход)</span>
       <span style="font-size: 0.65rem; color: #8b949e;">Лимит: 1 шт.</span>
     </div>
@@ -848,7 +895,7 @@
     </div>
 
     <!-- Черный PR -->
-    <div class="section-title" style="margin-top: 4px;">Инструменты влияния (Black Ops)</div>
+    <div class="section-title">Инструменты влияния (Black Ops)</div>
     <div class="grid-2">
       <button class="btn-black-ops" onclick="manipulate('HYPE')">
         <div class="ops-title">📢 Купить хайп в СМИ</div>
@@ -873,7 +920,7 @@
     </div>
 
     <button class="btn-prestige" id="btn-prestige-action" style="display: none;" onclick="triggerPrestigeModal()">
-      ✈️ Эмиграция в Дубай (Цель: $1,000,000 достигнута!)
+      ✈️ Эмиграция в Дубай (Престиж <span id="next-prestige-num">I</span>)
     </button>
   </div>
 
@@ -900,25 +947,27 @@
   <!-- ==================== ВКЛАДКА 3: КАЗИНО ==================== -->
   <div id="view-casino" class="casino-view">
     <div class="casino-vip-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 6px;">
           <span style="font-size: 1.1rem;">💎</span>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 800; color: var(--gold); letter-spacing: 0.5px;">ПОДПОЛЬНЫЙ СИНДИКАТ</div>
+            <div style="font-size: 0.82rem; font-weight: 800; color: var(--gold); letter-spacing: 0.4px;">ПОДПОЛЬНЫЙ СИНДИКАТ</div>
             <div style="font-size: 0.65rem; color: var(--text-muted);">VIP-клуб высоких ставок</div>
           </div>
         </div>
-        <div class="bet-input-wrap" style="width: 48%; border-color: rgba(255,207,38,0.4);">
+        <div class="bet-input-wrap" style="width: 45%; border-color: rgba(255,207,38,0.4);">
           <span style="color: var(--gold);">$</span>
           <input type="number" id="casino-bet-input" class="bet-input" value="10000" min="10000" step="5000">
         </div>
       </div>
-      <div class="quick-chips">
-        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(10000)">$10,000</div>
-        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(25000)">$25,000</div>
-        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(50000)">$50,000</div>
-        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(100000)">$100,000</div>
-        <div class="chip" style="border-color: var(--red); color: var(--red);" onclick="setCasinoBetPercent(1.0)">ALL-IN</div>
+
+      <!-- Исправленные фишки: 5 равных колонок, помещаются на любом смартфоне -->
+      <div class="casino-chips-grid">
+        <div class="casino-chip" onclick="setCasinoBet(10000)">$10K</div>
+        <div class="casino-chip" onclick="setCasinoBet(25000)">$25K</div>
+        <div class="casino-chip" onclick="setCasinoBet(50000)">$50K</div>
+        <div class="casino-chip" onclick="setCasinoBet(100000)">$100K</div>
+        <div class="casino-chip max" onclick="setCasinoBetPercent(1.0)">MAX</div>
       </div>
     </div>
 
@@ -926,6 +975,7 @@
       <button class="btn-casino-sub active" id="btn-sub-crash" onclick="switchCasinoGame('crash')">🚀 Ракета</button>
       <button class="btn-casino-sub" id="btn-sub-roulette" onclick="switchCasinoGame('roulette')">🔴 Рулетка</button>
       <button class="btn-casino-sub" id="btn-sub-plinko" onclick="switchCasinoGame('plinko')">📌 Плинко</button>
+      <button class="btn-casino-sub" id="btn-sub-pusher" onclick="switchCasinoGame('pusher')">🪙 Пушер</button>
       <button class="btn-casino-sub" id="btn-sub-mines" onclick="switchCasinoGame('mines')">💣 Мины</button>
     </div>
 
@@ -974,7 +1024,7 @@
       </div>
     </div>
 
-    <!-- 3. ПЛИНКО С БИНОМИАЛЬНЫМ РАСПРЕДЕЛЕНИЕМ -->
+    <!-- 3. ПЛИНКО -->
     <div class="casino-game-box" id="casino-box-plinko" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">📌 Plinko Multi-Drop</span>
@@ -986,7 +1036,22 @@
       </button>
     </div>
 
-    <!-- 4. МИНЫ С 95% RTP -->
+    <!-- 4. COIN PUSHER -->
+    <div class="casino-game-box" id="casino-box-pusher" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🪙 Cyber Coin Pusher</span>
+        <span style="font-size: 0.7rem; color: var(--gold);">Тапай по столу для сброса</span>
+      </div>
+      <div class="pusher-viewport" onclick="handlePusherCanvasClick(event)">
+        <canvas id="pusher-canvas"></canvas>
+        <div class="pusher-hint">▼ НАЖИМАЙ В ЛЮБОЕ МЕСТО СВЕРХУ ДЛЯ БРОСКА ▼</div>
+      </div>
+      <button class="ipo-btn-invest" id="btn-pusher-drop" style="background: linear-gradient(135deg, #ffd700, #ff8800); color: #000;" onclick="dropPusherCoin()">
+        Сбросить монету ($<span id="pusher-btn-bet-label">10,000</span>)
+      </button>
+    </div>
+
+    <!-- 5. МИНЫ -->
     <div class="casino-game-box" id="casino-box-mines" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">💣 Теневые Мины (4 бомбы)</span>
@@ -1018,7 +1083,7 @@
     <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
   </div>
 
-  <!-- МОДАЛКА ИТОГОВ IPO -->
+  <!-- Модалки -->
   <div class="modal-overlay" id="ipo-result-modal">
     <div class="modal-content" id="ipo-result-content">
       <div style="font-size: 3rem;" id="ipo-result-icon">🎉</div>
@@ -1032,7 +1097,6 @@
     </div>
   </div>
 
-  <!-- GAME OVER МОДАЛКА -->
   <div class="modal-overlay" id="gameover-modal" style="background: rgba(5, 7, 10, 0.95);">
     <div class="modal-content gameover-box">
       <div style="font-size: 3rem;">🚨</div>
@@ -1050,13 +1114,12 @@
     </div>
   </div>
 
-  <!-- МОДАЛКА ПРЕСТИЖА -->
   <div class="modal-overlay" id="prestige-modal">
     <div class="modal-content" style="border: 2px solid var(--yellow);">
       <div style="font-size: 3rem;">✈️🌴</div>
       <h2 style="color: var(--yellow); font-size: 1.25rem;">ЭМИГРАЦИЯ В ДУБАЙ</h2>
       <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4;">
-        Вы заработали $1,000,000 и перевели капитал в частный траст!
+        Вы перевели капитал в частный траст и повысили статус Олигарха!
       </p>
       <button class="btn-modal-action" onclick="confirmPrestige()">
         👑 Улететь на джете (Престиж)
@@ -1065,7 +1128,6 @@
     </div>
   </div>
 
-  <!-- АДМИН МОДАЛКА -->
   <div class="modal-overlay" id="admin-modal">
     <div class="modal-content" style="border: 1px solid var(--yellow);">
       <h3 style="color: var(--yellow); font-size: 1.05rem;">👑 Режим Создателя</h3>
@@ -1089,6 +1151,21 @@
     let myPlayerId = tgUser.id ? String(tgUser.id) : (localStorage.getItem('finsim_anon_id') || 'anon_' + Math.floor(Math.random()*100000));
     localStorage.setItem('finsim_anon_id', myPlayerId);
     let myPlayerName = tgUser.username ? '@' + tgUser.username : (tgUser.first_name || 'Трейдер #' + myPlayerId.slice(-4));
+
+    // Римские цифры (1 -> I, 4 -> IV, 9 -> IX и т.д.)
+    function toRoman(num) {
+      if (num <= 0) return '';
+      const romanMap = [
+        [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+        [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+        [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']
+      ];
+      let res = '';
+      for (const [v, s] of romanMap) {
+        while (num >= v) { res += s; num -= v; }
+      }
+      return res;
+    }
 
     // --- ЗВУКОВОЙ ДВИЖОК ---
     let soundEnabled = true;
@@ -1136,6 +1213,13 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
           osc.start(now);
           osc.stop(now + 0.04);
+        } else if (type === 'coin') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400 + Math.random()*400, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
         } else if (type === 'win') {
           [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
             const o = audioCtx.createOscillator();
@@ -1357,7 +1441,7 @@
     loadGameState();
 
     // ==========================================
-    // КАЗИНО: СТРОГАЯ ЭКОНОМИКА (МИН. $10,000)
+    // КАЗИНО: ЛОГИКА
     // ==========================================
     let currentCasinoGame = 'crash';
 
@@ -1379,14 +1463,8 @@
     function getCasinoBet() {
       const input = document.getElementById('casino-bet-input');
       let val = parseInt(input.value) || 10000;
-      if (val < 10000) {
-        val = 10000;
-        input.value = val;
-      }
-      if (val > cash) {
-        val = Math.max(10000, Math.floor(cash));
-        input.value = val;
-      }
+      if (val < 10000) { val = 10000; input.value = val; }
+      if (val > cash) { val = Math.max(10000, Math.floor(cash)); input.value = val; }
       return val;
     }
 
@@ -1395,6 +1473,8 @@
       const str = bet.toLocaleString();
       document.getElementById('crash-btn-bet-label').innerText = str;
       document.getElementById('plinko-btn-bet-label').innerText = str;
+      const pusherBtn = document.getElementById('pusher-btn-bet-label');
+      if (pusherBtn) pusherBtn.innerText = str;
       if (minesState.status === 'idle') document.getElementById('mines-btn-bet-label').innerText = str;
     }
 
@@ -1404,19 +1484,22 @@
       playSound('click');
       haptic('light');
       currentCasinoGame = game;
-      ['crash', 'roulette', 'plinko', 'mines'].forEach(g => {
-        document.getElementById(`casino-box-${g}`).style.display = g === game ? 'flex' : 'none';
-        document.getElementById(`btn-sub-${g}`).classList.toggle('active', g === game);
+      ['crash', 'roulette', 'plinko', 'pusher', 'mines'].forEach(g => {
+        const box = document.getElementById(`casino-box-${g}`);
+        if (box) box.style.display = g === game ? 'flex' : 'none';
+        const btn = document.getElementById(`btn-sub-${g}`);
+        if (btn) btn.classList.toggle('active', g === game);
       });
       if (game === 'crash') { resizeCrashCanvas(); drawCrashScene(0, 0); }
       if (game === 'roulette') { drawRouletteWheel(0, null); }
       if (game === 'plinko') { resizePlinkoCanvas(); }
+      if (game === 'pusher') { resizePusherCanvas(); initPusherTable(); }
       if (game === 'mines' && minesState.status === 'idle') initMinesUI();
       updateCasinoLabels();
     }
 
     // ==========================================
-    // 1. CRASH (СТРОГИЙ 94% RTP + 5% МГНОВЕННЫЙ КРАШ)
+    // 1. CRASH: ПЕРЕРАБОТАННАЯ ВЕКТОРНАЯ ГРАФИКА
     // ==========================================
     const crashCanvas = document.getElementById('crash-canvas');
     const crashCtx = crashCanvas.getContext('2d');
@@ -1426,7 +1509,7 @@
     let crashStars = Array.from({length: 60}, () => ({
       x: Math.random() * 500,
       y: Math.random() * 250,
-      r: Math.random() * 1.6 + 0.4,
+      r: Math.random() * 1.5 + 0.4,
       alpha: Math.random() * 0.7 + 0.3
     }));
 
@@ -1458,10 +1541,8 @@
       cash -= bet;
       updateUI();
 
-      // Математическая модель Crash с House Edge 6% (RTP = 94%)
       let cp = 1.00;
       if (Math.random() < 0.05) {
-        // 5% шанс моментального краша на старте (1.00x)
         cp = 1.00;
       } else {
         const r = Math.random();
@@ -1710,25 +1791,29 @@
         }
       }
 
+      // Мягкие стилизованные неоновые облака (без черных полос)
       const cloudOffset = altProgress * 180;
-      const cloudAlpha = Math.max(0, 0.4 - altProgress * 0.45);
+      const cloudAlpha = Math.max(0, 0.35 - altProgress * 0.4);
       if (cloudAlpha > 0) {
-        crashCtx.fillStyle = `rgba(255, 255, 255, ${cloudAlpha})`;
         [
           {x: 70, y: 70 + cloudOffset, r: 28},
           {x: 180, y: 110 + cloudOffset, r: 38},
           {x: 290, y: 80 + cloudOffset, r: 32}
         ].forEach(c => {
           if (c.y < h + 50) {
+            const radGrad = crashCtx.createRadialGradient(c.x, c.y, 5, c.x, c.y, c.r * 1.4);
+            radGrad.addColorStop(0, `rgba(255, 255, 255, ${cloudAlpha * 1.2})`);
+            radGrad.addColorStop(0.6, `rgba(180, 220, 255, ${cloudAlpha * 0.7})`);
+            radGrad.addColorStop(1, 'rgba(180, 220, 255, 0)');
+            crashCtx.fillStyle = radGrad;
             crashCtx.beginPath();
-            crashCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-            crashCtx.arc(c.x + 22, c.y - 8, c.r * 0.75, 0, Math.PI * 2);
-            crashCtx.arc(c.x - 22, c.y + 4, c.r * 0.7, 0, Math.PI * 2);
+            crashCtx.arc(c.x, c.y, c.r * 1.4, 0, Math.PI * 2);
             crashCtx.fill();
           }
         });
       }
 
+      // Горизонт Земли
       const groundY = (h - 25) + altProgress * 95;
       if (groundY < h + 60) {
         crashCtx.fillStyle = '#0a0f16';
@@ -1843,20 +1928,13 @@
     let rouletteBallRadius = 88;
 
     const rouletteSlices = [
-      {num: 0, color: '#2ea043'},
-      {num: 8, color: '#161b22'},
-      {num: 1, color: '#da3633'},
-      {num: 9, color: '#161b22'},
-      {num: 2, color: '#da3633'},
-      {num: 10, color: '#161b22'},
-      {num: 3, color: '#da3633'},
-      {num: 11, color: '#161b22'},
-      {num: 4, color: '#da3633'},
-      {num: 12, color: '#161b22'},
-      {num: 5, color: '#da3633'},
-      {num: 13, color: '#161b22'},
-      {num: 6, color: '#da3633'},
-      {num: 14, color: '#161b22'},
+      {num: 0, color: '#2ea043'}, {num: 8, color: '#161b22'},
+      {num: 1, color: '#da3633'}, {num: 9, color: '#161b22'},
+      {num: 2, color: '#da3633'}, {num: 10, color: '#161b22'},
+      {num: 3, color: '#da3633'}, {num: 11, color: '#161b22'},
+      {num: 4, color: '#da3633'}, {num: 12, color: '#161b22'},
+      {num: 5, color: '#da3633'}, {num: 13, color: '#161b22'},
+      {num: 6, color: '#da3633'}, {num: 14, color: '#161b22'},
       {num: 7, color: '#da3633'}
     ];
 
@@ -1997,19 +2075,17 @@
     }
 
     // ==========================================
-    // 3. ПЛИНКО: СТРОГОЕ БИНОМИАЛЬНОЕ РАСПРЕДЕЛЕНИЕ (RTP = 89.1%)
+    // 3. ПЛИНКО: БИНОМИАЛЬНЫЙ РАСЧЕТ (RTP = 89.1%)
     // ==========================================
     const plinkoCanvas = document.getElementById('plinko-canvas');
     const pCtx = plinkoCanvas.getContext('2d');
     let plinkoBalls = [];
     let plinkoAnimId = null;
-    // 7 луз: [10x, 1.5x, 0.5x, 0.2x, 0.5x, 1.5x, 10x]
-    // 10x падает ТОЛЬКО в 3.1% случаев! В 78% случаев шарик залетает в 0.2x или 0.5x!
     let plinkoBins = [10, 1.5, 0.5, 0.2, 0.5, 1.5, 10];
     let bucketFlash = Array(7).fill(0);
 
     const PLINKO_ROWS = 6;
-    const PEG_SPACING_X = 28; // Фиксированный шаг решетки Гальтона!
+    const PEG_SPACING_X = 28;
     const PEG_SPACING_Y = 24;
 
     function resizePlinkoCanvas() {
@@ -2028,7 +2104,6 @@
 
       const centerX = w / 2;
 
-      // Отрисовка правильной треугольной решетки Гальтона
       pCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
       for (let r = 0; r < PLINKO_ROWS; r++) {
         const count = r + 3;
@@ -2044,7 +2119,6 @@
         }
       }
 
-      // 7 корзин строго под промежутками нижнего ряда
       const binsTotalWidth = 7 * PEG_SPACING_X;
       const binStartX = centerX - binsTotalWidth / 2;
 
@@ -2070,7 +2144,6 @@
         pCtx.fillText(mult + 'x', bx + bw / 2 + 1.5, h - 13);
       });
 
-      // Шарики
       plinkoBalls.forEach(b => {
         pCtx.beginPath();
         pCtx.arc(b.x, b.y, 4.5, 0, Math.PI * 2);
@@ -2097,7 +2170,6 @@
       const centerX = w / 2;
       const colors = ['#ffd700', '#00ff87', '#00d2ff', '#ff3366', '#b537f2'];
 
-      // Генерируем 6 независимых 50/50 шагов (биномиальное распределение!)
       let rights = 0;
       const pathDecisions = [];
       for (let i = 0; i < 6; i++) {
@@ -2111,8 +2183,8 @@
         y: 8,
         vy: 1.5,
         currentRow: 0,
-        pathDecisions: pathDecisions, // Биномиальный путь
-        targetBin: rights, // Итоговая корзина от 0 до 6
+        pathDecisions: pathDecisions,
+        targetBin: rights,
         bet: bet,
         color: colors[Math.floor(Math.random() * colors.length)]
       });
@@ -2127,36 +2199,31 @@
       const w = plinkoCanvas.width / dpr;
       const h = 220;
       const centerX = w / 2;
-      const binStartX = centerX - (7 * PEG_SPACING_X) / 2;
 
       for (let i = plinkoBalls.length - 1; i >= 0; i--) {
         const b = plinkoBalls[i];
-        b.vy += 0.22; // Гравитация
+        b.vy += 0.22;
         b.y += b.vy;
 
-        // Определяем строку решетки
         const row = Math.floor((b.y - 15) / PEG_SPACING_Y);
         if (row >= 0 && row < 6) {
           const stepIndex = b.pathDecisions[row];
-          // Расчет идеальной позиции в слое Гальтона
           const count = row + 3;
           const rowWidth = (count - 1) * PEG_SPACING_X;
           const startX = centerX - rowWidth / 2;
           const targetX = startX + (stepIndex + 0.5) * PEG_SPACING_X;
 
-          // Мягкое подруливание к биномиальному пути с органичным отскоком
           b.x += (targetX - b.x) * 0.18;
 
           if (row > b.currentRow) {
             b.currentRow = row;
             playSound('tick');
-            b.vy = 0.8; // Замедление при соударении
+            b.vy = 0.8;
           }
         }
 
-        // Попадание в корзину
         if (b.y >= h - 28) {
-          const finalBin = b.targetBin; // Строго гарантированный биномиальный слот!
+          const finalBin = b.targetBin;
           const mult = plinkoBins[finalBin];
           const returnAmount = Math.floor(b.bet * mult);
           cash += returnAmount;
@@ -2183,7 +2250,352 @@
     }
 
     // ==========================================
-    // 4. МИНЫ (СТРОГИЙ МАТЕМАТИЧЕСКИЙ RTP = 95%)
+    // 4. COIN PUSHER
+    // ==========================================
+    const pusherCanvas = document.getElementById('pusher-canvas');
+    const uCtx = pusherCanvas.getContext('2d');
+    let pusherItems = [];
+    let pusherAnimId = null;
+    let pusherCycle = 0;
+
+    function resizePusherCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      pusherCanvas.width = pusherCanvas.parentElement.clientWidth * dpr;
+      pusherCanvas.height = 240 * dpr;
+      uCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizePusherCanvas);
+
+    function initPusherTable() {
+      if (pusherItems.length > 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr || 320;
+
+      for (let i = 0; i < 40; i++) {
+        pusherItems.push({
+          type: 'coin',
+          x: w * 0.18 + Math.random() * (w * 0.64),
+          z: 0.15 + Math.random() * 0.75,
+          val: 10000,
+          vx: 0, vz: 0,
+          rad: 9
+        });
+      }
+
+      pusherItems.push({
+        type: 'bar',
+        x: w * 0.42,
+        z: 0.55,
+        val: 50000,
+        vx: 0, vz: 0,
+        rad: 16
+      });
+      pusherItems.push({
+        type: 'bar',
+        x: w * 0.58,
+        z: 0.72,
+        val: 50000,
+        vx: 0, vz: 0,
+        rad: 16
+      });
+
+      pusherItems.push({
+        type: 'gem',
+        x: w * 0.5,
+        z: 0.82,
+        val: 150000,
+        vx: 0, vz: 0,
+        rad: 12
+      });
+
+      if (!pusherAnimId) {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      }
+    }
+
+    function handlePusherCanvasClick(e) {
+      const rect = pusherCanvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      dropPusherCoinAt(clickX);
+    }
+
+    function dropPusherCoin() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      dropPusherCoinAt(w / 2 + (Math.random() - 0.5) * 60);
+    }
+
+    function dropPusherCoinAt(targetX) {
+      const bet = getCasinoBet();
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
+      if (cash < bet) return alert('Недостаточно средств!');
+
+      playSound('coin');
+      haptic('light');
+      cash -= bet;
+      updateUI();
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      const safeX = Math.max(w * 0.2, Math.min(w * 0.8, targetX));
+
+      pusherItems.push({
+        type: 'coin',
+        x: safeX,
+        z: 0.05,
+        val: bet,
+        vx: (Math.random() - 0.5) * 0.4,
+        vz: 0.015,
+        rad: 9
+      });
+
+      if (!pusherAnimId) {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      }
+      saveGameState();
+    }
+
+    function animatePusherLoop() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = pusherCanvas.width / dpr;
+      const h = 240;
+
+      pusherCycle += 0.035;
+      const pusherPos = 0.14 + Math.sin(pusherCycle) * 0.14;
+      const pusherSpeed = Math.cos(pusherCycle) * 0.007;
+
+      const leftGutterX = w * 0.12;
+      const rightGutterX = w * 0.88;
+
+      let wonCashThisFrame = 0;
+
+      for (let i = pusherItems.length - 1; i >= 0; i--) {
+        const item = pusherItems[i];
+
+        if (pusherSpeed > 0 && item.z < pusherPos + 0.1 && item.z >= pusherPos - 0.08) {
+          item.vz = Math.max(item.vz, pusherSpeed * 1.4);
+          item.vx += (Math.random() - 0.5) * 0.2;
+        }
+
+        item.z += item.vz;
+        item.x += item.vx;
+        item.vz *= 0.85;
+        item.vx *= 0.85;
+
+        for (let j = i - 1; j >= 0; j--) {
+          const other = pusherItems[j];
+          const dx = item.x - other.x;
+          const dz = (item.z - other.z) * 120;
+          const dist = Math.hypot(dx, dz);
+          const minDist = item.rad + other.rad - 2;
+
+          if (dist < minDist && dist > 0) {
+            const overlap = (minDist - dist) * 0.4;
+            const nx = dx / dist;
+            const nz = dz / dist / 120;
+
+            item.x += nx * overlap;
+            item.z += nz * overlap;
+            other.x -= nx * overlap;
+            other.z -= nz * overlap;
+
+            if (item.vz > 0.001) other.vz += item.vz * 0.45;
+          }
+        }
+
+        if (item.x < leftGutterX || item.x > rightGutterX) {
+          pusherItems.splice(i, 1);
+          playSound('tick');
+          continue;
+        }
+
+        if (item.z >= 0.98) {
+          wonCashThisFrame += item.val;
+          pusherItems.splice(i, 1);
+          continue;
+        }
+      }
+
+      if (wonCashThisFrame > 0) {
+        cash += wonCashThisFrame;
+        playSound('win');
+        haptic('success');
+        document.getElementById('news').innerText = `🪙 PUSHER: С обрыва упало +$${wonCashThisFrame.toLocaleString()}!`;
+        updateUI();
+        saveGameState();
+      }
+
+      drawPusherScene(w, h, pusherPos);
+
+      if (pusherItems.length < 28) {
+        pusherItems.push({
+          type: Math.random() > 0.15 ? 'coin' : (Math.random() > 0.5 ? 'bar' : 'gem'),
+          x: w * 0.25 + Math.random() * (w * 0.5),
+          z: 0.12,
+          val: 10000,
+          vx: 0, vz: 0.01,
+          rad: 9
+        });
+      }
+
+      if (currentCasinoGame === 'pusher') {
+        pusherAnimId = requestAnimationFrame(animatePusherLoop);
+      } else {
+        pusherAnimId = null;
+      }
+    }
+
+    function drawPusherScene(w, h, pusherPos) {
+      uCtx.clearRect(0, 0, w, h);
+
+      const bgGrad = uCtx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, '#090d14');
+      bgGrad.addColorStop(1, '#111724');
+      uCtx.fillStyle = bgGrad;
+      uCtx.fillRect(0, 0, w, h);
+
+      const leftGutterX = w * 0.12;
+      const rightGutterX = w * 0.88;
+
+      uCtx.fillStyle = 'rgba(255, 51, 102, 0.15)';
+      uCtx.fillRect(0, 0, leftGutterX, h);
+      uCtx.fillRect(rightGutterX, 0, w - rightGutterX, h);
+
+      uCtx.strokeStyle = 'rgba(255, 51, 102, 0.5)';
+      uCtx.lineWidth = 2;
+      uCtx.strokeRect(0, 0, leftGutterX, h);
+      uCtx.strokeRect(rightGutterX, 0, w - rightGutterX, h);
+
+      uCtx.fillStyle = 'rgba(255, 51, 102, 0.7)';
+      uCtx.font = 'bold 8px monospace';
+      uCtx.save();
+      uCtx.translate(14, h / 2);
+      uCtx.rotate(-Math.PI / 2);
+      uCtx.fillText('СТОК КАЗИНО (0$)', -35, 0);
+      uCtx.restore();
+
+      uCtx.save();
+      uCtx.translate(w - 6, h / 2);
+      uCtx.rotate(Math.PI / 2);
+      uCtx.fillText('СТОК КАЗИНО (0$)', -35, 0);
+      uCtx.restore();
+
+      const pusherY = 35 + pusherPos * 60;
+      const pushGrad = uCtx.createLinearGradient(0, pusherY - 30, 0, pusherY);
+      pushGrad.addColorStop(0, '#484f58');
+      pushGrad.addColorStop(0.5, '#c9d1d9');
+      pushGrad.addColorStop(1, '#8b949e');
+      uCtx.fillStyle = pushGrad;
+      uCtx.fillRect(leftGutterX, pusherY - 30, rightGutterX - leftGutterX, 30);
+
+      uCtx.fillStyle = 'var(--gold)';
+      uCtx.fillRect(leftGutterX, pusherY - 2, rightGutterX - leftGutterX, 4);
+
+      const ledgeY = h - 22;
+      uCtx.fillStyle = 'rgba(0, 255, 135, 0.2)';
+      uCtx.fillRect(leftGutterX, ledgeY, rightGutterX - leftGutterX, 22);
+
+      uCtx.strokeStyle = 'var(--green)';
+      uCtx.lineWidth = 2;
+      uCtx.strokeRect(leftGutterX, ledgeY, rightGutterX - leftGutterX, 22);
+
+      uCtx.fillStyle = 'var(--green)';
+      uCtx.font = 'bold 10px monospace';
+      uCtx.textAlign = 'center';
+      uCtx.fillText('▼ ЗОНА ВЫПЛАТЫ ИГРОКУ ▼', w / 2, h - 8);
+
+      const sorted = [...pusherItems].sort((a, b) => a.z - b.z);
+      sorted.forEach(item => {
+        const screenY = 35 + item.z * (ledgeY - 35);
+        const scale = 0.8 + item.z * 0.35;
+        if (item.type === 'coin') {
+          drawIsometricCoin(item.x, screenY, item.rad * scale);
+        } else if (item.type === 'bar') {
+          drawIsometricBar(item.x, screenY, item.rad * scale);
+        } else if (item.type === 'gem') {
+          drawIsometricGem(item.x, screenY, item.rad * scale);
+        }
+      });
+    }
+
+    function drawIsometricCoin(x, y, r) {
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 3, r, r * 0.55, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = 'rgba(0,0,0,0.45)';
+      uCtx.fill();
+
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 2, r, r * 0.55, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = '#b58406';
+      uCtx.fill();
+
+      uCtx.beginPath();
+      uCtx.ellipse(x, y, r, r * 0.55, 0, 0, Math.PI * 2);
+      const cGrad = uCtx.createLinearGradient(x - r, y, x + r, y);
+      cGrad.addColorStop(0, '#ffd700');
+      cGrad.addColorStop(0.5, '#fff2a1');
+      cGrad.addColorStop(1, '#e6a800');
+      uCtx.fillStyle = cGrad;
+      uCtx.fill();
+      uCtx.strokeStyle = '#b58406';
+      uCtx.lineWidth = 1;
+      uCtx.stroke();
+
+      uCtx.fillStyle = '#946300';
+      uCtx.font = 'bold 8px sans-serif';
+      uCtx.textAlign = 'center';
+      uCtx.textBaseline = 'middle';
+      uCtx.fillText('$', x, y);
+    }
+
+    function drawIsometricBar(x, y, r) {
+      uCtx.beginPath();
+      uCtx.ellipse(x, y + 4, r * 1.2, r * 0.5, 0, 0, Math.PI * 2);
+      uCtx.fillStyle = 'rgba(0,0,0,0.5)';
+      uCtx.fill();
+
+      const bw = r * 2.2;
+      const bh = r * 0.8;
+
+      uCtx.fillStyle = '#6e7681';
+      uCtx.fillRect(x - bw / 2, y, bw, bh);
+
+      uCtx.beginPath();
+      uCtx.moveTo(x - bw / 2, y);
+      uCtx.lineTo(x - bw / 2 + 4, y - 6);
+      uCtx.lineTo(x + bw / 2 - 4, y - 6);
+      uCtx.lineTo(x + bw / 2, y);
+      uCtx.closePath();
+      const topGrad = uCtx.createLinearGradient(0, y - 6, 0, y);
+      topGrad.addColorStop(0, '#f0f6fc');
+      topGrad.addColorStop(1, '#c9d1d9');
+      uCtx.fillStyle = topGrad;
+      uCtx.fill();
+
+      uCtx.fillStyle = '#21262d';
+      uCtx.font = 'bold 7px monospace';
+      uCtx.textAlign = 'center';
+      uCtx.fillText('50K', x, y - 1);
+    }
+
+    function drawIsometricGem(x, y, r) {
+      uCtx.save();
+      uCtx.translate(x, y);
+      uCtx.beginPath();
+      uCtx.moveTo(0, -r);
+      uCtx.lineTo(r, -r * 0.3);
+      uCtx.lineTo(0, r);
+      uCtx.lineTo(-r, -r * 0.3);
+      uCtx.closePath();
+      uCtx.fillStyle = '#00ff87';
+      uCtx.shadowColor = '#00ff87';
+      uCtx.shadowBlur = 10;
+      uCtx.fill();
+      uCtx.restore();
+    }
+
+    // ==========================================
+    // 5. МИНЫ
     // ==========================================
     let minesState = {
       status: 'idle',
@@ -2194,8 +2606,6 @@
       currentMult: 1.0
     };
 
-    // Точная математическая таблица честных множителей (для 4 бомб из 25 при 95% RTP):
-    // 1st: 1.13x, 2nd: 1.35x, 3rd: 1.64x, 4th: 2.00x...
     const MINES_MULTS = [
       1.0, 1.13, 1.35, 1.64, 2.00, 2.48, 3.10, 3.95, 5.12, 6.77, 9.15,
       12.65, 18.00, 26.50, 41.00, 68.00, 120.00, 235.00, 520.00, 1350.00, 4500.00
@@ -2203,6 +2613,7 @@
 
     function initMinesUI() {
       const field = document.getElementById('mines-field');
+      if (!field) return;
       field.innerHTML = '';
       for (let i = 0; i < 25; i++) {
         const cell = document.createElement('div');
@@ -2370,7 +2781,7 @@
         const row = document.createElement('div');
         row.className = `leader-row ${isMe ? 'me' : ''}`;
         let crown = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `#${idx + 1}`));
-        const prestigeTitle = p.prestige > 0 ? `👑 Олигарх ${p.prestige}` : '';
+        const prestigeTitle = p.prestige > 0 ? `👑 Олигарх ${toRoman(p.prestige)}` : '';
 
         row.innerHTML = `
           <div class="leader-rank">${crown}</div>
@@ -2527,7 +2938,7 @@
       const sec = Math.max(0, Math.ceil(ms / 1000));
       const m = Math.floor(sec / 60);
       const s = sec % 60;
-      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
     function investStartup(id) {
@@ -2674,14 +3085,19 @@
 
       const prestigeEl = document.getElementById('prestige-label');
       if (prestigeLevel > 0) {
-        prestigeEl.style.display = 'flex';
-        prestigeEl.innerText = `👑 Олигарх ${'I'.repeat(Math.min(5, prestigeLevel))}`;
+        prestigeEl.style.display = 'inline-flex';
+        prestigeEl.innerText = `👑 Олигарх ${toRoman(prestigeLevel)}`;
       } else {
         prestigeEl.style.display = 'none';
       }
 
       const prestigeBtn = document.getElementById('btn-prestige-action');
-      prestigeBtn.style.display = cash >= 1000000 ? 'flex' : 'none';
+      if (cash >= 1000000) {
+        prestigeBtn.style.display = 'flex';
+        document.getElementById('next-prestige-num').innerText = toRoman(prestigeLevel + 1);
+      } else {
+        prestigeBtn.style.display = 'none';
+      }
 
       const passiveIncome = getPassivePerSec();
       const pBadge = document.getElementById('passive-income-badge');
@@ -2700,7 +3116,6 @@
       updateItemButton('btn-biz-2', biz.coffee, '$65,000');
       updateItemButton('btn-biz-3', biz.fund, '$250,000');
 
-      // SEC Risk
       const riskFill = document.getElementById('risk-fill');
       riskFill.style.width = Math.min(100, secRisk) + '%';
       if (secRisk >= 75) {
@@ -2715,7 +3130,6 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      // 20-сек сделка
       const tradeCard = document.getElementById('trade-card');
       const orderButtons = document.getElementById('order-buttons');
       const betPanel = document.getElementById('bet-panel');
@@ -3229,7 +3643,7 @@
       text += `Всего игроков: ${cachedPlayers.length}\n`;
       text += `Суммарный капитал: $${totalCash.toLocaleString()}\n\n`;
       cachedPlayers.slice(0, 10).forEach((p, i) => {
-        text += `${i + 1}. ${p.name}: $${p.cash.toLocaleString()} (Престиж: ${p.prestige})\n`;
+        text += `${i + 1}. ${p.name}: $${p.cash.toLocaleString()} (Престиж: ${toRoman(p.prestige)})\n`;
       });
       alert(text);
     }
@@ -3255,9 +3669,8 @@
         updateUI();
         saveGameState();
       } else if (code === 'сбросить') {
-        // Секретный код сброса раздутого баланса для проверки экономики
         cash = 10000;
-        document.getElementById('news').innerText = '👑 Баланс сброшен до $10,000 для проверки экономики!';
+        document.getElementById('news').innerText = '👑 Баланс сброшен до $10,000!';
         closeAdminModal();
         updateUI();
         saveGameState();
