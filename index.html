@@ -79,10 +79,7 @@
       align-items: center;
       gap: 3px;
     }
-    .header-btns {
-      display: flex;
-      gap: 6px;
-    }
+    .header-btns { display: flex; gap: 6px; }
     .btn-icon {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
@@ -99,20 +96,20 @@
       font-weight: 700;
     }
 
-    /* ДВЕ ПЛАШКИ НАВИГАЦИИ (ГЛАВНАЯ / ИПО) */
+    /* 4 ПЛАШКИ НАВИГАЦИИ */
     .nav-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
       padding: 4px;
       background: #0d121c;
       border-radius: 10px;
       border: 1px solid var(--card-border);
     }
     .nav-tab {
-      padding: 8px;
+      padding: 8px 2px;
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-align: center;
       background: transparent;
@@ -122,25 +119,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 3px;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     .nav-tab.active {
       background: #1f293d;
       color: #fff;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
-    .nav-tab.active.tab-ipo {
-      background: linear-gradient(135deg, rgba(181, 55, 242, 0.3), rgba(0, 210, 255, 0.2));
-      border: 1px solid var(--purple);
-      color: #fff;
+    .nav-tab.active.tab-casino {
+      background: linear-gradient(135deg, rgba(255, 208, 0, 0.25), rgba(255, 51, 102, 0.25));
+      border: 1px solid var(--yellow);
+      color: var(--yellow);
     }
     .badge-count {
       background: var(--purple);
       color: #fff;
-      font-size: 0.65rem;
-      padding: 1px 5px;
-      border-radius: 10px;
+      font-size: 0.6rem;
+      padding: 1px 4px;
+      border-radius: 8px;
     }
 
     /* Шкала SEC */
@@ -167,7 +165,7 @@
       transition: width 0.3s ease, background 0.3s;
     }
 
-    /* Терминал Графика */
+    /* График */
     .chart-card {
       padding: 10px;
       display: flex;
@@ -175,21 +173,9 @@
       gap: 6px;
       position: relative;
     }
-    .ticker-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .stock-symbol {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-    .chart-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .ticker-row { display: flex; justify-content: space-between; align-items: center; }
+    .stock-symbol { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+    .chart-controls { display: flex; align-items: center; gap: 6px; }
     .chart-mode-btn {
       background: #1a2230;
       border: 1px solid var(--card-border);
@@ -199,17 +185,8 @@
       font-size: 0.68rem;
       cursor: pointer;
     }
-    .stock-price {
-      font-family: var(--font-mono);
-      font-size: 1.35rem;
-      font-weight: 800;
-    }
-    canvas#chart {
-      width: 100%;
-      height: 160px;
-      display: block;
-      border-radius: 6px;
-    }
+    .stock-price { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 800; }
+    canvas#chart { width: 100%; height: 160px; display: block; border-radius: 6px; }
 
     .news-box {
       padding: 8px 10px;
@@ -251,11 +228,7 @@
       flex-direction: column;
       gap: 8px;
     }
-    .bet-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .bet-top-row { display: flex; justify-content: space-between; align-items: center; }
     .bet-input-wrap {
       display: flex;
       align-items: center;
@@ -265,11 +238,7 @@
       padding: 4px 8px;
       width: 55%;
     }
-    .bet-input-wrap span {
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-    }
+    .bet-input-wrap span { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem; }
     .bet-input {
       background: transparent;
       border: none;
@@ -281,11 +250,7 @@
       outline: none;
       margin-left: 4px;
     }
-    .quick-chips {
-      display: flex;
-      gap: 5px;
-      overflow-x: auto;
-    }
+    .quick-chips { display: flex; gap: 5px; overflow-x: auto; }
     .chip {
       background: #1a2230;
       border: 1px solid var(--card-border);
@@ -322,11 +287,7 @@
       color: var(--blue);
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     button {
       outline: none;
       border: none;
@@ -357,12 +318,7 @@
       color: var(--red);
       box-shadow: 0 4px 12px var(--red-glow);
     }
-    .btn-subtitle {
-      font-size: 0.65rem;
-      opacity: 0.8;
-      font-family: var(--font-mono);
-      font-weight: normal;
-    }
+    .btn-subtitle { font-size: 0.65rem; opacity: 0.8; font-family: var(--font-mono); font-weight: normal; }
 
     .section-title {
       font-size: 0.7rem;
@@ -447,12 +403,110 @@
       cursor: pointer;
     }
 
-    /* СТИЛИ ВКЛАДКИ ВЕНЧУР / IPO */
-    .ipo-view {
-      display: none;
+    /* ВКЛАДКА КАЗИНО */
+    .casino-view { display: none; flex-direction: column; gap: 10px; }
+    .casino-game-menu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .btn-casino-sub {
+      background: rgba(22, 27, 34, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 2px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+    }
+    .btn-casino-sub.active {
+      background: rgba(255, 208, 0, 0.15);
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+    .casino-game-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
       flex-direction: column;
       gap: 10px;
     }
+    .casino-bet-header {
+      background: #0d121c;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* CRASH РАКЕТА */
+    canvas#crash-canvas {
+      width: 100%;
+      height: 170px;
+      background: #090d14;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      display: block;
+    }
+
+    /* МИНЫ */
+    .mines-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin: 8px 0;
+    }
+    .mine-cell {
+      background: #151b26;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .mine-cell:active { transform: scale(0.92); }
+    .mine-cell.gem { background: rgba(0, 255, 135, 0.2); border-color: var(--green); }
+    .mine-cell.bomb { background: rgba(255, 51, 102, 0.3); border-color: var(--red); }
+
+    /* РУЛЕТКА */
+    .roulette-display {
+      background: #090d14;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .roulette-num-big {
+      font-size: 2.8rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      transition: all 0.1s;
+    }
+
+    /* ПЛИНКО ХОЛСТ */
+    canvas#plinko-canvas {
+      width: 100%;
+      height: 200px;
+      background: #090d14;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      display: block;
+    }
+
+    /* ВКЛАДКА IPO */
+    .ipo-view { display: none; flex-direction: column; gap: 10px; }
     .ipo-header-box {
       padding: 12px;
       background: linear-gradient(135deg, rgba(181, 55, 242, 0.15), rgba(0, 210, 255, 0.1));
@@ -471,11 +525,7 @@
       flex-direction: column;
       gap: 8px;
     }
-    .ipo-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .ipo-card-top { display: flex; justify-content: space-between; align-items: center; }
     .ipo-name { font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; }
     .ipo-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
     .ipo-chances {
@@ -496,15 +546,32 @@
       font-weight: 700;
       text-align: center;
     }
-    .ipo-progress-wrap {
-      background: rgba(0, 0, 0, 0.4);
+
+    /* ВКЛАДКА ЛИДЕРБОРД */
+    .leaderboard-view { display: none; flex-direction: column; gap: 10px; }
+    .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stats-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
       padding: 10px;
-      border-radius: 8px;
-      border: 1px solid var(--blue);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      text-align: center;
     }
+    .stats-val { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 800; color: var(--blue); margin-top: 2px; }
+    .leader-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(22, 27, 34, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+    }
+    .leader-row.me { border-color: var(--green); background: rgba(0, 255, 135, 0.08); }
+    .leader-rank { font-weight: 800; font-family: var(--font-mono); width: 24px; color: var(--yellow); }
+    .leader-user { flex: 1; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .leader-cash { font-family: var(--font-mono); font-weight: 700; color: #fff; }
 
     /* МОДАЛКИ */
     .modal-overlay {
@@ -528,7 +595,6 @@
       flex-direction: column;
       gap: 12px;
       text-align: center;
-      position: relative;
     }
     .modal-input {
       background: #090c10;
@@ -558,7 +624,6 @@
       100% { box-shadow: 0 0 25px rgba(255, 51, 102, 0.4); }
     }
 
-    /* ХОЛСТ САЛЮТА */
     canvas#fireworks-canvas {
       position: fixed;
       inset: 0;
@@ -572,7 +637,6 @@
 </head>
 <body>
 
-  <!-- Холст Салюта -->
   <canvas id="fireworks-canvas"></canvas>
 
   <!-- Шапка -->
@@ -589,17 +653,23 @@
     </div>
   </div>
 
-  <!-- ДВЕ ОТДЕЛЬНЫЕ ПЛАШКИ (НАВИГАЦИЯ) -->
+  <!-- 4 ПЛАШКИ НАВИГАЦИИ -->
   <div class="nav-tabs">
     <button class="nav-tab active" id="tab-btn-main" onclick="switchTab('main')">
-      📊 Главная
+      📊 Терминал
     </button>
-    <button class="nav-tab tab-ipo" id="tab-btn-ipo" onclick="switchTab('ipo')">
-      🚀 Венчур & IPO <span class="badge-count" id="ipo-badge" style="display: none;">1</span>
+    <button class="nav-tab" id="tab-btn-ipo" onclick="switchTab('ipo')">
+      🚀 Венчур <span class="badge-count" id="ipo-badge" style="display: none;">1</span>
+    </button>
+    <button class="nav-tab tab-casino" id="tab-btn-casino" onclick="switchTab('casino')">
+      🎰 Казино
+    </button>
+    <button class="nav-tab" id="tab-btn-top" onclick="switchTab('top')">
+      🏆 Топ
     </button>
   </div>
 
-  <!-- Шкала SEC (Видна всегда) -->
+  <!-- Шкала SEC -->
   <div class="glass risk-card">
     <div class="risk-header">
       <span>ВНИМАНИЕ РЕГУЛЯТОРА (SEC HEAT)</span>
@@ -610,10 +680,8 @@
     </div>
   </div>
 
-  <!-- ==================== ОКНО 1: ГЛАВНЫЙ ТЕРМИНАЛ ==================== -->
+  <!-- ==================== ВКЛАДКА 1: ТЕРМИНАЛ ==================== -->
   <div id="view-main" style="display: flex; flex-direction: column; gap: 10px;">
-
-    <!-- График котировок -->
     <div class="glass chart-card">
       <div class="ticker-row">
         <span class="stock-symbol" id="ticker-label">$TITAN / PRO</span>
@@ -625,16 +693,15 @@
       <canvas id="chart"></canvas>
     </div>
 
-    <!-- Инфо-лента -->
     <div class="news-box">
-      <span id="news" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">⚡ Торги открыты. До кризиса рынка есть время.</span>
+      <span id="news" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">⚡ Торги открыты. Данные синхронизируются.</span>
       <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
         <span id="passive-income-badge" style="color: var(--green); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;">+$0/с</span>
         <button class="btn-share" id="flex-share-btn" style="display: none;" onclick="shareFlexResult()">📤 Flex</button>
       </div>
     </div>
 
-    <!-- Активная 20-сек сделка -->
+    <!-- Активная сделка (20 сек) -->
     <div class="glass active-trade-card" id="trade-card">
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
         <div>
@@ -642,9 +709,7 @@
           <b id="trade-type" style="font-size: 0.85rem;">LONG</b>
           <span style="color: var(--text-muted); font-size: 0.75rem;">($<span id="trade-bet-val">1000</span> | <span id="trade-lev-val">x3.5</span>)</span>
         </div>
-        <div>
-          ⏱️ <b id="trade-timer" style="font-family: var(--font-mono); color: var(--yellow);">20s</b>
-        </div>
+        <div>⏱️ <b id="trade-timer" style="font-family: var(--font-mono); color: var(--yellow);">20s</b></div>
       </div>
       <div class="trade-timer-bar">
         <div class="trade-timer-fill" id="trade-timer-fill"></div>
@@ -655,7 +720,7 @@
       </div>
     </div>
 
-    <!-- Выбор размера ставки и Плеча -->
+    <!-- Ставки -->
     <div class="glass bet-container" id="bet-panel">
       <div class="bet-top-row">
         <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">СТАВКА:</span>
@@ -682,7 +747,6 @@
       </div>
     </div>
 
-    <!-- Кнопки Торговли (20 сек) -->
     <div class="grid-2" id="order-buttons">
       <button class="btn-trade btn-long" onclick="openPosition('LONG')">
         ▲ LONG (20s)
@@ -694,7 +758,7 @@
       </button>
     </div>
 
-    <!-- Черный синдикат (Навыки на 10 минут) -->
+    <!-- Черный синдикат (Навыки) -->
     <div class="section-title">
       <span>Черный синдикат (Действуют 10 мин)</span>
       <span style="font-size: 0.65rem; color: #8b949e;">Временные</span>
@@ -723,7 +787,7 @@
       </div>
     </div>
 
-    <!-- Легальные активы и пассивный доход -->
+    <!-- Легальные активы -->
     <div class="section-title" style="margin-top: 4px;">
       <span>Легальные Активы (Пассивный доход)</span>
       <span style="font-size: 0.65rem; color: #8b949e;">Лимит: 1 шт.</span>
@@ -752,7 +816,7 @@
       </div>
     </div>
 
-    <!-- Черный PR и манипуляции -->
+    <!-- Черный PR -->
     <div class="section-title" style="margin-top: 4px;">Инструменты влияния (Black Ops)</div>
     <div class="grid-2">
       <button class="btn-black-ops" onclick="manipulate('HYPE')">
@@ -777,13 +841,12 @@
       </button>
     </div>
 
-    <!-- Кнопка Престижа (Дубай) -->
     <button class="btn-prestige" id="btn-prestige-action" style="display: none;" onclick="triggerPrestigeModal()">
       ✈️ Эмиграция в Дубай (Цель: $1,000,000 достигнута!)
     </button>
   </div>
 
-  <!-- ==================== ОКНО 2: ВЕНЧУР И IPO ==================== -->
+  <!-- ==================== ВКЛАДКА 2: ВЕНЧУР И IPO ==================== -->
   <div id="view-ipo" class="ipo-view">
     <div class="ipo-header-box">
       <div>
@@ -800,12 +863,120 @@
       <span>Доступные проекты (Раунд Seed)</span>
       <span style="color: var(--yellow); font-size: 0.65rem;">🦄 5% Единорог (x10)</span>
     </div>
-
-    <!-- Список стартапов -->
     <div id="ipo-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
   </div>
 
-  <!-- МОДАЛКА ИТОГОВ IPO (ПОБЕДА / ПОРАЖЕНИЕ) -->
+  <!-- ==================== ВКЛАДКА 3: КАЗИНО (СИНДИКАТ-КЛУБ) ==================== -->
+  <div id="view-casino" class="casino-view">
+    <div class="casino-bet-header">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--yellow);">СТАВКА В КАЗИНО (МИН. $10,000):</span>
+        <div class="bet-input-wrap" style="width: 50%;">
+          <span>$</span>
+          <input type="number" id="casino-bet-input" class="bet-input" value="10000" min="10000" step="5000">
+        </div>
+      </div>
+      <div class="quick-chips">
+        <div class="chip" onclick="setCasinoBet(10000)">$10,000</div>
+        <div class="chip" onclick="setCasinoBet(25000)">$25,000</div>
+        <div class="chip" onclick="setCasinoBet(50000)">$50,000</div>
+        <div class="chip" onclick="setCasinoBet(100000)">$100,000</div>
+        <div class="chip" onclick="setCasinoBetPercent(1.0)">ALL-IN</div>
+      </div>
+    </div>
+
+    <div class="casino-game-menu">
+      <button class="btn-casino-sub active" id="btn-sub-crash" onclick="switchCasinoGame('crash')">🚀 Crash</button>
+      <button class="btn-casino-sub" id="btn-sub-roulette" onclick="switchCasinoGame('roulette')">🔴 Рулетка</button>
+      <button class="btn-casino-sub" id="btn-sub-plinko" onclick="switchCasinoGame('plinko')">📌 Plinko</button>
+      <button class="btn-casino-sub" id="btn-sub-mines" onclick="switchCasinoGame('mines')">💣 Мины</button>
+    </div>
+
+    <!-- 1. ИГРА: CRASH (ДИАГОНАЛЬНАЯ РАКЕТА) -->
+    <div class="casino-game-box" id="casino-box-crash">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🚀 Диагональная Ракета</span>
+        <b id="crash-multiplier-text" style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--yellow);">1.00x</b>
+      </div>
+      <canvas id="crash-canvas"></canvas>
+      <div id="crash-btn-container">
+        <button class="ipo-btn-invest" id="btn-crash-action" style="background: linear-gradient(135deg, #00d2ff, #0077ff); width: 100%;" onclick="startCrashGame()">
+          Запустить ракету ($<span id="crash-btn-bet-label">10,000</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. ИГРА: РУЛЕТКА -->
+    <div class="casino-game-box" id="casino-box-roulette" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🔴⚫ Европейская Рулетка</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">0 - 14</span>
+      </div>
+      <div class="roulette-display">
+        <div class="roulette-num-big" id="roulette-result-display" style="color: var(--yellow);">?</div>
+        <div id="roulette-status-text" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Сделайте ставку на цвет</div>
+      </div>
+      <div class="grid-2">
+        <button class="btn-trade btn-short" onclick="playRoulette('RED')">
+          🔴 Красное (x2)
+          <span class="btn-subtitle">1-7</span>
+        </button>
+        <button class="btn-trade" style="background: #1f293d; border: 1px solid #4a5568;" onclick="playRoulette('BLACK')">
+          ⚫ Черное (x2)
+          <span class="btn-subtitle">8-14</span>
+        </button>
+        <button class="btn-trade btn-long" style="grid-column: span 2;" onclick="playRoulette('ZERO')">
+          🟢 Зеро 0 (x14)
+          <span class="btn-subtitle">Джекпот</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. ИГРА: ПЛИНКО -->
+    <div class="casino-game-box" id="casino-box-plinko" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">📌 Plinko Drop</span>
+        <span style="font-size: 0.7rem; color: var(--yellow);">Корзины от 0.2x до 10x</span>
+      </div>
+      <canvas id="plinko-canvas"></canvas>
+      <button class="ipo-btn-invest" id="btn-plinko-drop" style="background: linear-gradient(135deg, #ffd000, #ff8800); color: #000;" onclick="dropPlinkoBall()">
+        Сбросить шарик ($<span id="plinko-btn-bet-label">10,000</span>)
+      </button>
+    </div>
+
+    <!-- 4. ИГРА: МИНЫ -->
+    <div class="casino-game-box" id="casino-box-mines" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">💣 Теневые Мины (4 мины)</span>
+        <b id="mines-multiplier-label" style="font-family: var(--font-mono); color: var(--green);">1.00x</b>
+      </div>
+      <div class="mines-grid" id="mines-field"></div>
+      <button class="ipo-btn-invest" id="btn-mines-action" style="background: linear-gradient(135deg, #2ea043, #00d2ff);" onclick="handleMinesBtn()">
+        Начать игру ($<span id="mines-btn-bet-label">10,000</span>)
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== ВКЛАДКА 4: ТОП ==================== -->
+  <div id="view-top" class="leaderboard-view">
+    <div class="stats-summary">
+      <div class="stats-box">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">ВСЕГО ИГРОКОВ</span>
+        <div class="stats-val" id="stats-total-players">1</div>
+      </div>
+      <div class="stats-box">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">ОНЛАЙН СЕЙЧАС</span>
+        <div class="stats-val" id="stats-online-players" style="color: var(--green);">1</div>
+      </div>
+    </div>
+    <div class="section-title">
+      <span>Рейтинг миллиардеров</span>
+      <span style="font-size: 0.65rem; color: var(--green);">● Live Cloud Sync</span>
+    </div>
+    <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+  </div>
+
+  <!-- МОДАЛКА ИТОГОВ IPO -->
   <div class="modal-overlay" id="ipo-result-modal">
     <div class="modal-content" id="ipo-result-content">
       <div style="font-size: 3rem;" id="ipo-result-icon">🎉</div>
@@ -825,7 +996,7 @@
       <div style="font-size: 3rem;">🚨</div>
       <h2 style="color: var(--red); font-size: 1.25rem;">ВЫ АРЕСТОВАНЫ!</h2>
       <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4;">
-        Шкала SEC достигла 100%. Финансовый регулятор конфисковал все деньги и венчурные доли!
+        Шкала SEC достигла 100%. Финансовый регулятор конфисковал все деньги!
       </p>
       <div style="background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;">
         <div style="font-size: 0.75rem; color: var(--text-muted);">Капитал до ареста:</div>
@@ -843,8 +1014,7 @@
       <div style="font-size: 3rem;">✈️🌴</div>
       <h2 style="color: var(--yellow); font-size: 1.25rem;">ЭМИГРАЦИЯ В ДУБАЙ</h2>
       <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4;">
-        Вы заработали $1,000,000 и перевели капитал в частный траст! Вы получаете титул <b>Олигарха</b> и повышенный стартовый капитал.<br><br>
-        ⚠️ <i>Внимание: Надзор SEC продолжается!</i>
+        Вы заработали $1,000,000 и перевели капитал в частный траст!
       </p>
       <button class="btn-modal-action" onclick="confirmPrestige()">
         👑 Улететь на джете (Престиж)
@@ -859,16 +1029,24 @@
       <h3 style="color: var(--yellow); font-size: 1.05rem;">👑 Режим Создателя</h3>
       <input type="text" class="modal-input" id="admin-code-input" placeholder="Код доступа..." autocomplete="off">
       <button class="btn-modal-action" onclick="submitAdminCode()">Применить</button>
-      <button style="background: rgba(255, 51, 102, 0.15); border: 1px solid var(--red); color: var(--red); padding: 8px; border-radius: 8px; font-size: 0.75rem; margin-top: 6px;" onclick="hardResetGame()">⚠️ Сбросить весь прогресс</button>
+      <button style="background: #21262d; border: 1px solid var(--card-border); color: var(--blue); padding: 8px; border-radius: 8px; font-size: 0.75rem;" onclick="showAdminStats()">👥 Мониторинг игроков (База)</button>
+      <button style="background: rgba(255, 51, 102, 0.15); border: 1px solid var(--red); color: var(--red); padding: 8px; border-radius: 8px; font-size: 0.75rem; margin-top: 4px;" onclick="hardResetGame()">⚠️ Сбросить весь прогресс</button>
       <button style="background: transparent; color: var(--text-muted); padding: 6px; font-size: 0.8rem;" onclick="closeAdminModal()">Закрыть</button>
     </div>
   </div>
 
   <script>
+    const FIREBASE_DB_URL = ""; 
+
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.ready();
       window.Telegram.WebApp.expand();
     }
+
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+    let myPlayerId = tgUser.id ? String(tgUser.id) : (localStorage.getItem('finsim_anon_id') || 'anon_' + Math.floor(Math.random()*100000));
+    localStorage.setItem('finsim_anon_id', myPlayerId);
+    let myPlayerName = tgUser.username ? '@' + tgUser.username : (tgUser.first_name || 'Трейдер #' + myPlayerId.slice(-4));
 
     // --- ЗВУКОВОЙ ДВИЖОК ---
     let soundEnabled = true;
@@ -941,7 +1119,6 @@
           osc.start(now);
           osc.stop(now + 0.55);
         } else if (type === 'firework') {
-          // Звук взрыва салюта
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(180, now);
           osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
@@ -963,7 +1140,7 @@
       } catch (e) {}
     }
 
-    // --- ДВИЖОК САЛЮТА (FIREWORKS CANVAS) ---
+    // --- САЛЮТ ---
     const fCanvas = document.getElementById('fireworks-canvas');
     const fCtx = fCanvas.getContext('2d');
     let fireworks = [];
@@ -980,7 +1157,6 @@
       fCanvas.style.display = 'block';
       fireworks = [];
       playSound('firework');
-
       for (let i = 0; i < 5; i++) {
         setTimeout(() => {
           createBurst(
@@ -990,7 +1166,6 @@
           playSound('firework');
         }, i * 280);
       }
-
       if (!fireworkAnimId) animateFireworks();
       setTimeout(stopFireworks, 4500);
     }
@@ -1017,9 +1192,8 @@
         const p = fireworks[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.08; // Гравитация
+        p.vy += 0.08;
         p.alpha -= 0.015;
-
         fCtx.save();
         fCtx.globalAlpha = Math.max(0, p.alpha);
         fCtx.fillStyle = p.color;
@@ -1029,25 +1203,16 @@
         fCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         fCtx.fill();
         fCtx.restore();
-
         if (p.alpha <= 0) fireworks.splice(i, 1);
       }
-
-      if (fireworks.length > 0) {
-        fireworkAnimId = requestAnimationFrame(animateFireworks);
-      } else {
-        cancelAnimationFrame(fireworkAnimId);
-        fireworkAnimId = null;
-      }
+      if (fireworks.length > 0) fireworkAnimId = requestAnimationFrame(animateFireworks);
+      else { cancelAnimationFrame(fireworkAnimId); fireworkAnimId = null; }
     }
 
     function stopFireworks() {
       fCanvas.style.display = 'none';
       fireworks = [];
-      if (fireworkAnimId) {
-        cancelAnimationFrame(fireworkAnimId);
-        fireworkAnimId = null;
-      }
+      if (fireworkAnimId) { cancelAnimationFrame(fireworkAnimId); fireworkAnimId = null; }
     }
 
     // --- СОСТОЯНИЕ ИГРЫ ---
@@ -1078,8 +1243,7 @@
     let isSwanActive = false;
     let swanTimeLeft = 0;
 
-    // --- СТАВКИ ВЕНЧУРА И IPO ---
-    let nextIpoRefreshTime = Date.now() + 5 * 60 * 1000; // Раз в 5 минут
+    let nextIpoRefreshTime = Date.now() + 5 * 60 * 1000;
     let startups = [];
 
     const startupPool = [
@@ -1098,9 +1262,9 @@
         name: s.name,
         icon: s.icon,
         pitch: s.pitch,
-        cost: Math.floor(Math.random() * (95 - 15 + 1) + 15) * 1000, // От $15k до $95k (не выше 100к!)
-        status: 'available', // available | invested | done
-        timeLeft: 60 // Ровно 1 минута на переход в IPO
+        cost: Math.floor(Math.random() * (95 - 15 + 1) + 15) * 1000,
+        status: 'available',
+        timeLeft: 60
       }));
     }
 
@@ -1115,6 +1279,7 @@
         nextSwanTime, nextIpoRefreshTime, startups
       };
       localStorage.setItem('finsim_save_data', JSON.stringify(data));
+      syncPlayerToCloud();
     }
 
     function loadGameState() {
@@ -1137,37 +1302,648 @@
           if (typeof d.nextIpoRefreshTime === 'number') nextIpoRefreshTime = d.nextIpoRefreshTime;
           if (Array.isArray(d.startups) && d.startups.length > 0) startups = d.startups;
         }
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
       if (!startups || startups.length === 0) generateStartups();
     }
 
     loadGameState();
 
-    // --- ПЕРЕКЛЮЧЕНИЕ ПЛАШЕК (ТАБЫ) ---
+    // ==========================================
+    // ЛОГИКА КАЗИНО (МИНИМУМ $10,000)
+    // ==========================================
+    let currentCasinoGame = 'crash';
+
+    function setCasinoBet(amount) {
+      playSound('click');
+      haptic('light');
+      document.getElementById('casino-bet-input').value = Math.max(10000, Math.min(Math.floor(cash), amount));
+      updateCasinoLabels();
+    }
+
+    function setCasinoBetPercent(pct) {
+      playSound('click');
+      haptic('light');
+      const val = Math.max(10000, Math.floor(cash * pct));
+      document.getElementById('casino-bet-input').value = val;
+      updateCasinoLabels();
+    }
+
+    function getCasinoBet() {
+      const input = document.getElementById('casino-bet-input');
+      let val = parseInt(input.value) || 10000;
+      if (val < 10000) {
+        alert('Минимальная ставка в Казино: $10,000!');
+        val = 10000;
+      }
+      if (val > cash) val = Math.floor(cash);
+      input.value = val;
+      return val;
+    }
+
+    function updateCasinoLabels() {
+      const bet = getCasinoBet();
+      const str = bet.toLocaleString();
+      document.getElementById('crash-btn-bet-label').innerText = str;
+      document.getElementById('plinko-btn-bet-label').innerText = str;
+      if (minesState.status === 'idle') document.getElementById('mines-btn-bet-label').innerText = str;
+    }
+
+    document.getElementById('casino-bet-input')?.addEventListener('input', updateCasinoLabels);
+
+    function switchCasinoGame(game) {
+      playSound('click');
+      haptic('light');
+      currentCasinoGame = game;
+      ['crash', 'roulette', 'plinko', 'mines'].forEach(g => {
+        document.getElementById(`casino-box-${g}`).style.display = g === game ? 'flex' : 'none';
+        document.getElementById(`btn-sub-${g}`).classList.toggle('active', g === game);
+      });
+      if (game === 'crash') resizeCrashCanvas();
+      if (game === 'plinko') resizePlinkoCanvas();
+      if (game === 'mines' && minesState.status === 'idle') initMinesUI();
+      updateCasinoLabels();
+    }
+
+    // --- 1. CRASH РАКЕТА (ДИАГОНАЛЬНЫЙ ПОЛЕТ) ---
+    const crashCanvas = document.getElementById('crash-canvas');
+    const crashCtx = crashCanvas.getContext('2d');
+    let crashState = {
+      status: 'idle', // idle | flying | crashed | cashed
+      bet: 10000,
+      currentMult: 1.0,
+      crashPoint: 1.5,
+      startTime: 0,
+      animId: null
+    };
+
+    function resizeCrashCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      crashCanvas.width = crashCanvas.parentElement.clientWidth * dpr;
+      crashCanvas.height = 170 * dpr;
+      crashCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCrashCanvas);
+
+    function startCrashGame() {
+      if (crashState.status === 'flying') return;
+      const bet = getCasinoBet();
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
+      if (cash < bet) return alert('Недостаточно денег для ставки!');
+
+      playSound('click');
+      haptic('medium');
+      cash -= bet;
+      updateUI();
+
+      // Генерация точки взрыва (краша)
+      let cp = 1.01;
+      if (Math.random() > 0.04) {
+        cp = parseFloat((1 / (1 - Math.random() * 0.95)).toFixed(2));
+      }
+      crashState = {
+        status: 'flying',
+        bet: bet,
+        currentMult: 1.00,
+        crashPoint: cp,
+        startTime: Date.now(),
+        animId: null
+      };
+
+      document.getElementById('crash-btn-container').innerHTML = `
+        <button class="ipo-btn-invest" id="btn-crash-cashout" style="background: linear-gradient(135deg, #2ea043, #00ff87); color:#000; width: 100%;" onclick="cashoutCrash()">
+          Забрать $${Math.floor(bet).toLocaleString()} (1.00x)
+        </button>
+      `;
+
+      runCrashLoop();
+      saveGameState();
+    }
+
+    function cashoutCrash() {
+      if (crashState.status !== 'flying') return;
+      crashState.status = 'cashed';
+      const win = Math.floor(crashState.bet * crashState.currentMult);
+      cash += win;
+      playSound('win');
+      haptic('success');
+      document.getElementById('news').innerText = `🚀 РАКЕТА: Вы забрали $${win.toLocaleString()} на ${crashState.currentMult.toFixed(2)}x!`;
+      document.getElementById('crash-btn-container').innerHTML = `
+        <button class="ipo-btn-invest" style="background: #21262d; width: 100%;" onclick="resetCrashBtn()">
+          Забрано +$${win.toLocaleString()}! Играть снова
+        </button>
+      `;
+      updateUI();
+      saveGameState();
+    }
+
+    function resetCrashBtn() {
+      crashState.status = 'idle';
+      document.getElementById('crash-btn-container').innerHTML = `
+        <button class="ipo-btn-invest" style="background: linear-gradient(135deg, #00d2ff, #0077ff); width: 100%;" onclick="startCrashGame()">
+          Запустить ракету ($<span id="crash-btn-bet-label">${getCasinoBet().toLocaleString()}</span>)
+        </button>
+      `;
+      drawCrashScene(0, 0);
+    }
+
+    function runCrashLoop() {
+      const elapsed = (Date.now() - crashState.startTime) / 1000;
+      // Экспоненциальный рост множителя
+      crashState.currentMult = parseFloat((1.0 + Math.pow(elapsed * 0.55, 1.8)).toFixed(2));
+
+      document.getElementById('crash-multiplier-text').innerText = crashState.currentMult.toFixed(2) + 'x';
+      if (crashState.status === 'flying') {
+        const est = Math.floor(crashState.bet * crashState.currentMult);
+        const btn = document.getElementById('btn-crash-cashout');
+        if (btn) btn.innerText = `Забрать $${est.toLocaleString()} (${crashState.currentMult.toFixed(2)}x)`;
+      }
+
+      // Проверка на взрыв
+      if (crashState.currentMult >= crashState.crashPoint) {
+        // ВЗРЫВ!
+        crashState.status = 'crashed';
+        playSound('loss');
+        haptic('error');
+        document.getElementById('crash-multiplier-text').innerText = '💥 CRASH ' + crashState.crashPoint.toFixed(2) + 'x';
+        document.getElementById('crash-multiplier-text').style.color = 'var(--red)';
+        document.getElementById('news').innerText = `💥 РАКЕТА ВЗОРВАЛАСЬ на ${crashState.crashPoint.toFixed(2)}x! Ставка сгорела.`;
+        document.getElementById('crash-btn-container').innerHTML = `
+          <button class="ipo-btn-invest" style="background: rgba(255,51,102,0.2); border:1px solid var(--red); color:var(--red); width: 100%;" onclick="resetCrashBtn()">
+            Взрыв! Попробовать снова
+          </button>
+        `;
+        drawCrashScene(1, 1, true);
+        saveGameState();
+        return;
+      }
+
+      // Отрисовка ракеты по диагонали
+      const progress = Math.min(1, elapsed / 8);
+      drawCrashScene(progress, progress);
+
+      if (crashState.status === 'flying' || crashState.status === 'cashed') {
+        crashState.animId = requestAnimationFrame(runCrashLoop);
+      }
+    }
+
+    function drawCrashScene(px, py, exploded = false) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = crashCanvas.width / dpr;
+      const h = 170;
+      crashCtx.clearRect(0, 0, w, h);
+
+      // Сетка
+      crashCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      crashCtx.lineWidth = 1;
+      for (let i = 20; i < w; i += 35) {
+        crashCtx.beginPath(); crashCtx.moveTo(i, 0); crashCtx.lineTo(i, h); crashCtx.stroke();
+      }
+      for (let j = 20; j < h; j += 35) {
+        crashCtx.beginPath(); crashCtx.moveTo(0, j); crashCtx.lineTo(w, j); crashCtx.stroke();
+      }
+
+      // Траектория полета по диагонали (снизу слева -> вверх вправо)
+      const startX = 20, startY = h - 20;
+      const targetX = startX + px * (w - 60);
+      const targetY = startY - py * (h - 40);
+
+      // Светящийся шлейф
+      crashCtx.beginPath();
+      crashCtx.moveTo(startX, startY);
+      crashCtx.lineTo(targetX, targetY);
+      crashCtx.strokeStyle = exploded ? 'rgba(255,51,102,0.6)' : 'rgba(0, 210, 255, 0.6)';
+      crashCtx.lineWidth = 3;
+      crashCtx.shadowColor = exploded ? '#ff3366' : '#00d2ff';
+      crashCtx.shadowBlur = 10;
+      crashCtx.stroke();
+      crashCtx.shadowBlur = 0;
+
+      // Ракета или взрыв
+      crashCtx.font = '22px sans-serif';
+      crashCtx.textAlign = 'center';
+      crashCtx.textBaseline = 'middle';
+      if (exploded) {
+        crashCtx.fillText('💥', targetX, targetY);
+      } else {
+        crashCtx.fillText('🚀', targetX, targetY);
+      }
+    }
+
+    // --- 2. РУЛЕТКА ---
+    let rouletteSpinning = false;
+    function playRoulette(choice) {
+      if (rouletteSpinning) return;
+      const bet = getCasinoBet();
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
+      if (cash < bet) return alert('Недостаточно средств!');
+
+      rouletteSpinning = true;
+      playSound('click');
+      haptic('medium');
+      cash -= bet;
+      updateUI();
+
+      const display = document.getElementById('roulette-result-display');
+      const status = document.getElementById('roulette-status-text');
+      status.innerText = 'Колесо вращается...';
+
+      let counter = 0;
+      const interval = setInterval(() => {
+        counter++;
+        const temp = Math.floor(Math.random() * 15);
+        display.innerText = temp;
+        display.style.color = temp === 0 ? 'var(--green)' : (temp <= 7 ? 'var(--red)' : '#fff');
+        playSound('tick');
+
+        if (counter > 20) {
+          clearInterval(interval);
+          rouletteSpinning = false;
+
+          // Итоговый выигрышный номер (0 - 14)
+          const finalNum = Math.floor(Math.random() * 15);
+          display.innerText = finalNum;
+
+          let finalColor = 'BLACK';
+          if (finalNum === 0) finalColor = 'ZERO';
+          else if (finalNum <= 7) finalColor = 'RED';
+
+          display.style.color = finalColor === 'ZERO' ? 'var(--green)' : (finalColor === 'RED' ? 'var(--red)' : '#fff');
+
+          if (choice === finalColor) {
+            const mult = finalColor === 'ZERO' ? 14 : 2;
+            const payout = bet * mult;
+            cash += payout;
+            playSound('win');
+            haptic('success');
+            status.innerText = `🎉 ПОБЕДА! Выпало ${finalNum} (${finalColor}). Выигрыш: +$${payout.toLocaleString()}`;
+            document.getElementById('news').innerText = `🎰 РУЛЕТКА: Победа на ${finalColor}! +$${payout.toLocaleString()}`;
+          } else {
+            playSound('loss');
+            haptic('error');
+            status.innerText = `📉 МИМО! Выпало ${finalNum} (${finalColor}). Ставка сгорела.`;
+            document.getElementById('news').innerText = `🎰 РУЛЕТКА: Выпало ${finalNum} (${finalColor}). -$${bet.toLocaleString()}`;
+          }
+          updateUI();
+          saveGameState();
+        }
+      }, 70);
+    }
+
+    // --- 3. ПЛИНКО (PLINKO) ---
+    const plinkoCanvas = document.getElementById('plinko-canvas');
+    const pCtx = plinkoCanvas.getContext('2d');
+    let plinkoBall = null;
+    let plinkoBins = [10, 2, 0.5, 0.2, 0.5, 2, 10];
+
+    function resizePlinkoCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      plinkoCanvas.width = plinkoCanvas.parentElement.clientWidth * dpr;
+      plinkoCanvas.height = 200 * dpr;
+      pCtx.scale(dpr, dpr);
+      drawPlinkoBoard();
+    }
+
+    function drawPlinkoBoard() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = plinkoCanvas.width / dpr;
+      const h = 200;
+      pCtx.clearRect(0, 0, w, h);
+
+      // Отрисовка штырьков (пирамиды)
+      pCtx.fillStyle = 'rgba(255,255,255,0.4)';
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const count = r + 3;
+        const y = 25 + r * 24;
+        const spacing = w / (count + 1);
+        for (let c = 1; c <= count; c++) {
+          pCtx.beginPath();
+          pCtx.arc(c * spacing, y, 2.5, 0, Math.PI * 2);
+          pCtx.fill();
+        }
+      }
+
+      // Корзины внизу
+      const binWidth = w / plinkoBins.length;
+      plinkoBins.forEach((mult, i) => {
+        pCtx.fillStyle = mult >= 2 ? 'rgba(0,255,135,0.15)' : (mult < 1 ? 'rgba(255,51,102,0.15)' : 'rgba(255,208,0,0.15)');
+        pCtx.fillRect(i * binWidth + 2, h - 26, binWidth - 4, 22);
+
+        pCtx.fillStyle = mult >= 2 ? 'var(--green)' : (mult < 1 ? 'var(--red)' : 'var(--yellow)');
+        pCtx.font = '10px monospace';
+        pCtx.textAlign = 'center';
+        pCtx.fillText(mult + 'x', i * binWidth + binWidth / 2, h - 12);
+      });
+    }
+
+    function dropPlinkoBall() {
+      if (plinkoBall) return;
+      const bet = getCasinoBet();
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
+      if (cash < bet) return alert('Недостаточно средств!');
+
+      playSound('click');
+      haptic('medium');
+      cash -= bet;
+      updateUI();
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = plinkoCanvas.width / dpr;
+
+      plinkoBall = {
+        x: w / 2 + (Math.random() - 0.5) * 6,
+        y: 10,
+        vx: 0,
+        vy: 1.5,
+        bet: bet
+      };
+
+      animatePlinkoBall();
+    }
+
+    function animatePlinkoBall() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = plinkoCanvas.width / dpr;
+      const h = 200;
+
+      plinkoBall.vy += 0.18; // Гравитация
+      plinkoBall.y += plinkoBall.vy;
+      plinkoBall.x += plinkoBall.vx;
+
+      // Отскоки от штырьков
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const count = r + 3;
+        const py = 25 + r * 24;
+        const spacing = w / (count + 1);
+        for (let c = 1; c <= count; c++) {
+          const px = c * spacing;
+          const dist = Math.hypot(plinkoBall.x - px, plinkoBall.y - py);
+          if (dist < 6) {
+            playSound('tick');
+            plinkoBall.vy = -plinkoBall.vy * 0.35;
+            plinkoBall.vx = (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.0);
+          }
+        }
+      }
+
+      drawPlinkoBoard();
+
+      // Отрисовка шарика
+      pCtx.beginPath();
+      pCtx.arc(plinkoBall.x, plinkoBall.y, 5, 0, Math.PI * 2);
+      pCtx.fillStyle = 'var(--yellow)';
+      pCtx.shadowColor = 'var(--yellow)';
+      pCtx.shadowBlur = 8;
+      pCtx.fill();
+      pCtx.shadowBlur = 0;
+
+      // Приземление в корзину
+      if (plinkoBall.y >= h - 26) {
+        const binWidth = w / plinkoBins.length;
+        const binIdx = Math.min(plinkoBins.length - 1, Math.max(0, Math.floor(plinkoBall.x / binWidth)));
+        const mult = plinkoBins[binIdx];
+        const returnAmount = Math.floor(plinkoBall.bet * mult);
+        cash += returnAmount;
+
+        if (mult >= 1) { playSound('win'); haptic('success'); }
+        else { playSound('loss'); haptic('error'); }
+
+        document.getElementById('news').innerText = `📌 PLINKO: Шарик упал в корзину ${mult}x! Результат: $${returnAmount.toLocaleString()}`;
+        plinkoBall = null;
+        updateUI();
+        saveGameState();
+        return;
+      }
+
+      requestAnimationFrame(animatePlinkoBall);
+    }
+
+    // --- 4. МИНЫ (MINES 5x5) ---
+    let minesState = {
+      status: 'idle', // idle | playing
+      bet: 10000,
+      grid: [], // 25 cells: 'gem' or 'bomb'
+      revealed: [],
+      gemsFound: 0,
+      currentMult: 1.0
+    };
+
+    function initMinesUI() {
+      const field = document.getElementById('mines-field');
+      field.innerHTML = '';
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'mine-cell';
+        cell.innerText = '❓';
+        cell.onclick = () => tapMineCell(i);
+        field.appendChild(cell);
+      }
+      document.getElementById('mines-multiplier-label').innerText = '1.00x';
+    }
+
+    function handleMinesBtn() {
+      if (minesState.status === 'idle') {
+        // Начать новую игру
+        const bet = getCasinoBet();
+        if (bet < 10000) return alert('Минимальная ставка $10,000!');
+        if (cash < bet) return alert('Недостаточно средств!');
+
+        playSound('click');
+        haptic('medium');
+        cash -= bet;
+        updateUI();
+
+        // Расставляем 4 бомбы на 25 ячеек
+        const arr = Array(21).fill('gem').concat(Array(4).fill('bomb'));
+        arr.sort(() => 0.5 - Math.random());
+
+        minesState = {
+          status: 'playing',
+          bet: bet,
+          grid: arr,
+          revealed: Array(25).fill(false),
+          gemsFound: 0,
+          currentMult: 1.0
+        };
+
+        initMinesUI();
+        document.getElementById('btn-mines-action').innerText = `Забрать $${bet.toLocaleString()} (1.00x)`;
+        document.getElementById('btn-mines-action').style.background = 'linear-gradient(135deg, #ffd000, #ff8800)';
+      } else {
+        // Забрать банк
+        cashoutMines();
+      }
+    }
+
+    function tapMineCell(idx) {
+      if (minesState.status !== 'playing' || minesState.revealed[idx]) return;
+      minesState.revealed[idx] = true;
+      const field = document.getElementById('mines-field');
+      const cell = field.children[idx];
+
+      if (minesState.grid[idx] === 'bomb') {
+        // ВЗРЫВ МИНЫ!
+        cell.className = 'mine-cell bomb';
+        cell.innerText = '💥';
+        playSound('loss');
+        haptic('error');
+        minesState.status = 'idle';
+
+        // Открываем все мины
+        minesState.grid.forEach((type, i) => {
+          if (type === 'bomb') {
+            field.children[i].className = 'mine-cell bomb';
+            field.children[i].innerText = '💣';
+          }
+        });
+
+        document.getElementById('news').innerText = `💥 МИНЫ: Вы наткнулись на бомбу! Ставка -$${minesState.bet.toLocaleString()} сгорела.`;
+        document.getElementById('btn-mines-action').innerText = `Начать игру ($${getCasinoBet().toLocaleString()})`;
+        document.getElementById('btn-mines-action').style.background = 'linear-gradient(135deg, #2ea043, #00d2ff)';
+        saveGameState();
+      } else {
+        // ИЗУМРУД!
+        cell.className = 'mine-cell gem';
+        cell.innerText = '💎';
+        playSound('click');
+        haptic('light');
+
+        minesState.gemsFound++;
+        // Коэффициент растет с каждым изумрудом
+        minesState.currentMult = parseFloat((1.0 + minesState.gemsFound * 0.28).toFixed(2));
+        document.getElementById('mines-multiplier-label').innerText = minesState.currentMult.toFixed(2) + 'x';
+
+        const winVal = Math.floor(minesState.bet * minesState.currentMult);
+        document.getElementById('btn-mines-action').innerText = `Забрать $${winVal.toLocaleString()} (${minesState.currentMult.toFixed(2)}x)`;
+      }
+    }
+
+    function cashoutMines() {
+      if (minesState.status !== 'playing' || minesState.gemsFound === 0) return;
+      const win = Math.floor(minesState.bet * minesState.currentMult);
+      cash += win;
+      playSound('win');
+      haptic('success');
+      minesState.status = 'idle';
+
+      document.getElementById('news').innerText = `💎 МИНЫ: Вы забрали $${win.toLocaleString()} (${minesState.currentMult.toFixed(2)}x)!`;
+      document.getElementById('btn-mines-action').innerText = `Начать игру ($${getCasinoBet().toLocaleString()})`;
+      document.getElementById('btn-mines-action').style.background = 'linear-gradient(135deg, #2ea043, #00d2ff)';
+      initMinesUI();
+      updateUI();
+      saveGameState();
+    }
+
+    // --- ОБЛАЧНЫЙ СИНХРОНИЗАТОР ---
+    let cachedPlayers = [
+      { id: 'bot_1', name: '👑 @crypto_whale', cash: 1450000, prestige: 2, lastSeen: Date.now() },
+      { id: 'bot_2', name: '@wallstreet_wolf', cash: 420000, prestige: 1, lastSeen: Date.now() - 60000 },
+      { id: 'bot_3', name: '@arbitrage_king', cash: 185000, prestige: 0, lastSeen: Date.now() - 120000 }
+    ];
+
+    async function syncPlayerToCloud() {
+      const myData = {
+        id: myPlayerId,
+        name: myPlayerName,
+        cash: Math.floor(cash),
+        prestige: prestigeLevel,
+        lastSeen: Date.now()
+      };
+      const existingIdx = cachedPlayers.findIndex(p => p.id === myPlayerId);
+      if (existingIdx !== -1) cachedPlayers[existingIdx] = myData;
+      else cachedPlayers.push(myData);
+
+      if (!FIREBASE_DB_URL) return;
+      try {
+        const cleanUrl = FIREBASE_DB_URL.replace(/\/$/, "");
+        await fetch(`${cleanUrl}/players/${myPlayerId}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(myData)
+        });
+      } catch (e) {}
+    }
+
+    async function fetchLeaderboardFromCloud() {
+      if (!FIREBASE_DB_URL) {
+        renderLeaderboardUI(cachedPlayers);
+        return;
+      }
+      try {
+        const cleanUrl = FIREBASE_DB_URL.replace(/\/$/, "");
+        const res = await fetch(`${cleanUrl}/players.json`);
+        const data = await res.json();
+        if (data) {
+          cachedPlayers = Object.values(data);
+          renderLeaderboardUI(cachedPlayers);
+        } else {
+          renderLeaderboardUI(cachedPlayers);
+        }
+      } catch (e) {
+        renderLeaderboardUI(cachedPlayers);
+      }
+    }
+
+    function renderLeaderboardUI(list) {
+      const totalPlayersEl = document.getElementById('stats-total-players');
+      const onlinePlayersEl = document.getElementById('stats-online-players');
+      const container = document.getElementById('leaderboard-list');
+      if (!container) return;
+
+      const sorted = [...list].sort((a, b) => (b.cash + b.prestige * 1000000) - (a.cash + a.prestige * 1000000));
+      const now = Date.now();
+      const onlineCount = sorted.filter(p => (now - (p.lastSeen || 0)) < 5 * 60 * 1000).length;
+
+      totalPlayersEl.innerText = Math.max(1, sorted.length);
+      onlinePlayersEl.innerText = Math.max(1, onlineCount);
+
+      container.innerHTML = '';
+      sorted.slice(0, 20).forEach((p, idx) => {
+        const isMe = p.id === myPlayerId;
+        const row = document.createElement('div');
+        row.className = `leader-row ${isMe ? 'me' : ''}`;
+        let crown = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `#${idx + 1}`));
+        const prestigeTitle = p.prestige > 0 ? `👑 Олигарх ${p.prestige}` : '';
+
+        row.innerHTML = `
+          <div class="leader-rank">${crown}</div>
+          <div class="leader-user">
+            <b>${p.name}</b> ${isMe ? '<span style="color:var(--green);font-size:0.75rem;">(Вы)</span>' : ''}
+            ${prestigeTitle ? `<div style="font-size:0.68rem; color:var(--yellow);">${prestigeTitle}</div>` : ''}
+          </div>
+          <div class="leader-cash">$${Math.floor(p.cash).toLocaleString()}</div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // --- ПЕРЕКЛЮЧЕНИЕ ПЛАШЕК ---
     function switchTab(tab) {
       playSound('click');
       haptic('light');
-      const mainView = document.getElementById('view-main');
-      const ipoView = document.getElementById('view-ipo');
-      const btnMain = document.getElementById('tab-btn-main');
-      const btnIpo = document.getElementById('tab-btn-ipo');
+      const views = {
+        main: document.getElementById('view-main'),
+        ipo: document.getElementById('view-ipo'),
+        casino: document.getElementById('view-casino'),
+        top: document.getElementById('view-top')
+      };
+      const buttons = {
+        main: document.getElementById('tab-btn-main'),
+        ipo: document.getElementById('tab-btn-ipo'),
+        casino: document.getElementById('tab-btn-casino'),
+        top: document.getElementById('tab-btn-top')
+      };
 
-      if (tab === 'main') {
-        mainView.style.display = 'flex';
-        ipoView.style.display = 'none';
-        btnMain.classList.add('active');
-        btnIpo.classList.remove('active');
-        resizeCanvas();
-        drawChart();
-      } else {
-        mainView.style.display = 'none';
-        ipoView.style.display = 'flex';
-        btnMain.classList.remove('active');
-        btnIpo.classList.add('active');
-        renderIpoList();
-      }
+      Object.keys(views).forEach(k => {
+        views[k].style.display = k === tab ? 'flex' : 'none';
+        buttons[k].classList.toggle('active', k === tab);
+      });
+
+      if (tab === 'main') { resizeCanvas(); drawChart(); }
+      else if (tab === 'ipo') renderIpoList();
+      else if (tab === 'casino') { switchCasinoGame(currentCasinoGame); }
+      else if (tab === 'top') fetchLeaderboardFromCloud();
     }
 
     const canvas = document.getElementById('chart');
@@ -1288,20 +2064,16 @@
       return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    // --- ВЕНЧУР И IPO МЕХАНИКА ---
     function investStartup(id) {
       const item = startups.find(s => s.id === id);
       if (!item || item.status !== 'available') return;
-
-      if (cash < item.cost) {
-        return alert(`Недостаточно капитала! Требуется $${item.cost.toLocaleString()}`);
-      }
+      if (cash < item.cost) return alert(`Недостаточно средств! Нужно $${item.cost.toLocaleString()}`);
 
       playSound('click');
       haptic('medium');
       cash -= item.cost;
       item.status = 'invested';
-      item.timeLeft = 60; // 60 секунд на IPO
+      item.timeLeft = 60;
 
       updateUI();
       renderIpoList();
@@ -1311,23 +2083,17 @@
     function resolveIpo(item) {
       item.status = 'done';
       const roll = Math.random();
-
-      // Шансы: 5% Единорог (x10), 35% Успех (x2), 60% Банкротство
       if (roll < 0.05) {
-        // ЕДИНОРОГ (x10)
         const payout = item.cost * 10;
         cash += payout;
         showIpoResult(true, true, item, payout);
       } else if (roll < 0.40) {
-        // УСПЕХ (x2)
         const payout = item.cost * 2;
         cash += payout;
         showIpoResult(true, false, item, payout);
       } else {
-        // БАНКРОТСТВО (0)
         showIpoResult(false, false, item, 0);
       }
-
       updateUI();
       renderIpoList();
       saveGameState();
@@ -1343,21 +2109,20 @@
 
       if (isWin) {
         haptic('success');
-        triggerFireworks(); // ЗАПУСК САЛЮТА!
+        triggerFireworks();
         playSound('win');
-
         if (isUnicorn) {
           icon.innerText = '🦄✨';
           title.innerText = 'МЕГА-ХАЙП! ЕДИНОРОГ!';
           title.style.color = 'var(--purple)';
           content.style.border = '2px solid var(--purple)';
-          desc.innerHTML = `Стартап <b>${item.name}</b> произвел фурор на бирже! Акции взлетели в 10 раз! Вы сорвали куш венчурного рынка!`;
+          desc.innerHTML = `Стартап <b>${item.name}</b> взорвал биржу! Выплата в 10 раз превысила раунд Seed!`;
         } else {
           icon.innerText = '🚀📈';
           title.innerText = 'УСПЕШНЫЙ ВЫХОД НА IPO!';
           title.style.color = 'var(--green)';
           content.style.border = '2px solid var(--green)';
-          desc.innerHTML = `Акции <b>${item.name}</b> успешно размещены на бирже. Инвесторы зафиксировали чистую прибыль +100% (x2)!`;
+          desc.innerHTML = `Акции <b>${item.name}</b> выросли на листинге! Доходность составила +100% (x2)!`;
         }
         payoutEl.innerText = '+$' + payout.toLocaleString();
         payoutEl.style.color = 'var(--green)';
@@ -1370,15 +2135,8 @@
         content.style.border = '2px solid var(--red)';
         payoutEl.innerText = '-$' + item.cost.toLocaleString();
         payoutEl.style.color = 'var(--red)';
-
-        const fails = [
-          'Основатели вывели кассу на офшоры и скрылись.',
-          'Регулятор SEC заблокировал листинг из-за поддельных финансовых отчетов.',
-          'Технология оказалась нерабочим прототипом, инвесторы сбросили акции в ноль.'
-        ];
-        desc.innerHTML = `Проект <b>${item.name}</b> провалился! ${fails[Math.floor(Math.random() * fails.length)]} Инвестиции сгорели.`;
+        desc.innerHTML = `Проект <b>${item.name}</b> потерпел крах на закрытом аудите. Все инвестиции сгорели!`;
       }
-
       modal.style.display = 'flex';
     }
 
@@ -1397,15 +2155,14 @@
         card.className = 'ipo-card';
 
         if (s.status === 'invested') {
-          // Идет таймер 60 сек
           card.innerHTML = `
             <div class="ipo-card-top">
               <div class="ipo-name">${s.icon} ${s.name}</div>
               <span style="color: var(--yellow); font-family: var(--font-mono); font-weight: 700;">⏱️ ${s.timeLeft}s</span>
             </div>
-            <div class="ipo-progress-wrap">
-              <div style="display: flex; justify-content: space-between; font-size: 0.72rem;">
-                <span style="color: var(--blue);">Идет андеррайтинг и листинг...</span>
+            <div style="background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; border: 1px solid var(--blue);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 4px;">
+                <span style="color: var(--blue);">Идет листинг на бирже...</span>
                 <span style="font-family: var(--font-mono);">$${s.cost.toLocaleString()}</span>
               </div>
               <div class="trade-timer-bar">
@@ -1417,11 +2174,11 @@
           card.innerHTML = `
             <div class="ipo-card-top">
               <div class="ipo-name" style="opacity: 0.6;">${s.icon} ${s.name}</div>
-              <span style="color: var(--text-muted); font-size: 0.75rem;">Раунд закрыт</span>
+              <span style="color: var(--text-muted); font-size: 0.75rem;">Завершено</span>
             </div>
             <p class="ipo-desc">${s.pitch}</p>
             <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
-              IPO завершено
+              Раунд закрыт
             </div>
           `;
         } else {
@@ -1492,7 +2249,7 @@
       }
       document.getElementById('risk-val').innerText = secRisk + '%';
 
-      // 20-сек сделка в терминале
+      // 20-сек сделка
       const tradeCard = document.getElementById('trade-card');
       const orderButtons = document.getElementById('order-buttons');
       const betPanel = document.getElementById('bet-panel');
@@ -1526,7 +2283,6 @@
         betPanel.style.pointerEvents = 'auto';
       }
 
-      // Бейдж активных IPO на плашке
       const activeIpoCount = startups.filter(s => s.status === 'invested').length;
       const ipoBadge = document.getElementById('ipo-badge');
       if (activeIpoCount > 0) {
@@ -1672,7 +2428,7 @@
       }
     }
 
-    // --- ГЛАВНЫЙ ИГРОВОЙ ЦИКЛ (ТИК КАЖДУЮ СЕКУНДУ) ---
+    // --- ГЛАВНЫЙ ИГРОВОЙ ЦИКЛ (1 СЕК) ---
     let secDecayCounter = 0;
     setInterval(() => {
       if (isGameOver) return;
@@ -1709,7 +2465,6 @@
 
       if (secRisk > 0 && Math.random() < 0.15) secRisk = Math.max(0, secRisk - 1);
 
-      // Таймер 20-сек скальпинга
       if (position) {
         position.timeLeft--;
         if (position.timeLeft <= 5 && position.timeLeft > 0) {
@@ -1719,19 +2474,15 @@
         if (position.timeLeft <= 0) resolveTrade();
       }
 
-      // 1-минутный таймер для активных IPO
       let needIpoRender = false;
       startups.forEach(s => {
         if (s.status === 'invested') {
           s.timeLeft--;
           needIpoRender = true;
-          if (s.timeLeft <= 0) {
-            resolveIpo(s);
-          }
+          if (s.timeLeft <= 0) resolveIpo(s);
         }
       });
 
-      // 5-минутный таймер обновления сделок IPO
       const now = Date.now();
       if (now >= nextIpoRefreshTime) {
         generateStartups();
@@ -1744,6 +2495,10 @@
 
       if (needIpoRender && document.getElementById('view-ipo').style.display === 'flex') {
         renderIpoList();
+      }
+
+      if (secDecayCounter % 15 === 0) {
+        syncPlayerToCloud();
       }
 
       if (secRisk >= 100) {
@@ -1940,12 +2695,8 @@
       haptic('success');
       const text = `🔥 Я поднял +$${lastProfitableTrade.toLocaleString()} в FinSim! Мой баланс: $${Math.floor(cash).toLocaleString()} 👑 Попробуй обойти меня в биржевых схемах:`;
       const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
-      
-      if (window.Telegram?.WebApp?.openTelegramLink) {
-        window.Telegram.WebApp.openTelegramLink(url);
-      } else {
-        window.open(url, '_blank');
-      }
+      if (window.Telegram?.WebApp?.openTelegramLink) window.Telegram.WebApp.openTelegramLink(url);
+      else window.open(url, '_blank');
     }
 
     function triggerPrestigeModal() {
@@ -2006,6 +2757,17 @@
       document.getElementById('admin-modal').style.display = 'none';
     }
 
+    function showAdminStats() {
+      const totalCash = cachedPlayers.reduce((acc, p) => acc + (p.cash || 0), 0);
+      let text = `👥 СТАТИСТИКА ИГРОКОВ:\n`;
+      text += `Всего игроков: ${cachedPlayers.length}\n`;
+      text += `Суммарный капитал: $${totalCash.toLocaleString()}\n\n`;
+      cachedPlayers.slice(0, 10).forEach((p, i) => {
+        text += `${i + 1}. ${p.name}: $${p.cash.toLocaleString()} (Престиж: ${p.prestige})\n`;
+      });
+      alert(text);
+    }
+
     function submitAdminCode() {
       const input = document.getElementById('admin-code-input');
       const code = input.value.trim().toLowerCase();
@@ -2056,6 +2818,7 @@
     updateUI();
     drawChart();
     renderIpoList();
+    syncPlayerToCloud();
     if (isGameOver) triggerGameOver();
   </script>
 </body>
