@@ -7,8 +7,8 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #080b10;
-      --card-bg: rgba(18, 24, 34, 0.85);
+      --bg: #07090e;
+      --card-bg: rgba(16, 21, 31, 0.88);
       --card-border: rgba(255, 255, 255, 0.08);
       --green: #00ff87;
       --green-glow: rgba(0, 255, 135, 0.3);
@@ -17,7 +17,7 @@
       --blue: #00d2ff;
       --yellow: #ffd000;
       --purple: #b537f2;
-      --gold: #ffd700;
+      --gold: #ffcf26;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --font-mono: "SF Mono", "Fira Code", "Courier New", monospace;
@@ -130,7 +130,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
     .nav-tab.active.tab-casino {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 51, 102, 0.25));
+      background: linear-gradient(135deg, rgba(255, 207, 38, 0.25), rgba(255, 51, 102, 0.2));
       border: 1px solid var(--gold);
       color: var(--gold);
     }
@@ -251,18 +251,29 @@
       outline: none;
       margin-left: 4px;
     }
-    .quick-chips { display: flex; gap: 5px; overflow-x: auto; }
+
+    /* ИСПРАВЛЕННЫЕ ЧИПЫ (БЕЗ ОБРЕЗАНИЯ ALL-IN) */
+    .quick-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+    }
     .chip {
       background: #1a2230;
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 600;
+      font-size: 0.72rem;
+      font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      flex-shrink: 0;
     }
+    .chip:active { background: #263347; }
 
     .leverage-selector {
       display: none;
@@ -404,14 +415,14 @@
       cursor: pointer;
     }
 
-    /* ==================== СТИЛИ КАЗИНО ==================== */
+    /* ==================== VIP КАЗИНО ==================== */
     .casino-view { display: none; flex-direction: column; gap: 10px; }
     .casino-vip-card {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 51, 102, 0.1));
-      border: 1px solid rgba(255, 215, 0, 0.4);
+      background: linear-gradient(135deg, rgba(255, 207, 38, 0.14), rgba(255, 51, 102, 0.08));
+      border: 1px solid rgba(255, 207, 38, 0.4);
       border-radius: 12px;
       padding: 12px;
-      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
     .casino-game-menu {
       display: grid;
@@ -419,7 +430,7 @@
       gap: 6px;
     }
     .btn-casino-sub {
-      background: #111722;
+      background: #101622;
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 9px 2px;
@@ -431,10 +442,10 @@
       transition: all 0.2s;
     }
     .btn-casino-sub.active {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 136, 0, 0.15));
+      background: linear-gradient(135deg, rgba(255, 207, 38, 0.25), rgba(255, 136, 0, 0.15));
       border-color: var(--gold);
       color: var(--gold);
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 12px rgba(255, 207, 38, 0.2);
     }
     .casino-game-box {
       background: var(--card-bg);
@@ -446,13 +457,29 @@
       gap: 10px;
     }
 
-    /* РАКЕТА */
+    /* РАКЕТА ХОЛСТ */
+    .crash-viewport {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+    }
     canvas#crash-canvas {
       width: 100%;
-      height: 185px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 200px;
       display: block;
+    }
+    .crash-hud-overlay {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.4;
+      text-shadow: 0 1px 3px #000;
     }
 
     /* РУЛЕТКА */
@@ -471,7 +498,7 @@
     /* ПЛИНКО */
     canvas#plinko-canvas {
       width: 100%;
-      height: 210px;
+      height: 215px;
       background: #090e17;
       border-radius: 10px;
       border: 1px solid var(--card-border);
@@ -871,7 +898,7 @@
     <div id="ipo-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
   </div>
 
-  <!-- ==================== ВКЛАДКА 3: КАЗИНО (СИНДИКАТ-КЛУБ) ==================== -->
+  <!-- ==================== ВКЛАДКА 3: КАЗИНО ==================== -->
   <div id="view-casino" class="casino-view">
     <div class="casino-vip-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -882,16 +909,16 @@
             <div style="font-size: 0.65rem; color: var(--text-muted);">VIP-клуб высоких ставок</div>
           </div>
         </div>
-        <div class="bet-input-wrap" style="width: 48%; border-color: rgba(255,215,0,0.4);">
+        <div class="bet-input-wrap" style="width: 48%; border-color: rgba(255,207,38,0.4);">
           <span style="color: var(--gold);">$</span>
           <input type="number" id="casino-bet-input" class="bet-input" value="10000" min="10000" step="5000">
         </div>
       </div>
       <div class="quick-chips">
-        <div class="chip" style="border-color: rgba(255,215,0,0.3);" onclick="setCasinoBet(10000)">$10,000</div>
-        <div class="chip" style="border-color: rgba(255,215,0,0.3);" onclick="setCasinoBet(25000)">$25,000</div>
-        <div class="chip" style="border-color: rgba(255,215,0,0.3);" onclick="setCasinoBet(50000)">$50,000</div>
-        <div class="chip" style="border-color: rgba(255,215,0,0.3);" onclick="setCasinoBet(100000)">$100,000</div>
+        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(10000)">$10,000</div>
+        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(25000)">$25,000</div>
+        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(50000)">$50,000</div>
+        <div class="chip" style="border-color: rgba(255,207,38,0.4);" onclick="setCasinoBet(100000)">$100,000</div>
         <div class="chip" style="border-color: var(--red); color: var(--red);" onclick="setCasinoBetPercent(1.0)">ALL-IN</div>
       </div>
     </div>
@@ -903,13 +930,19 @@
       <button class="btn-casino-sub" id="btn-sub-mines" onclick="switchCasinoGame('mines')">💣 Мины</button>
     </div>
 
-    <!-- 1. ИГРА: CRASH (ДИАГОНАЛЬНАЯ РАКЕТА СКВОЗЬ АТМОСФЕРУ) -->
+    <!-- 1. ИГРА: CRASH (ВЕКТОРНАЯ РАКЕТА: ЗЕМЛЯ -> КОСМОС) -->
     <div class="casino-game-box" id="casino-box-crash">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🚀 Диагональный страто-полет</span>
-        <b id="crash-multiplier-text" style="font-family: var(--font-mono); font-size: 1.3rem; color: var(--yellow);">1.00x</b>
+        <b id="crash-multiplier-text" style="font-family: var(--font-mono); font-size: 1.35rem; color: var(--yellow);">1.00x</b>
       </div>
-      <canvas id="crash-canvas"></canvas>
+      <div class="crash-viewport">
+        <canvas id="crash-canvas"></canvas>
+        <div class="crash-hud-overlay" id="crash-hud">
+          <div>ВЫСОТА: <span id="hud-alt" style="color:var(--blue);">0 M</span></div>
+          <div>СКОРОСТЬ: <span id="hud-speed" style="color:var(--green);">МАХ 1.0</span></div>
+        </div>
+      </div>
       <div id="crash-btn-container">
         <button class="ipo-btn-invest" id="btn-crash-action" style="background: linear-gradient(135deg, #00d2ff, #0077ff); width: 100%;" onclick="startCrashGame()">
           Запустить ракету ($<span id="crash-btn-bet-label">10,000</span>)
@@ -917,7 +950,7 @@
       </div>
     </div>
 
-    <!-- 2. ИГРА: РУЛЕТКА С НАСТОЯЩИМ КОЛЕСОМ -->
+    <!-- 2. ИГРА: РУЛЕТКА -->
     <div class="casino-game-box" id="casino-box-roulette" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">🔴⚫ Европейская Рулетка</span>
@@ -942,7 +975,7 @@
       </div>
     </div>
 
-    <!-- 3. ИГРА: ПЛИНКО (МУЛЬТИ-СБРОС) -->
+    <!-- 3. ИГРА: ПЛИНКО -->
     <div class="casino-game-box" id="casino-box-plinko" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">📌 Plinko Multi-Drop</span>
@@ -954,7 +987,7 @@
       </button>
     </div>
 
-    <!-- 4. ИГРА: МИНЫ (MINES 5x5) -->
+    <!-- 4. ИГРА: МИНЫ -->
     <div class="casino-game-box" id="casino-box-mines" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">💣 Теневые Мины (4 бомбы)</span>
@@ -1079,8 +1112,6 @@
       initAudio();
       try {
         const now = audioCtx.currentTime;
-
-        // Дроттлинг тиков чтобы не хрипело при 20 шарах
         if (type === 'tick') {
           if (Date.now() - lastTickSoundTime < 35) return;
           lastTickSoundTime = Date.now();
@@ -1327,7 +1358,7 @@
     loadGameState();
 
     // ==========================================
-    // КАЗИНО: ЛОГИКА И ВИЗУАЛ (МИН. $10,000)
+    // ЛОГИКА КАЗИНО (МИНИМУМ $10,000)
     // ==========================================
     let currentCasinoGame = 'crash';
 
@@ -1385,16 +1416,21 @@
       updateCasinoLabels();
     }
 
-    // --- 1. CRASH РАКЕТА: ЗЕМЛЯ -> АТМОСФЕРА -> КОСМОС ---
+    // ==========================================
+    // 1. ПЕРЕРАБОТАННЫЙ CRASH: ВЕКТОРНАЯ РАКЕТА + ПЛАВНЫЙ КОСМОС
+    // ==========================================
     const crashCanvas = document.getElementById('crash-canvas');
     const crashCtx = crashCanvas.getContext('2d');
-    let crashStars = Array.from({length: 40}, () => ({
-      x: Math.random() * 400,
-      y: Math.random() * 200,
-      r: Math.random() * 1.5 + 0.5,
-      twinkle: Math.random()
+    let crashExhaustParticles = [];
+    let crashDebris = [];
+
+    // Генерация звездного поля космоса
+    let crashStars = Array.from({length: 60}, () => ({
+      x: Math.random() * 500,
+      y: Math.random() * 250,
+      r: Math.random() * 1.6 + 0.4,
+      alpha: Math.random() * 0.7 + 0.3
     }));
-    let crashExhaust = [];
 
     let crashState = {
       status: 'idle',
@@ -1408,7 +1444,7 @@
     function resizeCrashCanvas() {
       const dpr = window.devicePixelRatio || 1;
       crashCanvas.width = crashCanvas.parentElement.clientWidth * dpr;
-      crashCanvas.height = 185 * dpr;
+      crashCanvas.height = 200 * dpr;
       crashCtx.scale(dpr, dpr);
     }
     window.addEventListener('resize', resizeCrashCanvas);
@@ -1416,7 +1452,7 @@
     function startCrashGame() {
       if (crashState.status === 'flying') return;
       const bet = getCasinoBet();
-      if (bet < 10000) return alert('Минимальная ставка в Казино $10,000!');
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
       if (cash < bet) return alert('Недостаточно денег для ставки!');
 
       playSound('click');
@@ -1425,11 +1461,12 @@
       updateUI();
 
       let cp = 1.02;
-      if (Math.random() > 0.05) {
+      if (Math.random() > 0.04) {
         cp = parseFloat((1 / (1 - Math.random() * 0.94)).toFixed(2));
       }
 
-      crashExhaust = [];
+      crashExhaustParticles = [];
+      crashDebris = [];
       crashState = {
         status: 'flying',
         bet: bet,
@@ -1488,7 +1525,13 @@
         if (btn) btn.innerText = `Забрать $${est.toLocaleString()} (${crashState.currentMult.toFixed(2)}x)`;
       }
 
-      const altFactor = Math.min(1, elapsed / 7.5);
+      // Обновление телеметрии HUD
+      const altMeters = Math.floor(Math.pow(crashState.currentMult, 2.8) * 1200);
+      const machSpeed = (1.0 + (crashState.currentMult - 1) * 3.8).toFixed(1);
+      document.getElementById('hud-alt').innerText = altMeters.toLocaleString() + ' M';
+      document.getElementById('hud-speed').innerText = 'МАХ ' + machSpeed;
+
+      const altFactor = Math.min(1, elapsed / 7.0);
 
       if (crashState.currentMult >= crashState.crashPoint) {
         crashState.status = 'crashed';
@@ -1502,7 +1545,7 @@
             Взрыв! Попробовать снова
           </button>
         `;
-        drawCrashScene(altFactor, altFactor, true);
+        initCrashExplosion(altFactor, altFactor);
         saveGameState();
         return;
       }
@@ -1514,135 +1557,310 @@
       }
     }
 
+    function initCrashExplosion(px, py) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = crashCanvas.width / dpr;
+      const h = 200;
+      const targetX = 35 + px * (w - 75);
+      const targetY = (h - 35) - py * (h - 70);
+
+      crashDebris = [];
+      for (let i = 0; i < 35; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 5 + 1.5;
+        crashDebris.push({
+          x: targetX, y: targetY,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          alpha: 1.0,
+          color: Math.random() > 0.4 ? '#ff3366' : '#ffd000',
+          size: Math.random() * 4 + 2
+        });
+      }
+      runExplosionLoop(px, py);
+    }
+
+    function runExplosionLoop(px, py) {
+      drawCrashScene(px, py, true);
+      if (crashDebris.some(d => d.alpha > 0)) {
+        requestAnimationFrame(() => runExplosionLoop(px, py));
+      }
+    }
+
+    // ОТРИСОВКА ВЕКТОРНОЙ РАКЕТЫ
+    function drawVectorRocket(ctx, x, y, angle, engineOn) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      // 1. Анимированное пламя из сопла (Двухконтурный плазменный факел)
+      if (engineOn) {
+        const flameLen = 22 + Math.random() * 12;
+        const flameW = 8 + Math.random() * 3;
+
+        // Внешний оранжево-красный шлейф
+        ctx.beginPath();
+        ctx.moveTo(-16, -flameW / 2);
+        ctx.quadraticCurveTo(-16 - flameLen * 0.6, 0, -16 - flameLen, 0);
+        ctx.quadraticCurveTo(-16 - flameLen * 0.6, 0, -16, flameW / 2);
+        ctx.fillStyle = 'rgba(255, 60, 0, 0.85)';
+        ctx.shadowColor = '#ff3300';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+
+        // Внутреннее горячее ядро (светло-желтый / белый)
+        ctx.beginPath();
+        ctx.moveTo(-16, -flameW / 4);
+        ctx.quadraticCurveTo(-16 - flameLen * 0.4, 0, -16 - flameLen * 0.6, 0);
+        ctx.quadraticCurveTo(-16 - flameLen * 0.4, 0, -16, flameW / 4);
+        ctx.fillStyle = '#fff4a3';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // 2. Стабилизаторы (Крылья ракеты)
+      ctx.fillStyle = '#ff3366';
+      ctx.beginPath();
+      ctx.moveTo(-8, -6);
+      ctx.lineTo(-16, -14);
+      ctx.lineTo(-12, -4);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(-8, 6);
+      ctx.lineTo(-16, 14);
+      ctx.lineTo(-12, 4);
+      ctx.fill();
+
+      // 3. Корпус ракеты (Металлический обтекаемый фюзеляж)
+      const bodyGrad = ctx.createLinearGradient(0, -7, 0, 7);
+      bodyGrad.addColorStop(0, '#f0f6fc');
+      bodyGrad.addColorStop(0.5, '#c9d1d9');
+      bodyGrad.addColorStop(1, '#8b949e');
+
+      ctx.beginPath();
+      ctx.moveTo(-16, -6);
+      ctx.lineTo(10, -6);
+      ctx.quadraticCurveTo(24, 0, 26, 0);
+      ctx.quadraticCurveTo(24, 0, 10, 6);
+      ctx.lineTo(-16, 6);
+      ctx.closePath();
+      ctx.fillStyle = bodyGrad;
+      ctx.fill();
+      ctx.strokeStyle = '#484f58';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // 4. Носовой обтекатель (Красный акцент)
+      ctx.beginPath();
+      ctx.moveTo(10, -6);
+      ctx.quadraticCurveTo(24, 0, 26, 0);
+      ctx.quadraticCurveTo(24, 0, 10, 6);
+      ctx.fillStyle = '#ff3366';
+      ctx.fill();
+
+      // 5. Визор кабины (Неоново-голубое свечение)
+      ctx.beginPath();
+      ctx.arc(4, 0, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#00d2ff';
+      ctx.shadowColor = '#00d2ff';
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // 6. Сопло двигателя
+      ctx.fillStyle = '#21262d';
+      ctx.fillRect(-17, -4, 2, 8);
+
+      ctx.restore();
+    }
+
+    // ОТРИСОВКА СЦЕНЫ КРАША: ЗЕМЛЯ ➔ СТРАТОСФЕРА ➔ КОСМОС
     function drawCrashScene(px, py, exploded = false) {
       const dpr = window.devicePixelRatio || 1;
       const w = crashCanvas.width / dpr;
-      const h = 185;
+      const h = 200;
       crashCtx.clearRect(0, 0, w, h);
 
-      // ПЛАВНЫЙ ГРАДИЕНТ ВЫСОТЫ: ЗЕМЛЯ -> АТМОСФЕРА -> КОСМОС
-      const alt = Math.min(1, (crashState.currentMult - 1) / 4);
+      // Прогресс высоты от 0 (Земля) до 1 (Космос)
+      const altProgress = Math.min(1, (crashState.currentMult - 1) / 3.8);
 
-      // Цвет верха неба: от лазурного до черного космоса
-      const topR = Math.floor(10 * (1 - alt) + 3 * alt);
-      const topG = Math.floor(35 * (1 - alt) + 4 * alt);
-      const topB = Math.floor(80 * (1 - alt) + 12 * alt);
+      // ПЛАВНАЯ СМЕНА ФОНА
+      // Верх неба: от утреннего индиго до черного космического вакуума
+      const topR = Math.floor(18 * (1 - altProgress) + 4 * altProgress);
+      const topG = Math.floor(35 * (1 - altProgress) + 5 * altProgress);
+      const topB = Math.floor(75 * (1 - altProgress) + 12 * altProgress);
 
-      // Цвет низа неба: от утреннего горизонта до темно-синего
-      const botR = Math.floor(45 * (1 - alt) + 15 * alt);
-      const botG = Math.floor(80 * (1 - alt) + 20 * alt);
-      const botB = Math.floor(130 * (1 - alt) + 35 * alt);
+      // Низ неба: от теплой дымки горизонта до темно-синего
+      const botR = Math.floor(30 * (1 - altProgress) + 10 * altProgress);
+      const botG = Math.floor(65 * (1 - altProgress) + 18 * altProgress);
+      const botB = Math.floor(110 * (1 - altProgress) + 32 * altProgress);
 
-      const grad = crashCtx.createLinearGradient(0, 0, 0, h);
-      grad.addColorStop(0, `rgb(${topR}, ${topG}, ${topB})`);
-      grad.addColorStop(1, `rgb(${botR}, ${botG}, ${botB})`);
-      crashCtx.fillStyle = grad;
+      const skyGrad = crashCtx.createLinearGradient(0, 0, 0, h);
+      skyGrad.addColorStop(0, `rgb(${topR}, ${topG}, ${topB})`);
+      skyGrad.addColorStop(1, `rgb(${botR}, ${botG}, ${botB})`);
+      crashCtx.fillStyle = skyGrad;
       crashCtx.fillRect(0, 0, w, h);
 
-      // 1. Звезды в глубоком космосе (проявляются по мере подъема)
-      if (alt > 0.25) {
-        const starAlpha = Math.min(1, (alt - 0.25) * 1.5);
-        crashCtx.fillStyle = `rgba(255, 255, 255, ${starAlpha})`;
+      // 1. КОСМИЧЕСКОЕ НЕБО: Звезды и туманность (проявляются плавно)
+      if (altProgress > 0.15) {
+        const starOpacity = Math.min(1, (altProgress - 0.15) * 1.5);
+        crashCtx.fillStyle = `rgba(255, 255, 255, ${starOpacity})`;
         crashStars.forEach(s => {
           crashCtx.beginPath();
           crashCtx.arc(s.x % w, s.y % h, s.r, 0, Math.PI * 2);
           crashCtx.fill();
         });
+
+        // Фиолетовая космическая туманность на большой высоте
+        if (altProgress > 0.5) {
+          const nebOpacity = (altProgress - 0.5) * 0.45;
+          const nebGrad = crashCtx.createRadialGradient(w * 0.8, h * 0.2, 10, w * 0.8, h * 0.2, 120);
+          nebGrad.addColorStop(0, `rgba(181, 55, 242, ${nebOpacity})`);
+          nebGrad.addColorStop(1, 'rgba(0,0,0,0)');
+          crashCtx.fillStyle = nebGrad;
+          crashCtx.fillRect(0, 0, w, h);
+        }
       }
 
-      // 2. Облака (проплывают вниз)
-      const cloudOffset = alt * 140;
-      crashCtx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, 0.45 - alt * 0.45)})`;
-      [
-        {x: 60, y: 70 + cloudOffset, r: 24},
-        {x: 180, y: 110 + cloudOffset, r: 35},
-        {x: 280, y: 85 + cloudOffset, r: 28}
-      ].forEach(c => {
-        if (c.y < h + 40) {
-          crashCtx.beginPath();
-          crashCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-          crashCtx.arc(c.x + 20, c.y - 8, c.r * 0.8, 0, Math.PI * 2);
-          crashCtx.arc(c.x - 20, c.y + 2, c.r * 0.7, 0, Math.PI * 2);
-          crashCtx.fill();
-        }
-      });
+      // 2. ОБЛАКА: Мягкие объемные перистые облака (пролетают вниз)
+      const cloudOffset = altProgress * 180;
+      const cloudAlpha = Math.max(0, 0.4 - altProgress * 0.45);
+      if (cloudAlpha > 0) {
+        crashCtx.fillStyle = `rgba(255, 255, 255, ${cloudAlpha})`;
+        [
+          {x: 70, y: 70 + cloudOffset, r: 28},
+          {x: 180, y: 110 + cloudOffset, r: 38},
+          {x: 290, y: 80 + cloudOffset, r: 32}
+        ].forEach(c => {
+          if (c.y < h + 50) {
+            crashCtx.beginPath();
+            crashCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+            crashCtx.arc(c.x + 22, c.y - 8, c.r * 0.75, 0, Math.PI * 2);
+            crashCtx.arc(c.x - 22, c.y + 4, c.r * 0.7, 0, Math.PI * 2);
+            crashCtx.fill();
+          }
+        });
+      }
 
-      // 3. Силуэт Земли (горы и стартовая площадка опускаются вниз)
-      const groundY = (h - 22) + alt * 80;
-      if (groundY < h + 50) {
-        crashCtx.fillStyle = '#0f171c';
+      // 3. ЗЕМЛЯ: Стартовый космодром и силуэт ночного города (уходят вниз)
+      const groundY = (h - 25) + altProgress * 95;
+      if (groundY < h + 60) {
+        // Силуэты холмов
+        crashCtx.fillStyle = '#0a0f16';
         crashCtx.beginPath();
         crashCtx.moveTo(0, h);
-        crashCtx.lineTo(0, groundY + 10);
-        crashCtx.lineTo(40, groundY - 5);
-        crashCtx.lineTo(85, groundY + 8);
-        crashCtx.lineTo(160, groundY - 12);
-        crashCtx.lineTo(w, groundY + 15);
+        crashCtx.lineTo(0, groundY + 12);
+        crashCtx.lineTo(50, groundY - 8);
+        crashCtx.lineTo(120, groundY + 6);
+        crashCtx.lineTo(210, groundY - 14);
+        crashCtx.lineTo(w, groundY + 8);
         crashCtx.lineTo(w, h);
         crashCtx.fill();
 
-        // Зеленый горизонт
-        crashCtx.strokeStyle = 'rgba(46, 160, 67, 0.5)';
+        // Огни города на горизонте
+        crashCtx.fillStyle = 'rgba(255, 207, 38, 0.55)';
+        for (let i = 15; i < w; i += 28) {
+          crashCtx.fillRect(i, groundY - 2, 2, 2);
+          if (i % 56 === 0) crashCtx.fillRect(i + 5, groundY - 5, 2, 5);
+        }
+
+        // Стартовая башня космодрома
+        crashCtx.strokeStyle = '#484f58';
         crashCtx.lineWidth = 2;
-        crashCtx.stroke();
+        crashCtx.strokeRect(30, groundY - 24, 8, 26);
+
+        // Красный сигнальный маяк на башне
+        crashCtx.fillStyle = '#ff3366';
+        crashCtx.beginPath();
+        crashCtx.arc(34, groundY - 26, 2, 0, Math.PI * 2);
+        crashCtx.fill();
       }
 
-      // Траектория полета по диагонали (снизу-слева -> вправо-вверх)
-      const startX = 30, startY = h - 30;
-      const targetX = startX + px * (w - 70);
-      const targetY = startY - py * (h - 60);
+      // Траектория по диагонали
+      const startX = 35, startY = h - 35;
+      const targetX = startX + px * (w - 75);
+      const targetY = startY - py * (h - 70);
 
-      // Светящийся инверсионный след
+      // Светящийся инверсионный след полета
       crashCtx.beginPath();
       crashCtx.moveTo(startX, startY);
       crashCtx.lineTo(targetX, targetY);
-      crashCtx.strokeStyle = exploded ? 'rgba(255, 51, 102, 0.5)' : 'rgba(0, 210, 255, 0.5)';
+      crashCtx.strokeStyle = exploded ? 'rgba(255, 51, 102, 0.5)' : 'rgba(0, 210, 255, 0.55)';
       crashCtx.lineWidth = 3;
       crashCtx.shadowColor = exploded ? '#ff3366' : '#00d2ff';
-      crashCtx.shadowBlur = 8;
+      crashCtx.shadowBlur = 10;
       crashCtx.stroke();
       crashCtx.shadowBlur = 0;
 
-      // Частицы выхлопа
+      // ЧАСТИЦЫ ДЫМА И ИСКР ИЗ СОПЛА
       if (crashState.status === 'flying') {
-        crashExhaust.push({
-          x: targetX - 10,
-          y: targetY + 10,
-          alpha: 1,
-          size: Math.random() * 4 + 2
-        });
-      }
-      for (let i = crashExhaust.length - 1; i >= 0; i--) {
-        const e = crashExhaust[i];
-        e.alpha -= 0.05;
-        e.size *= 1.05;
-        crashCtx.fillStyle = `rgba(255, ${Math.floor(120 * e.alpha + 50)}, 0, ${e.alpha})`;
-        crashCtx.beginPath();
-        crashCtx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-        crashCtx.fill();
-        if (e.alpha <= 0) crashExhaust.splice(i, 1);
+        for (let i = 0; i < 2; i++) {
+          crashExhaustParticles.push({
+            x: targetX - 12 + (Math.random() - 0.5) * 4,
+            y: targetY + 12 + (Math.random() - 0.5) * 4,
+            vx: -Math.random() * 2 - 1,
+            vy: Math.random() * 2 + 1,
+            alpha: 1.0,
+            size: Math.random() * 3.5 + 2,
+            color: Math.random() > 0.3 ? '#ff8800' : '#ffcf26'
+          });
+        }
       }
 
-      // Отрисовка ракеты или взрыва
-      crashCtx.save();
-      crashCtx.translate(targetX, targetY);
-      if (exploded) {
-        crashCtx.font = '32px sans-serif';
-        crashCtx.textAlign = 'center';
-        crashCtx.textBaseline = 'middle';
-        crashCtx.fillText('💥', 0, 0);
-      } else {
-        // Поворот ракеты по диагонали ~38 градусов
-        crashCtx.rotate(-Math.PI / 4.5);
-        crashCtx.font = '28px sans-serif';
-        crashCtx.textAlign = 'center';
-        crashCtx.textBaseline = 'middle';
-        crashCtx.fillText('🚀', 0, 0);
+      for (let i = crashExhaustParticles.length - 1; i >= 0; i--) {
+        const p = crashExhaustParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.045;
+        p.size *= 1.04;
+
+        crashCtx.fillStyle = p.color;
+        crashCtx.globalAlpha = Math.max(0, p.alpha);
+        crashCtx.beginPath();
+        crashCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        crashCtx.fill();
+        crashCtx.globalAlpha = 1.0;
+
+        if (p.alpha <= 0) crashExhaustParticles.splice(i, 1);
       }
-      crashCtx.restore();
+
+      // ВЗРЫВ ИЛИ ПОЛЕТ ВЕКТОРНОЙ РАКЕТЫ
+      if (exploded) {
+        // Анимация разлета обломков
+        crashDebris.forEach(d => {
+          d.x += d.vx;
+          d.y += d.vy;
+          d.alpha -= 0.025;
+          crashCtx.fillStyle = d.color;
+          crashCtx.globalAlpha = Math.max(0, d.alpha);
+          crashCtx.beginPath();
+          crashCtx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+          crashCtx.fill();
+          crashCtx.globalAlpha = 1.0;
+        });
+
+        // Центральная вспышка
+        crashCtx.fillStyle = 'rgba(255, 51, 102, 0.4)';
+        crashCtx.beginPath();
+        crashCtx.arc(targetX, targetY, 26, 0, Math.PI * 2);
+        crashCtx.fill();
+
+        crashCtx.fillStyle = '#ffd000';
+        crashCtx.beginPath();
+        crashCtx.arc(targetX, targetY, 14, 0, Math.PI * 2);
+        crashCtx.fill();
+      } else {
+        // Угол наклона полета по диагонали (примерно -38 градусов)
+        const flightAngle = -Math.PI / 4.4;
+        const isEngineActive = (crashState.status === 'flying');
+        drawVectorRocket(crashCtx, targetX, targetY, flightAngle, isEngineActive);
+      }
     }
 
-    // --- 2. РУЛЕТКА: АНИМИРОВАННОЕ КОЛЕСО И ШАРИК ---
+    // ==========================================
+    // 2. РУЛЕТКА (АНИМИРОВАННОЕ КОЛЕСО И ШАРИК)
+    // ==========================================
     const rCanvas = document.getElementById('roulette-canvas');
     const rCtx = rCanvas.getContext('2d');
     let rouletteSpinning = false;
@@ -1650,7 +1868,6 @@
     let rouletteBallAngle = 0;
     let rouletteBallRadius = 88;
 
-    // 15 луз: 0 зеленый, 1-7 красные, 8-14 черные
     const rouletteSlices = [
       {num: 0, color: '#2ea043'},
       {num: 8, color: '#161b22'},
@@ -1682,7 +1899,6 @@
       rCtx.lineWidth = 4;
       rCtx.stroke();
 
-      // Отрисовка 15 секторов
       const sliceAngle = (Math.PI * 2) / rouletteSlices.length;
       rouletteSlices.forEach((s, idx) => {
         const start = wheelRot + idx * sliceAngle;
@@ -1693,11 +1909,10 @@
         rCtx.arc(cx, cy, radius, start, end);
         rCtx.fillStyle = s.color;
         rCtx.fill();
-        rCtx.strokeStyle = 'rgba(255,215,0,0.4)';
+        rCtx.strokeStyle = 'rgba(255,207,38,0.4)';
         rCtx.lineWidth = 1;
         rCtx.stroke();
 
-        // Цифры на лузах
         rCtx.save();
         rCtx.translate(cx, cy);
         rCtx.rotate(start + sliceAngle / 2);
@@ -1708,7 +1923,7 @@
         rCtx.restore();
       });
 
-      // Центральный золотой шпиндель
+      // Центральный шпиндель
       rCtx.beginPath();
       rCtx.arc(cx, cy, 28, 0, Math.PI * 2);
       const hubGrad = rCtx.createRadialGradient(cx, cy, 5, cx, cy, 28);
@@ -1720,7 +1935,7 @@
       rCtx.lineWidth = 2;
       rCtx.stroke();
 
-      // Шарик рулетки
+      // Шарик
       if (ballAngle !== null) {
         const bx = cx + Math.cos(ballAngle) * ballRad;
         const by = cy + Math.sin(ballAngle) * ballRad;
@@ -1750,7 +1965,6 @@
       status.innerText = 'Шарик запущен в желоб...';
       status.style.color = 'var(--blue)';
 
-      // Выбор случайного сектора
       const winIdx = Math.floor(Math.random() * rouletteSlices.length);
       const winSlice = rouletteSlices[winIdx];
 
@@ -1768,11 +1982,9 @@
 
         rouletteAngle += wheelSpeed;
         wheelSpeed *= 0.992;
-
         rouletteBallAngle += ballSpeed;
         ballSpeed *= 0.988;
 
-        // Постепенное падение шарика из желоба в лузу
         if (progress > 0.6) {
           rouletteBallRadius = Math.max(55, rouletteBallRadius - 0.45);
         }
@@ -1784,7 +1996,6 @@
           requestAnimationFrame(animateRoulette);
         } else {
           rouletteSpinning = false;
-          // Фиксация в лузе
           drawRouletteWheel(rouletteAngle, rouletteAngle + winIdx * sliceAngle + sliceAngle/2, 55);
 
           let finalColor = 'BLACK';
@@ -1814,7 +2025,9 @@
       requestAnimationFrame(animateRoulette);
     }
 
-    // --- 3. ПЛИНКО: БЫСТРЫЙ СПАМ ШАРАМИ (MULTI-DROP) ---
+    // ==========================================
+    // 3. ПЛИНКО (MULTI-DROP ЛАВИНА ШАРОВ)
+    // ==========================================
     const plinkoCanvas = document.getElementById('plinko-canvas');
     const pCtx = plinkoCanvas.getContext('2d');
     let plinkoBalls = [];
@@ -1825,7 +2038,7 @@
     function resizePlinkoCanvas() {
       const dpr = window.devicePixelRatio || 1;
       plinkoCanvas.width = plinkoCanvas.parentElement.clientWidth * dpr;
-      plinkoCanvas.height = 210 * dpr;
+      plinkoCanvas.height = 215 * dpr;
       pCtx.scale(dpr, dpr);
       drawPlinkoScene();
     }
@@ -1833,11 +2046,11 @@
     function drawPlinkoScene() {
       const dpr = window.devicePixelRatio || 1;
       const w = plinkoCanvas.width / dpr;
-      const h = 210;
+      const h = 215;
       pCtx.clearRect(0, 0, w, h);
 
-      // Отрисовка пирамиды штырьков
-      pCtx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      // Пирамида штырьков
+      pCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
       const rows = 6;
       for (let r = 0; r < rows; r++) {
         const count = r + 3;
@@ -1850,15 +2063,15 @@
         }
       }
 
-      // Корзины внизу
+      // Корзины
       const binWidth = w / plinkoBins.length;
       plinkoBins.forEach((mult, i) => {
         const isFlashed = bucketFlash[i] > 0;
         bucketFlash[i] = Math.max(0, bucketFlash[i] - 0.05);
 
         pCtx.fillStyle = isFlashed
-          ? 'rgba(255, 215, 0, 0.5)'
-          : (mult >= 2 ? 'rgba(0,255,135,0.15)' : (mult < 1 ? 'rgba(255,51,102,0.15)' : 'rgba(255,208,0,0.15)'));
+          ? 'rgba(255, 207, 38, 0.5)'
+          : (mult >= 2 ? 'rgba(0,255,135,0.18)' : (mult < 1 ? 'rgba(255,51,102,0.18)' : 'rgba(255,207,38,0.18)'));
         pCtx.fillRect(i * binWidth + 2, h - 26, binWidth - 4, 22);
 
         pCtx.strokeStyle = isFlashed ? 'var(--gold)' : 'rgba(255,255,255,0.1)';
@@ -1871,7 +2084,7 @@
         pCtx.fillText(mult + 'x', i * binWidth + binWidth / 2, h - 12);
       });
 
-      // Отрисовка всех летящих шариков
+      // Шарики
       plinkoBalls.forEach(b => {
         pCtx.beginPath();
         pCtx.arc(b.x, b.y, 4.5, 0, Math.PI * 2);
@@ -1885,7 +2098,7 @@
 
     function dropPlinkoBall() {
       const bet = getCasinoBet();
-      if (bet < 10000) return alert('Минимальная ставка в Казино $10,000!');
+      if (bet < 10000) return alert('Минимальная ставка $10,000!');
       if (cash < bet) return alert('Недостаточно денег для сброса шарика!');
 
       playSound('click');
@@ -1897,7 +2110,6 @@
       const w = plinkoCanvas.width / dpr;
       const colors = ['#ffd700', '#00ff87', '#00d2ff', '#ff3366', '#b537f2'];
 
-      // Добавляем шарик в массив (мульти-сброс без ожидания!)
       plinkoBalls.push({
         x: w / 2 + (Math.random() - 0.5) * 8,
         y: 10,
@@ -1915,15 +2127,15 @@
     function animatePlinkoMulti() {
       const dpr = window.devicePixelRatio || 1;
       const w = plinkoCanvas.width / dpr;
-      const h = 210;
+      const h = 215;
 
       for (let i = plinkoBalls.length - 1; i >= 0; i--) {
         const b = plinkoBalls[i];
-        b.vy += 0.17; // Гравитация
+        b.vy += 0.17;
         b.y += b.vy;
         b.x += b.vx;
 
-        // Отскоки от штырьков
+        // Отскоки
         const rows = 6;
         for (let r = 0; r < rows; r++) {
           const count = r + 3;
@@ -1948,7 +2160,7 @@
           const returnAmount = Math.floor(b.bet * mult);
           cash += returnAmount;
 
-          bucketFlash[binIdx] = 1.0; // Вспышка корзины
+          bucketFlash[binIdx] = 1.0;
 
           if (mult >= 1) { playSound('win'); haptic('success'); }
           else { playSound('loss'); haptic('error'); }
@@ -1969,7 +2181,9 @@
       }
     }
 
-    // --- 4. МИНЫ (MINES 5x5) ---
+    // ==========================================
+    // 4. МИНЫ (MINES 5x5)
+    // ==========================================
     let minesState = {
       status: 'idle',
       bet: 10000,
@@ -2671,7 +2885,7 @@
       }
     }
 
-    // --- ГЛАВНЫЙ ИГРОВОЙ ЦИКЛ (1 СЕК) ---
+    // --- ГЛАВНЫЙ ЦИКЛ (1 СЕК) ---
     let secDecayCounter = 0;
     setInterval(() => {
       if (isGameOver) return;
@@ -3065,4 +3279,4 @@
     if (isGameOver) triggerGameOver();
   </script>
 </body>
-</html>
+  </html>
